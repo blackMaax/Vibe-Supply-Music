@@ -2,6 +2,9 @@
 import HomePageClient from "@/components/home/home-page-client" // Import the new client component
 import { getSiteSettings, type SiteSettingsData, getHomepageData } from "@/sanity/lib/queries"
 
+// Add revalidation every 60 seconds
+export const revalidate = 60
+
 export default async function Home() {
   const siteSettings: SiteSettingsData | null = await getSiteSettings();
   const homepageData = await getHomepageData();

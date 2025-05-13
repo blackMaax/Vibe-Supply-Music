@@ -23,8 +23,8 @@ interface HomePageClientProps {
     image?: { asset?: { _id: string; url: string }; imageTitle?: string; imageSubtitle?: string };
     footer?: string;
     logo?: { asset?: { _id: string; url: string } };
-    features?: string[];
     featuresIntro?: string;
+    features?: { text: string }[];
   };
   // Add other data props as needed, e.g., testimonials, galleryImages, bandMembers if fetched server-side
 }
