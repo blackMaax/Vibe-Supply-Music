@@ -1,0 +1,28 @@
+# Sanity Studio
+studio/
+sanity/
+
+# Development files
+.git
+.github
+.gitignore
+README.md
+*.log
+
+# Build outputs
+.next
+out
+build
+dist
+
+# Dependencies
+node_modules
+.pnpm-store
+
+# Environment files
+.env*
+!.env.production
+
+# Cache
+.cache
+.vercel 
