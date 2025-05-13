@@ -1,4 +1,8 @@
-import { staticData } from "./static-data"
+import { createClient } from 'next-sanity'
+import { client as sanityClient } from '@/sanity/lib/client'
+
+// Export the actual Sanity client instead of the mock
+export const client = sanityClient
 
 // Define types for your Sanity data
 export interface HomepageData {
@@ -57,77 +61,32 @@ export interface GalleryImage {
   }
 }
 
-// Mock client that returns static data instead of making API calls
-export const client = {
-  fetch: async (query: string) => {
-    console.log("Mock Sanity client fetch:", query)
-
-    // Determine what data to return based on the query
-    if (query.includes("homepage")) {
-      return staticData.homepage
-    } else if (query.includes("about")) {
-      return staticData.about
-    } else if (query.includes("package")) {
-      return staticData.packages
-    } else if (query.includes("testimonial")) {
-      return staticData.testimonials
-    } else if (query.includes("contact")) {
-      return staticData.contact
-    } else if (query.includes("gallery")) {
-      return staticData.gallery
-    }
-
-    // Default fallback
-    return {}
-  },
-  config: () => ({
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-  }),
-}
-
-// In-memory cache for frequently accessed data
-let homepageCache: HomepageData | null = null
-let testimonialsCache: TestimonialData[] | null = null
-
-export async function getHomepage(): Promise<HomepageData> {
-  // Return cached data if available
-  if (homepageCache) {
-    return homepageCache
-  }
-
-  try {
-    // Use static data instead of fetching from Sanity
-    const data = staticData.homepage
-
-    // Cache the result
-    homepageCache = data
-    return data
-  } catch (error) {
-    console.error("Error getting homepage data:", error)
-    return {
-      headline: "Make Your Event Unforgettable",
-      subheadline: "Live music for weddings & private events",
-      ctaText: "Book a Consultation",
-    }
-  }
-}
-
 export async function getAbout(): Promise<AboutData> {
   try {
-    return staticData.about
+    const query = `*[_type == "about"][0]{
+      title,
+      body
+    }`
+    const data = await client.fetch<AboutData>(query)
+    return data || { title: "About Vibe Supply", body: [] }
   } catch (error) {
     console.error("Error getting about data:", error)
-    return {
-      title: "About Vibe Supply",
-      body: [],
-    }
+    return { title: "About Vibe Supply", body: [] }
   }
 }
 
 export async function getPackages(): Promise<PackageData[]> {
   try {
-    return staticData.packages
+    const query = `*[_type == "package"]{
+      tier,
+      title,
+      lineup,
+      djType,
+      description,
+      isHighlighted
+    }`
+    const data = await client.fetch<PackageData[]>(query)
+    return data || []
   } catch (error) {
     console.error("Error getting packages data:", error)
     return []
@@ -135,18 +94,18 @@ export async function getPackages(): Promise<PackageData[]> {
 }
 
 export async function getTestimonials(): Promise<TestimonialData[]> {
-  // Return cached data if available
-  if (testimonialsCache) {
-    return testimonialsCache
-  }
-
   try {
-    // Use static data instead of fetching from Sanity
-    const data = staticData.testimonials
-
-    // Cache the result
-    testimonialsCache = data
-    return data
+    const query = `*[_type == "testimonial"]{
+      name,
+      quote,
+      image {
+        asset-> {
+          _ref
+        }
+      }
+    }`
+    const data = await client.fetch<TestimonialData[]>(query)
+    return data || []
   } catch (error) {
     console.error("Error getting testimonials data:", error)
     return []
@@ -155,21 +114,42 @@ export async function getTestimonials(): Promise<TestimonialData[]> {
 
 export async function getContact(): Promise<ContactData> {
   try {
-    return staticData.contact
+    const query = `*[_type == "contact"][0]{
+      email,
+      phone,
+      socialLinks
+    }`
+    const data = await client.fetch<ContactData>(query)
+    return data || {
+      email: "info@vibesupply.com",
+      phone: "+44 123 456 7890",
+      socialLinks: []
+    }
   } catch (error) {
     console.error("Error getting contact data:", error)
     return {
       email: "info@vibesupply.com",
       phone: "+44 123 456 7890",
-      socialLinks: [],
+      socialLinks: []
     }
   }
 }
 
 // Add this function after the getContact function
-export async function getGallery() {
+export async function getGallery(): Promise<any> {
   try {
-    return staticData.gallery
+    const query = `*[_type == "gallery"][0]{
+      images[] {
+        _key,
+        alt,
+        caption,
+        asset-> {
+          _ref
+        }
+      }
+    }`
+    const data = await client.fetch<any>(query)
+    return data || { images: [] }
   } catch (error) {
     console.error("Error getting gallery data:", error)
     return { images: [] }

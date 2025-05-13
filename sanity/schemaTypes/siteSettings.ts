@@ -44,6 +44,39 @@ export default defineType({
       ],
     },
     {
+      name: 'logoWhite',
+      title: 'White/Inverted Logo',
+      type: 'image',
+      description: 'A version of the logo for use on dark backgrounds.',
+      options: { hotspot: true },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt text',
+          type: 'string',
+          description: 'Important for SEO and accessibility.',
+        },
+      ],
+    },
+    {
+      name: 'favicon',
+      title: 'Favicon',
+      type: 'image',
+      description: 'Recommended: .ico or .png, square dimensions (e.g., 32x32, 64x64).',
+    },
+    {
+      name: 'contactEmail',
+      title: 'Contact Email',
+      type: 'string',
+      description: 'Primary contact email address for the site.',
+    },
+    {
+      name: 'contactPhone',
+      title: 'Contact Phone',
+      type: 'string',
+      description: 'Primary contact phone number for the site.',
+    },
+    {
       name: 'defaultOgImage',
       title: 'Default OG Image',
       type: 'image',
@@ -91,6 +124,12 @@ export default defineType({
           name: 'copyrightName',
           title: 'Copyright name',
           type: 'string',
+        },
+        {
+          name: 'footerText',
+          title: 'Footer Text',
+          type: 'string',
+          description: 'Text displayed in the footer (e.g., © YEAR Vibe Supply. All rights reserved.)',
         },
         {
           name: 'footerNav',

@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/is-prop-valid": "latest",
+    "@emotion/is-prop-valid": "1.2.2",
     "@hookform/resolvers": "^3.9.1",
     "@portabletext/react": "^3.2.1",
     "@radix-ui/react-accordion": "1.2.2",
@@ -78,7 +78,14 @@
   },
   "pnpm": {
     "overrides": {
-      "framer-motion": "10.18.0"
+      "framer-motion": "10.18.0",
+      "@emotion/is-prop-valid": "1.2.2"
+    },
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@types/react",
+        "@types/react-dom"
+      ]
     }
   }
 }
