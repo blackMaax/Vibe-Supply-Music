@@ -13,5 +13,11 @@ export default async function Home() {
   // Fetch any other data needed for the homepage here if it's coming from Sanity
   // For example, testimonials, gallery images (actual data, not placeholders), etc.
 
-  return <HomePageClient siteSettings={siteSettings} heroImages={heroImages} aboutVibeSupply={aboutVibeSupply} />;
+  return <HomePageClient 
+    siteSettings={siteSettings} 
+    heroImages={heroImages} 
+    aboutVibeSupply={aboutVibeSupply} 
+    packageCtaSection={homepageData?.packageCtaSection}
+    meetTheTeamSection={homepageData?.meetTheTeamSection}
+  />;
 }

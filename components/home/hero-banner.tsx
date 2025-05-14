@@ -1,15 +1,20 @@
 "use client"
 
-import { motion, type HTMLMotionProps } from "framer-motion"
+import { motion, type MotionProps } from "framer-motion"
 import Image from "next/image"
 // import { getImageUrl } from "@/lib/static-data" // Commented out as logoToDisplay now uses a direct fallback
 import Navbar from "@/components/layout/navbar"
 import { urlForImage } from "@/lib/sanity-image"
-import React from "react"
+import React, { type HTMLAttributes } from "react"
+import LuxuryCard from "@/components/ui/luxury-card"
 
 interface HeroBannerProps {
   heroLogoUrl?: string | null;
-  heroImages: { asset: { _id: string; _ref: string }; alt?: string }[];
+  heroImages: { 
+    asset: { _id: string; _ref: string }; 
+    alt?: string;
+    title?: string;
+  }[];
 }
 
 // Define a type for motion div props to include className explicitly if needed
@@ -18,11 +23,39 @@ interface HeroBannerProps {
 export default function HeroBanner({ heroLogoUrl, heroImages }: HeroBannerProps) {
   const logoToDisplay = heroLogoUrl || "/placeholder.svg";
 
-  const motionDivProps: HTMLMotionProps<"div"> = {
+  // Removed explicit HTMLMotionProps type to let TypeScript infer
+  const logoMotionProps = {
     initial: { opacity: 0, scale: 0.9 },
     animate: { opacity: 1, scale: 1 },
     transition: { duration: 1 },
     className: "w-full flex justify-center items-center"
+  };
+
+  // Explicitly typed props for the Navbar motion.div
+  const navbarMotionWrapperProps: MotionProps & HTMLAttributes<HTMLDivElement> = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.8, delay: 0.5 },
+    className: "w-full"
+  };
+
+  // Image Cards Section motion props
+  const imageCardsSectionMotionProps: MotionProps & HTMLAttributes<HTMLDivElement> = {
+    className: "w-full flex flex-row justify-around items-stretch gap-2 sm:gap-3 md:gap-4"
+  };
+  
+  // Props for individual image card - transition delay is dynamic, so we handle it inside the map
+  // We define common props here and merge transition inside the map for individual cards
+  const individualCardBaseMotionProps: Omit<MotionProps, 'transition'> & Omit<HTMLAttributes<HTMLDivElement>, 'className'> = {
+    initial: { opacity: 0, y: 30 },
+    animate: { opacity: 1, y: 0 },
+  };
+
+  const geometricAccentMotionProps: MotionProps & HTMLAttributes<HTMLDivElement> = {
+    initial: { opacity: 0, rotate: 0 },
+    animate: { opacity: 0.15, rotate: 360 },
+    transition: { duration: 100, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
+    className: "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[800px] md:h-[800px] pointer-events-none"
   };
 
   return (
@@ -30,9 +63,9 @@ export default function HeroBanner({ heroLogoUrl, heroImages }: HeroBannerProps)
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0"></div>
 
-      {/* Hero Content Container - Using fixed lg padding for testing */}
-      <div className="container mx-auto px-4 relative z-10 flex-grow flex flex-col items-center justify-start text-center space-y-3 md:space-y-4 lg:space-y-3 pt-[4vh] md:pt-[5vh] lg:pt-20 xl:pt-[3vh]">
-        <motion.div {...motionDivProps}>
+      {/* Hero Content Container - Revised padding and spacing */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex-grow flex flex-col items-center justify-center text-center space-y-6 md:space-y-8 py-16 sm:py-20 md:py-24">
+        <motion.div {...logoMotionProps}>
           <Image
             src={logoToDisplay}
             alt="Vibe Supply Logo"
@@ -46,58 +79,64 @@ export default function HeroBanner({ heroLogoUrl, heroImages }: HeroBannerProps)
           />
         </motion.div>
 
-        {/* Navbar - Removed specific top padding */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="w-full md:pt-0" 
-        >
+        {/* Navbar */}
+        <motion.div {...navbarMotionWrapperProps}>
           <Navbar />
         </motion.div>
 
-        {/* Image Cards Section - Adjusted margin-top for lg/xl */}
-        <motion.div 
-          className="w-full flex flex-row justify-around items-stretch gap-2 sm:gap-3 md:gap-4 mt-2 md:mt-3 lg:mt-2 px-0 sm:px-1"
-        >
+        {/* Image Cards Section */}
+        <motion.div {...imageCardsSectionMotionProps}>
           {heroImages && heroImages.length > 0 ? heroImages.map((img, index) => {
             const isOuterCard = index === 0 || index === heroImages.length - 1;
             const imageUrl = urlForImage(img);
 
             if (!imageUrl) return null;
 
+            // Explicitly define key and other attributes separately
+            const cardKey = img.asset?._id ? `${img.asset._id}-${index}` : `hero-image-${index}`;
+            console.log("!!! HERO BANNER MAP ITEM:", index, "KEY:", cardKey);
+            const motionAttributes: MotionProps & HTMLAttributes<HTMLDivElement> = {
+              ...individualCardBaseMotionProps,
+              transition: { duration: 0.6, delay: 0.8 + index * 0.2 },
+              className: `w-[31%] sm:w-[30%] md:w-[30%] lg:w-[31%] xl:w-[31%] aspect-[3/4] bg-black/30 rounded-lg sm:rounded-xl shadow-lg md:shadow-xl border border-gold/10 md:border-gold/20 hover:shadow-gold/20 md:hover:shadow-gold/30 transition-all duration-300 transform hover:scale-105 cursor-pointer group ${isOuterCard ? "mt-5 md:mt-6 lg:mt-8" : ""}`
+            };
+
             return (
-              <React.Fragment key={img.asset._id}>
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.8 + index * 0.2 }}
-                className={`w-[31%] sm:w-[30%] md:w-[30%] lg:w-[31%] xl:w-[31%] aspect-[3/4] bg-black/30 rounded-lg sm:rounded-xl shadow-lg md:shadow-xl border border-gold/10 md:border-gold/20 hover:shadow-gold/20 md:hover:shadow-gold/30 transition-all duration-300 transform hover:scale-105 cursor-pointer group ${isOuterCard ? "mt-5 md:mt-6 lg:mt-8" : ""}`}
-              >
+              <motion.div key={cardKey} {...motionAttributes}>
                 <div className="relative w-full h-full rounded-lg sm:rounded-xl overflow-hidden">
                   <Image
-                      src={imageUrl}
+                    src={imageUrl}
                     alt={img.alt || `Hero Image ${index + 1}`}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                     sizes="(max-width: 768px) 30vw, 31vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  {/* <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div> */}
+                  
+                  {img.title && (
+                    <div className="absolute top-2 left-2 right-2 sm:top-3 sm:left-3 sm:right-3 md:top-4 md:left-4 md:right-4 text-center flex justify-center items-center">
+                      <LuxuryCard 
+                        className="py-1 px-2 sm:py-1.5 sm:px-3 md:py-2 md:px-4 !rounded-md bg-black/50 backdrop-blur-sm border-gold/30 max-w-[90%]"
+                        variant="nested"
+                        floatingParticles={false} 
+                        sparkleOverlay={false}
+                        cornerAccents="none"
+                      >
+                        <h3 className="font-display gold-text text-xs sm:text-sm md:text-base lg:text-lg leading-tight shadow-md truncate">
+                          {img.title}
+                        </h3>
+                      </LuxuryCard>
+                    </div>
+                  )}
                 </div>
               </motion.div>
-              </React.Fragment>
             )
           }) : null}
         </motion.div>
       </div>
 
       {/* Geometric Accent - Rotating Hexagon */}
-      <motion.div
-        initial={{ opacity: 0, rotate: 0 }}
-        animate={{ opacity: 0.15, rotate: 360 }}
-        transition={{ duration: 100, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[800px] md:h-[800px] pointer-events-none"
-      >
+      <motion.div {...geometricAccentMotionProps}>
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
           <polygon
             points="50,3 97,25 97,75 50,97 3,75 3,25"

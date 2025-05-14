@@ -731,3 +731,62 @@ footer {
 .animate-fade-in-up {
   animation: fade-in-up 0.5s ease-out forwards;
 }
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Added for animated rainbow border */
+  @property --rainbow-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  @keyframes rainbow-border-rotate {
+    to {
+      --rainbow-angle: 360deg;
+    }
+  }
+
+  .rainbow-border-wrapper {
+    --rainbow-colors: #ffc0cb, #ffdab9, #ffffcc, #c1e1c1, #b0e0e6, #e6e6fa, #f5cff5; /* Pastel ROYGBIV */
+    display: inline-block; /* So it wraps the button size */
+    padding: 2px; /* This creates the border thickness */
+    border-radius: 9999px; /* Tailwind's rounded-full value */
+    background: conic-gradient(
+      from var(--rainbow-angle) at 50% 50%,
+      var(--rainbow-colors),
+      #ffc0cb /* Repeat first pastel color for smooth loop */
+    );
+    animation: rainbow-border-rotate 4s linear infinite;
+    /* The button placed inside this wrapper will need its own background 
+       to cover the center of this gradient, and its own border-radius. */
+  }
+
+  .rainbow-border-image-hover {
+    --rainbow-angle: 0deg;
+    --rainbow-colors-hover: #ffc0cb, #ffdab9, #ffffcc, #c1e1c1, #b0e0e6, #e6e6fa, #f5cff5;
+    /* pastel --rainbow-colors-hover: #ffadad, #ffd6a5, #fdffb6, #caffbf, #9bf6ff, #a0c4ff, #bdb2ff, #ffc6ff; vibrant */
+    padding: 2px; /* Border thickness */
+    border-radius: 0.75rem; /* Corresponds to rounded-xl */
+    background-image: conic-gradient(
+      from var(--rainbow-angle) at 50% 50%,
+      var(--rainbow-colors-hover),
+      #ffc0cb /* Repeat first color for smooth loop */
+    ); /* Moved from hover to base */
+    animation: rainbow-border-rotate 4s linear infinite; /* Moved from hover to base */
+    box-shadow: 0 0 0px rgba(0,0,0,0); /* Default shadow: none */
+    transition: box-shadow 0.4s ease-out; /* Only transition shadow now */
+  }
+
+  .group:hover .rainbow-border-image-hover,
+  .rainbow-border-image-hover:hover { /* Apply effect on hover of group or self */
+    /* Background-image and animation are now in the base class */
+    box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.3), 0 8px 10px -6px rgba(212, 175, 55, 0.2);
+     /* Example gold-ish shadow, adjust as needed */
+  }
+
+  /* ... other utilities ... */
+}

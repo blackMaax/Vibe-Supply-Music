@@ -58,6 +58,85 @@ export async function getSiteSettings(): Promise<SiteSettingsData | null> {
   }
 }
 
+// Interfaces for PackageCtaSection
+export interface PackageFeature { // This might be redundant if features are just strings
+  _key: string; 
+  text: string;
+}
+
+export interface PackageItem {
+  _key: string;
+  name: string;
+  tagline?: string;
+  features?: string[]; 
+  image?: {
+    asset?: { _ref?: string; _id?: string; url?: string };
+    alt?: string;
+  };
+  isPopular?: boolean;
+}
+
+export interface PackageCtaSectionData {
+  title?: string;
+  subtitle?: string;
+  buttonText?: string;
+  buttonLink?: string;
+  packages?: PackageItem[];
+}
+
+// Added common type for Sanity image references
+export interface SanityImageReference {
+  asset?: {
+    _ref?: string;
+    _id?: string;
+    url?: string; // Typically added after resolving the reference
+  };
+  alt?: string;
+}
+
+// Added type for individual Band Member
+export interface BandMemberData {
+  _key: string; // Sanity adds a _key for array items
+  name?: string;
+  role?: string;
+  bio?: string;
+  image?: SanityImageReference;
+}
+
+// Added type for the Meet The Team section data
+export interface MeetTheTeamSectionData {
+  title?: string;
+  subtitle?: string;
+  mainImage?: SanityImageReference;
+  bandMembers?: BandMemberData[];
+}
+
+export interface HomepageHeroImage {
+  asset: {
+    _id: string;
+    url: string;
+  };
+  alt?: string;
+  title?: string;
+}
+
+export interface HomepageData {
+  mainHero?: {
+    images?: HomepageHeroImage[];
+  };
+  aboutVibeSupply?: {
+    title?: string;
+    content?: any[];
+    image?: { asset?: { _id: string; url: string }, imageTitle?: string, imageSubtitle?: string };
+    footer?: string;
+    logo?: { asset?: { _id: string; url: string } };
+    featuresIntro?: string;
+    features?: { text: string }[];
+  };
+  packageCtaSection?: PackageCtaSectionData;
+  meetTheTeamSection?: MeetTheTeamSectionData; // Added meetTheTeamSection here
+}
+
 // GROQ query to fetch the homepage singleton document
 const homepageQuery = `*[_type == "homepage"][0]{
   mainHero {
@@ -66,7 +145,8 @@ const homepageQuery = `*[_type == "homepage"][0]{
         _id,
         url
       },
-      alt
+      alt,
+      title
     }
   },
   aboutVibeSupply {
@@ -91,31 +171,43 @@ const homepageQuery = `*[_type == "homepage"][0]{
     features[] {
       text
     }
+  },
+  packageCtaSection {
+    title,
+    subtitle,
+    buttonText,
+    buttonLink,
+    packages[]{
+      _key,
+      name,
+      tagline,
+      features[],
+      image {
+        asset->{_id, url},
+        alt
+      },
+      isPopular
+    }
+  },
+  meetTheTeamSection {  // Added meetTheTeamSection to the query
+    title,
+    subtitle,
+    mainImage {
+      asset->{_id, url},
+      alt
+    },
+    bandMembers[]{
+      _key,
+      name,
+      role,
+      bio,
+      image {
+        asset->{_id, url},
+        alt
+      }
+    }
   }
 }`;
-
-export interface HomepageHeroImage {
-  asset: {
-    _id: string;
-    url: string;
-  };
-  alt?: string;
-}
-
-export interface HomepageData {
-  mainHero?: {
-    images?: HomepageHeroImage[];
-  };
-  aboutVibeSupply?: {
-    title?: string;
-    content?: any[];
-    image?: { asset?: { _id: string; url: string }, imageTitle?: string, imageSubtitle?: string };
-    footer?: string;
-    logo?: { asset?: { _id: string; url: string } };
-    featuresIntro?: string;
-    features?: { text: string }[];
-  };
-}
 
 export async function getHomepageData(): Promise<HomepageData | null> {
   try {

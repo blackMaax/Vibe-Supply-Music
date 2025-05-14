@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { Instagram, Facebook, Twitter, Mail, Phone, Link as LinkIcon, Youtube } from "lucide-react"
+import { Instagram, Facebook, Twitter, Mail, Phone, Link as LinkIcon, Youtube, Linkedin, MessageCircle, Pin, Film } from "lucide-react"
 import { getImageUrl } from "@/lib/static-data"
 
 // Define the props for the Footer component
@@ -16,15 +16,28 @@ interface FooterProps {
 
 // Helper to get appropriate icon based on platform
 const getSocialIcon = (platform?: string) => {
-  switch (platform?.toLowerCase()) {
+  if (!platform) return <LinkIcon size={18} />;
+  // Aggressively clean the platform string: remove anything not a letter or number
+  const cleanedPlatform = platform.replace(/[^a-zA-Z0-9]/g, '');
+  
+  switch (cleanedPlatform.toLowerCase()) {
     case "instagram":
       return <Instagram size={18} />;
     case "facebook":
       return <Facebook size={18} />;
     case "twitter":
+    case "x":
       return <Twitter size={18} />;
     case "youtube":
       return <Youtube size={18} />;
+    case "linkedin":
+      return <Linkedin size={18} />;
+    case "whatsapp":
+      return <MessageCircle size={18} />;
+    case "pinterest":
+      return <Pin size={18} />;
+    case "tiktok":
+      return <Film size={18} />;
     // Add more cases for other platforms if needed
     default:
       return <LinkIcon size={18} />; // Default link icon

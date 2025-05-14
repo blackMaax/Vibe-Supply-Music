@@ -52,6 +52,8 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         // Custom colors
+        premiumGold: '#ffdb00',
+        premiumNavy: '#253779',
         gold: {
           DEFAULT: "#D4AF37",
           light: "#F8E9A1",

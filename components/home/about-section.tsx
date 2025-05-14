@@ -28,22 +28,34 @@ const AboutSection = ({
   imageTitle,
   imageSubtitle,
 }: AboutSectionProps) => {
+
+  const textCardMotionProps = {
+    initial: { opacity: 0, x: -20 },
+    whileInView: { opacity: 1, x: 0 },
+    transition: { duration: 0.7 },
+    viewport: { once: true },
+  };
+
+  const imageCardMotionProps = {
+    initial: { opacity: 0, x: 20 },
+    whileInView: { opacity: 1, x: 0 },
+    transition: { duration: 0.7, delay: 0.2 },
+    viewport: { once: true },
+  };
+
   return (
-    <section className={`py-24 relative ${className}`}>
+    <section className={`pt-24 pb-12 relative ${className}`}>
       <div className="container mx-auto px-4">
         {/* Image and content */}
-        <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto items-stretch">
-          {/* Content - now wider (2 columns) */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-            className="w-full lg:w-2/5 flex flex-col h-full"
+        <div className="grid gap-8 max-w-6xl mx-auto lg:grid-cols-5 items-start lg:items-stretch">
+          {/* Content - spans 2 columns on lg */}
+          <motion.div 
+            {...(textCardMotionProps as any)} 
+            className="w-full lg:col-span-2 flex flex-col h-full"
           >
             <LuxuryCard className="h-full flex flex-col">
               <div className="relative z-10 flex flex-col justify-between p-6 h-full">
-                <div>
+                <div className="flex-grow">
                   <div className="flex justify-center mb-10">
                     {logoUrl && (
                       <span className="inline-block align-middle">
@@ -82,13 +94,10 @@ const AboutSection = ({
             </LuxuryCard>
           </motion.div>
 
-          {/* Image - now 3 columns */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="w-full lg:w-3/5 flex flex-col h-full"
+          {/* Image - spans 3 columns on lg */}
+          <motion.div 
+            {...(imageCardMotionProps as any)} 
+            className="w-full lg:col-span-3 flex flex-col h-full"
           >
             <LuxuryCard className="h-full flex flex-col">
               <div className="relative w-full h-full min-h-[500px] lg:min-h-[600px] flex flex-col">

@@ -55,7 +55,7 @@ export default function LuxuryCard({
   variant = "default",
   cornerAccents = "all",
   sparkleOverlay = true,
-  floatingParticles = true,
+  floatingParticles = false,
   performanceMode = false,
   title,
   subtitle,
@@ -190,41 +190,38 @@ export default function LuxuryCard({
 
       case "band-member":
         return (
-          <div className="flex flex-col items-center text-center relative z-10">
-            {/* Circular image with enhanced border */}
+          <div className="flex flex-col items-center text-center relative z-10 pt-16">
+            {/* Circular image positioned to overlap */}
             {imageSrc && (
-              <div className="w-40 h-40 rounded-full overflow-hidden mb-6 relative">
-                <div className="absolute inset-0 rounded-full gold-border-enhanced"></div>
-                <div className="absolute inset-2 overflow-hidden rounded-full">
+              <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 w-32 h-32 rounded-full overflow-hidden mb-4 border-4 border-neutral-800 shadow-lg">
+                {/* Simple gold ring instead of complex border for this style */}
+                {/* <div className="absolute inset-0 rounded-full gold-border-enhanced"></div> */}
                   <Image
                     src={imageSrc || "/placeholder.svg"}
                     alt={name || "Band Member"}
                     fill
                     className="object-cover"
                   />
-                </div>
               </div>
             )}
 
             {/* Name with enhanced styling */}
             {name && (
-              <div className="mb-1">
-                <h3 className="text-xl font-bold gold-text" style={{ lineHeight: "1.8", marginBottom: "8px" }}>
+              <div className="mb-1 mt-2">
+                <h3 className="text-2xl font-bold gold-text font-display">
                   {name}
                 </h3>
               </div>
             )}
 
-            {/* Decorative divider with animation */}
-            <div className="w-12 h-0.5 bg-gradient-to-r from-transparent via-gold/50 to-transparent mb-2 mx-auto relative">
-              <div className="absolute inset-0 blur-sm bg-gold/30"></div>
-            </div>
+            {/* Role with distinct styling */}
+            {role && <p className="text-pink text-sm font-medium mb-3 tracking-wider uppercase">{role}</p>}
 
-            {/* Role with gradient text */}
-            {role && <p className="gold-text text-sm mb-4">{role}</p>}
+            {/* Decorative divider */}
+            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-gold/50 to-transparent mb-4 mx-auto"></div>
 
             {/* Bio with improved readability */}
-            {bio && <p className="text-gray-300 text-sm leading-relaxed mb-2">{bio}</p>}
+            {bio && <p className="text-gray-300 text-sm leading-relaxed px-2">{bio}</p>}
           </div>
         )
 
@@ -399,7 +396,7 @@ export default function LuxuryCard({
   const getAdditionalClasses = () => {
     let classes = "group"
 
-    if (variant === "core-value" || variant === "band-member") {
+    if (variant === "core-value") {
       classes += " float-animation-subtle"
     }
 
@@ -414,27 +411,243 @@ export default function LuxuryCard({
     return classes
   }
 
-  // Render the card
-  return (
-    <>
-      <motion.div
-        {...getAnimationSettings()}
-        onClick={onClick}
-        className={`relative rounded-2xl ${
+  const animationSettings = getAnimationSettings();
+
+  // Consolidate props for the motion component
+  const motionComponentProps: any = {
+    ...animationSettings,
+    className: `relative rounded-2xl ${
           variant === "gallery-item"
             ? "overflow-hidden"
             : variant === "hero"
               ? "overflow-hidden flex justify-center items-center"
               : "overflow-visible"
-        } transition-all duration-500 ${getPadding()} ${getAdditionalClasses()} ${className}`}
-        style={{
+    } transition-all duration-500 ${getPadding()} ${getAdditionalClasses()} ${className}`,
+    style: {
           ...getBackgroundStyle(),
           animationDelay: variant === "core-value" || variant === "band-member" ? `${index * 0.2}s` : undefined,
           height: variant === "gallery-item" ? "100%" : "auto",
           maxHeight: variant === "hero" ? "calc(100vh - 250px)" : "none",
           minHeight: "fit-content",
-        }}
-      >
+    },
+  };
+
+  if (onClick) {
+    motionComponentProps.onClick = onClick;
+  }
+
+  // Render the card
+  // If it's a clickable card with an actionLink, wrap with Link and use motion.a
+  if (isClickable && actionLink) {
+    // Note: motion.a might also need specific typing if issues arise, but Framer Motion typically handles this.
+    return (
+      <Link href={actionLink} passHref legacyBehavior>
+        <motion.a {...motionComponentProps}>
+          {/* Enhanced hover glow effect */}
+          {!isNested && (
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 pointer-events-none"
+              style={{
+                boxShadow: "0 0 20px rgba(212, 175, 55, 0.4), inset 0 0 20px rgba(212, 175, 55, 0.2)",
+                borderRadius: "1rem",
+                zIndex: 1,
+              }}
+            ></div>
+          )}
+
+          {/* Gradient overlay for depth */}
+          {gradientOverlay && !isNested && (
+            <div
+              className="absolute inset-0 opacity-30 z-0 pointer-events-none"
+              style={{
+                background:
+                  "radial-gradient(circle at top right, rgba(212, 175, 55, 0.15), transparent 70%), radial-gradient(circle at bottom left, rgba(255, 62, 150, 0.1), transparent 70%)",
+              }}
+            ></div>
+          )}
+
+          {/* Gold sparkle overlay with improved pattern */}
+          {sparkleOverlay && !isNested && (
+            <div
+              className="absolute inset-0 opacity-15 pointer-events-none z-0"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fillOpacity='0.4'%3E%3Ccircle cx='10' cy='10' r='1'/%3E%3Ccircle cx='30' cy='50' r='0.8'/%3E%3Ccircle cx='50' cy='30' r='1.2'/%3E%3Ccircle cx='70' cy='70' r='0.6'/%3E%3Ccircle cx='90' cy='20' r='1'/%3E%3Ccircle cx='20' cy='90' r='0.8'/%3E%3Ccircle cx='60' cy='10' r='0.5'/%3E%3Ccircle cx='80' cy='40' r='1.2'/%3E%3Ccircle cx='40' cy='80' r='0.9'/%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundSize: "100px 100px",
+              }}
+            ></div>
+          )}
+
+          {/* Animated shimmer points - reduced for performance */}
+          {sparkleOverlay && mounted && !isNested && !performanceMode && (
+            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+              {[...Array(performanceMode ? 3 : 12)].map((_, i) => (
+                <div
+                  key={i}
+                  className="shimmer-point"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 10}s`,
+                    animationDuration: `${15 + Math.random() * 20}s`,
+                    willChange: "transform, opacity",
+                  }}
+                ></div>
+              ))}
+            </div>
+          )}
+
+          {/* Enhanced corner accents with animation - TOP LEFT - INSET */}
+          {!isNested && (cornerAccents === "all" || cornerAccents === "top" || cornerAccents === "left") && (
+            <div className="absolute top-4 left-4 w-16 h-16 pointer-events-none">
+              <svg width="100%" height="100%" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M1,1 L1,20 M1,1 L20,1"
+                  stroke="url(#goldGradient)"
+                  strokeWidth="2"
+                  fill="none"
+                  strokeOpacity="0.8"
+                >
+                  <animate attributeName="strokeOpacity" values="0.6;0.9;0.6" dur="3s" repeatCount="indefinite" />
+                </path>
+                <defs>
+                  <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.6" />
+                    <stop offset="50%" stopColor="#F8E9A1" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#D4AF37" stopOpacity="0.6" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+          )}
+
+          {/* Enhanced corner accents with animation - TOP RIGHT - INSET */}
+          {!isNested && (cornerAccents === "all" || cornerAccents === "top" || cornerAccents === "right") && (
+            <div className="absolute top-4 right-4 w-16 h-16 pointer-events-none">
+              <svg width="100%" height="100%" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M63,1 L63,20 M63,1 L44,1"
+                  stroke="url(#goldGradient)"
+                  strokeWidth="2"
+                  fill="none"
+                  strokeOpacity="0.8"
+                >
+                  <animate attributeName="strokeOpacity" values="0.6;0.9;0.6" dur="3s" repeatCount="indefinite" />
+                </path>
+              </svg>
+            </div>
+          )}
+
+          {/* Enhanced corner accents with animation - BOTTOM LEFT - INSET */}
+          {!isNested && (cornerAccents === "all" || cornerAccents === "bottom" || cornerAccents === "left") && (
+            <div className="absolute bottom-4 left-4 w-16 h-16 pointer-events-none">
+              <svg width="100%" height="100%" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M1,63 L1,44 M1,63 L20,63"
+                  stroke="url(#goldGradient)"
+                  strokeWidth="2"
+                  fill="none"
+                  strokeOpacity="0.8"
+                >
+                  <animate attributeName="strokeOpacity" values="0.6;0.9;0.6" dur="3s" repeatCount="indefinite" />
+                </path>
+              </svg>
+            </div>
+          )}
+
+          {/* Enhanced corner accents with animation - BOTTOM RIGHT - INSET */}
+          {!isNested && (cornerAccents === "all" || cornerAccents === "bottom" || cornerAccents === "right") && (
+            <div className="absolute bottom-4 right-4 w-16 h-16 pointer-events-none">
+              <svg width="100%" height="100%" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M63,63 L63,44 M63,63 L44,63"
+                  stroke="url(#goldGradient)"
+                  strokeWidth="2"
+                  fill="none"
+                  strokeOpacity="0.8"
+                >
+                  <animate attributeName="strokeOpacity" values="0.6;0.9;0.6" dur="3s" repeatCount="indefinite" />
+                </path>
+              </svg>
+            </div>
+          )}
+
+          {/* Subtle diagonal gold accent lines */}
+          {!isNested && (
+            <>
+              <div
+                className="absolute top-[15%] right-[10%] w-[80px] h-[1px] rotate-30 opacity-20 z-0"
+                style={{
+                  background: "linear-gradient(90deg, transparent, #D4AF37, transparent)",
+                  boxShadow: "0 0 3px #D4AF37",
+                }}
+              ></div>
+
+              <div
+                className="absolute bottom-[20%] left-[15%] w-[100px] h-[1px] -rotate-30 opacity-20 z-0"
+                style={{
+                  background: "linear-gradient(90deg, transparent, #D4AF37, transparent)",
+                  boxShadow: "0 0 3px #D4AF37",
+                }}
+              ></div>
+            </>
+          )}
+
+          {/* Decorative hexagon pattern */}
+          {mounted && !isNested && (
+            <div className="absolute inset-0 opacity-5 pointer-events-none z-0">
+              <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern
+                    id="hexPattern"
+                    width="50"
+                    height="43.4"
+                    patternUnits="userSpaceOnUse"
+                    patternTransform="scale(3)"
+                  >
+                    <polygon
+                      points="25,0 50,14.4 50,43.4 25,57.8 0,43.4 0,14.4"
+                      fill="none"
+                      stroke="#D4AF37"
+                      strokeWidth="0.5"
+                      strokeOpacity="0.3"
+                    />
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#hexPattern)" />
+              </svg>
+            </div>
+          )}
+
+          {/* Animated floating particles - reduced for performance */}
+          {floatingParticles && mounted && !isNested && !performanceMode && (
+            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={`particle-${i}`}
+                  className="absolute w-1 h-1 rounded-full bg-gold/30"
+                  style={{
+                    left: `${20 + Math.random() * 60}%`,
+                    top: `${20 + Math.random() * 60}%`,
+                    filter: "blur(1px)",
+                    animation: `float-${(i % 3) + 1} ${10 + Math.random() * 15}s linear infinite`,
+                    opacity: 0.4 + Math.random() * 0.3,
+                    willChange: "transform",
+                  }}
+                ></div>
+              ))}
+            </div>
+          )}
+
+          <div className="relative z-20 overflow-visible break-words w-full h-full">{renderCardContent()}</div>
+        </motion.a>
+      </Link>
+    );
+  }
+
+  // Default case: render motion.div
+  return (
+    <>
+      <motion.div {...motionComponentProps}>
         {/* Enhanced hover glow effect */}
         {!isNested && (
           <div
@@ -630,7 +843,6 @@ export default function LuxuryCard({
           </div>
         )}
 
-        {/* Content with improved z-index */}
         <div className="relative z-20 overflow-visible break-words w-full h-full">{renderCardContent()}</div>
 
         {/* Add CSS animations */}
