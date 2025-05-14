@@ -20,7 +20,9 @@ node_modules
 .pnpm-store
 
 # Environment files
-.env*
+.env
+.env.local
+.env.development
 !.env.production
 
 # Cache

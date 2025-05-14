@@ -10,7 +10,7 @@ interface AboutSectionProps {
   imageAlt?: string
   className?: string
   footer?: string
-  logoUrl?: string
+  logoUrl?: string | null
   features?: { text: string }[]
   featuresIntro?: string
   imageTitle?: string

@@ -9,7 +9,7 @@ import PageBackground from "@/components/layout/page-background"
 import DebugInfo from "@/components/layout/debug-info"
 import CookieBanner from "@/components/layout/cookie-banner"
 import type { SiteSettingsData } from "@/sanity/lib/queries"
-import { urlFor } from "@/sanity/lib/image"
+import { urlForImage as urlFor } from "@/lib/sanity-image"
 
 interface MainLayoutClientProps {
   children: React.ReactNode;

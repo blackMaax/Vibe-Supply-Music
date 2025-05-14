@@ -1,18 +1,29 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, type HTMLMotionProps } from "framer-motion"
 import Image from "next/image"
-import { getImageUrl } from "@/lib/static-data"
+// import { getImageUrl } from "@/lib/static-data" // Commented out as logoToDisplay now uses a direct fallback
 import Navbar from "@/components/layout/navbar"
+import { urlForImage } from "@/lib/sanity-image"
+import React from "react"
 
 interface HeroBannerProps {
   heroLogoUrl?: string | null;
-  heroImages: { asset: { _id: string; url: string }; alt?: string }[];
+  heroImages: { asset: { _id: string; _ref: string }; alt?: string }[];
 }
 
+// Define a type for motion div props to include className explicitly if needed
+// type MotionDivProps = HTMLMotionProps<"div"> & { className?: string };
+
 export default function HeroBanner({ heroLogoUrl, heroImages }: HeroBannerProps) {
-  // Determine the logo source: dynamic prop or fallback
-  const logoToDisplay = heroLogoUrl || getImageUrl("logo") || "/placeholder.svg";
+  const logoToDisplay = heroLogoUrl || "/placeholder.svg";
+
+  const motionDivProps: HTMLMotionProps<"div"> = {
+    initial: { opacity: 0, scale: 0.9 },
+    animate: { opacity: 1, scale: 1 },
+    transition: { duration: 1 },
+    className: "w-full flex justify-center items-center"
+  };
 
   return (
     <section className="relative overflow-hidden text-white min-h-screen flex flex-col">
@@ -21,13 +32,7 @@ export default function HeroBanner({ heroLogoUrl, heroImages }: HeroBannerProps)
 
       {/* Hero Content Container - Using fixed lg padding for testing */}
       <div className="container mx-auto px-4 relative z-10 flex-grow flex flex-col items-center justify-start text-center space-y-3 md:space-y-4 lg:space-y-3 pt-[4vh] md:pt-[5vh] lg:pt-20 xl:pt-[3vh]">
-        {/* Logo - Removed specific top margin */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1 }}
-          className="w-full flex justify-center items-center"
-        >
+        <motion.div {...motionDivProps}>
           <Image
             src={logoToDisplay}
             alt="Vibe Supply Logo"
@@ -57,9 +62,13 @@ export default function HeroBanner({ heroLogoUrl, heroImages }: HeroBannerProps)
         >
           {heroImages && heroImages.length > 0 ? heroImages.map((img, index) => {
             const isOuterCard = index === 0 || index === heroImages.length - 1;
+            const imageUrl = urlForImage(img);
+
+            if (!imageUrl) return null;
+
             return (
+              <React.Fragment key={img.asset._id}>
               <motion.div
-                key={img.asset._id}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.8 + index * 0.2 }}
@@ -67,7 +76,7 @@ export default function HeroBanner({ heroLogoUrl, heroImages }: HeroBannerProps)
               >
                 <div className="relative w-full h-full rounded-lg sm:rounded-xl overflow-hidden">
                   <Image
-                    src={img.asset.url}
+                      src={imageUrl}
                     alt={img.alt || `Hero Image ${index + 1}`}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -76,6 +85,7 @@ export default function HeroBanner({ heroLogoUrl, heroImages }: HeroBannerProps)
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
               </motion.div>
+              </React.Fragment>
             )
           }) : null}
         </motion.div>

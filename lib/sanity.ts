@@ -1,8 +1,8 @@
 import { createClient } from 'next-sanity'
-import { client as sanityClient } from '@/sanity/lib/client'
+import { client } from './client'
 
 // Export the actual Sanity client instead of the mock
-export const client = sanityClient
+export { client }
 
 // Define types for your Sanity data
 export interface HomepageData {

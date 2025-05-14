@@ -1,6 +1,6 @@
 // This is now a Server Component, it can be async and fetch data
 import HomePageClient from "@/components/home/home-page-client" // Import the new client component
-import { getSiteSettings, type SiteSettingsData, getHomepageData } from "@/sanity/lib/queries"
+import { getSiteSettings, type SiteSettingsData, getHomepageData } from "@/lib/queries"
 
 // Add revalidation every 60 seconds
 export const revalidate = 60

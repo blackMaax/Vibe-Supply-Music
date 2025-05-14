@@ -21,7 +21,7 @@ const nextConfig = {
       '@radix-ui/react-dropdown-menu',
       '@radix-ui/react-navigation-menu',
       '@radix-ui/react-toast',
-      'framer-motion',
+    'framer-motion',
     ]
   }
 }

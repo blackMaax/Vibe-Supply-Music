@@ -2,7 +2,7 @@
 
 import HeroBanner from "@/components/home/hero-banner"
 import CTASection from "@/components/home/cta-section"
-import { motion } from "framer-motion"
+import { motion, type HTMLMotionProps } from "framer-motion"
 import { getImageUrl } from "@/lib/static-data"
 import Image from "next/image"
 import LuxuryCard from "@/components/ui/luxury-card"
@@ -11,18 +11,18 @@ import GalleryPreviewSection from "@/components/home/gallery-preview-section"
 import AboutSection from "@/components/home/about-section"
 import CTASectionMobile from "@/components/home/cta-section-mobile"
 import { useIsMobile } from "@/hooks/use-mobile"
-import type { SiteSettingsData } from "@/sanity/lib/queries"
-import { urlFor } from "@/sanity/lib/image"
+import type { SiteSettingsData } from "../../sanity/lib/queries"
+import { urlForImage as urlFor } from "@/lib/sanity-image"
 
 interface HomePageClientProps {
   siteSettings: SiteSettingsData | null;
-  heroImages: { asset: { _id: string; url: string } }[];
+  heroImages: { asset: { _id: string; _ref: string } }[];
   aboutVibeSupply?: {
     title?: string;
     content?: any[];
-    image?: { asset?: { _id: string; url: string }; imageTitle?: string; imageSubtitle?: string };
+    image?: { asset?: { _id: string; _ref: string }; imageTitle?: string; imageSubtitle?: string };
     footer?: string;
-    logo?: { asset?: { _id: string; url: string } };
+    logo?: { asset?: { _id: string; _ref: string } };
     featuresIntro?: string;
     features?: { text: string }[];
   };
@@ -63,16 +63,23 @@ export default function HomePageClient({ siteSettings, heroImages, aboutVibeSupp
   const ctaSubtitle = siteSettings?.defaultSeoDescription || "Whether it's an intimate wedding or a large corporate function, Vibe Supply brings the energy and creates unforgettable moments through music.";
   const ctaButtonText = "View Our Packages"; // This was not in siteSettings schema, using fallback
   // Use defaultSeoImage for CTA image, or a fallback
-  const ctaImageSrc = siteSettings?.defaultSeoImage ? urlFor(siteSettings.defaultSeoImage) : getImageUrl("performance3");
+  const ctaImageSrc = siteSettings?.defaultSeoImage ? urlFor(siteSettings.defaultSeoImage) : "/placeholder.svg";
+
+  // Generate URLs for AboutSection images using urlFor
+  // Ensure aboutImageSrc has a definite string value for AboutSection's prop type
+  const aboutImageSanityUrl = aboutVibeSupply?.image ? urlFor(aboutVibeSupply.image) : null;
+  const aboutImageSrc = aboutImageSanityUrl || "/placeholder.svg"; // Ensure fallback to a string
+  
+  const aboutLogoUrl = aboutVibeSupply?.logo ? urlFor(aboutVibeSupply.logo) : null;
 
   return (
     <>
       <HeroBanner heroLogoUrl={heroLogoUrl} heroImages={heroImages} />
 
       <AboutSection
-        imageSrc={aboutVibeSupply?.image?.asset?.url || getImageUrl("performance3")}
+        imageSrc={aboutImageSrc}
         footer={aboutVibeSupply?.footer}
-        logoUrl={aboutVibeSupply?.logo?.asset?.url}
+        logoUrl={aboutLogoUrl}
         features={aboutVibeSupply?.features?.map(f => typeof f === 'string' ? { text: f } : f)}
         featuresIntro={aboutVibeSupply?.featuresIntro}
         imageTitle={aboutVibeSupply?.image?.imageTitle}
@@ -106,11 +113,11 @@ export default function HomePageClient({ siteSettings, heroImages, aboutVibeSupp
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <motion.div
+              style={{ position: 'relative', height: '100%', minHeight: '600px' }}
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7 }}
               viewport={{ once: true }}
-              className="relative h-full min-h-[600px] lg:min-h-0"
             >
               <div className="rounded-xl overflow-hidden h-full shadow-lg border border-gold/30 relative">
                 <div className="absolute inset-0">
