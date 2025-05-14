@@ -5,8 +5,8 @@ import "./globals.css"
 import { Montserrat, Playfair_Display } from "next/font/google"
 // ThemeProvider and other layout components moved to MainLayoutClient
 import MainLayoutClient from "@/components/layout/main-layout-client" // Import the new client component
-import { getSiteSettings, type SiteSettingsData } from "@/sanity/lib/queries" // Corrected import path for SiteSettingsData and getSiteSettings
-import { urlFor } from "@/sanity/lib/image"; // Correct import for Sanity image URL builder
+import { getSiteSettings, type SiteSettingsData } from "../sanity/lib/queries" // Corrected import path for SiteSettingsData and getSiteSettings
+import { urlFor } from "../sanity/lib/image"; // Correct import for Sanity image URL builder
 import type { Metadata } from 'next' // Import Metadata type
 // usePathname import REMOVED
 
