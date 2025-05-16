@@ -1,58 +1,83 @@
 "use client"
 
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
+import { motion } from "framer-motion"
+import { cn } from "@/lib/utils"
 import { usePathname } from "next/navigation"
-import FiligreeDivider from "@/components/decorations/FiligreeDivider"
 
 export default function Navbar() {
+  const [activeItem, setActiveItem] = useState("Home")
+  const navItems = ["Home", "About", "Packages", "Contact"]
   const pathname = usePathname()
 
+  useEffect(() => {
+    const currentPath = pathname.split("/")[1] || "home"
+    const localNavItems = ["Home", "About", "Packages", "Contact"]
+    const activeNav = localNavItems.find(item => item.toLowerCase() === currentPath.toLowerCase())
+    if (activeNav) {
+      setActiveItem(activeNav)
+    } else if (pathname === "/") {
+      setActiveItem("Home")
+    }
+    // If no match and not home, decide on a default or leave as is
+    // For now, if path is e.g. /terms, no nav item will be active, which is acceptable.
+  }, [pathname])
+
   return (
-    <div className="w-full flex flex-col items-center py-2 md:py-3">
-      <div className="flex flex-col items-center w-auto">
-        <FiligreeDivider className="w-full max-w-[250px] md:max-w-[300px] lg:max-w-[350px] h-auto text-black my-0 transform scale-y-[-1]" />
-        <nav
-          className="inline-flex items-center justify-center space-x-3 sm:space-x-4 md:space-x-6 py-1"
-        >
-          <NavLink href="/" label="Home" currentPath={pathname} />
-          <NavLink href="/about" label="About" currentPath={pathname} />
-          <NavLink href="/packages" label="Packages" currentPath={pathname} />
-          <NavLink href="/contact" label="Contact" currentPath={pathname} />
+    <header className="w-full py-6">
+      <div className="container mx-auto">
+        <nav className="flex flex-col items-center justify-center">
+          <div className="relative flex items-center justify-center gap-2 sm:gap-4 md:gap-8 py-4">
+            {navItems.map((item, index) => (
+              <React.Fragment key={`nav-fragment-${item}`}>
+                <NavItem
+                  item={item}
+                  isActive={activeItem === item}
+                />
+                {index < navItems.length - 1 && <div className="w-2 h-2 rotate-45 bg-black opacity-70" />}
+              </React.Fragment>
+            ))}
+
+            {/* Decorative line that spans across the navbar */}
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-black" />
+            <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-black" />
+          </div>
         </nav>
-        <FiligreeDivider className="w-full max-w-[250px] md:max-w-[300px] lg:max-w-[350px] h-auto text-black my-0" />
       </div>
-    </div>
+    </header>
   )
 }
 
-interface NavLinkProps {
-  href: string
-  label: string
-  currentPath: string
+interface NavItemProps {
+  item: string
+  isActive: boolean
 }
 
-function NavLink({ href, label, currentPath }: NavLinkProps) {
-  const isActive = currentPath === href || (href !== "/" && currentPath.startsWith(href))
-
+function NavItem({ item, isActive }: NavItemProps) {
   return (
-    <Link
-      href={href}
-      className={`font-display relative group transition-colors duration-300 \
-                 px-2 py-2 text-sm \
-                 md:px-3 md:text-base \
-                 ${isActive ? "text-black" : "text-black hover:text-neutral-700"}`}
-    >
-      {label}
-      <span className="absolute left-0 bottom-[-4px] block w-full">
+    <div className="relative">
+      <Link
+        href={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
+        className={cn(
+          "relative z-10 px-2 sm:px-3 md:px-4 py-2 text-base font-medium transition-colors",
+          isActive ? "text-black" : "text-black hover:text-black",
+        )}
+      >
+        {item}
+
+        {/* Geometric line accents that appear on hover and when active */}
         {isActive && (
-          <span className="block h-[2px] w-full bg-black"></span>
+          // @ts-ignore 
+          <motion.div
+            layoutId="activeNavIndicator"
+            className="absolute -bottom-1 left-0 right-0 h-[2px] bg-black"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
+          />
         )}
-        {!isActive && (
-          <span
-            className="block h-px w-0 bg-black transition-all duration-300 group-hover:w-full"
-          ></span>
-        )}
-      </span>
-    </Link>
+      </Link>
+    </div>
   )
 }

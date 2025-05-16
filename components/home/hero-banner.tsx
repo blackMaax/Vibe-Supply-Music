@@ -7,14 +7,11 @@ import Navbar from "@/components/layout/navbar"
 import { urlForImage } from "@/lib/sanity-image"
 import React, { type HTMLAttributes } from "react"
 import LuxuryCard from "@/components/ui/luxury-card"
+import type { HeroImageItem } from "../../lib/queries"
 
 interface HeroBannerProps {
   heroLogoUrl?: string | null;
-  heroImages: { 
-    asset: { _id: string; _ref: string }; 
-    alt?: string;
-    title?: string;
-  }[];
+  heroImages: HeroImageItem[];
 }
 
 // Define a type for motion div props to include className explicitly if needed
@@ -64,7 +61,7 @@ export default function HeroBanner({ heroLogoUrl, heroImages }: HeroBannerProps)
       <div className="absolute inset-0 z-0"></div>
 
       {/* Hero Content Container - Revised padding and spacing */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex-grow flex flex-col items-center justify-center text-center space-y-6 md:space-y-8 py-16 sm:py-20 md:py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex-grow flex flex-col items-center justify-center text-center space-y-6 md:space-y-8 pt-16 sm:pt-20 md:pt-24 pb-2 sm:pb-4 md:pb-6">
         <motion.div {...logoMotionProps}>
           <Image
             src={logoToDisplay}
@@ -94,7 +91,6 @@ export default function HeroBanner({ heroLogoUrl, heroImages }: HeroBannerProps)
 
             // Explicitly define key and other attributes separately
             const cardKey = img.asset?._id ? `${img.asset._id}-${index}` : `hero-image-${index}`;
-            console.log("!!! HERO BANNER MAP ITEM:", index, "KEY:", cardKey);
             const motionAttributes: MotionProps & HTMLAttributes<HTMLDivElement> = {
               ...individualCardBaseMotionProps,
               transition: { duration: 0.6, delay: 0.8 + index * 0.2 },
@@ -136,7 +132,7 @@ export default function HeroBanner({ heroLogoUrl, heroImages }: HeroBannerProps)
       </div>
 
       {/* Geometric Accent - Rotating Hexagon */}
-      <motion.div {...geometricAccentMotionProps}>
+      {/* <motion.div {...geometricAccentMotionProps}>
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
           <polygon
             points="50,3 97,25 97,75 50,97 3,75 3,25"
@@ -153,7 +149,7 @@ export default function HeroBanner({ heroLogoUrl, heroImages }: HeroBannerProps)
             strokeOpacity="0.4"
           />
         </svg>
-      </motion.div>
+      </motion.div> */}
     </section>
   )
 }

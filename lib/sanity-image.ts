@@ -3,9 +3,16 @@
 
 // Helper to construct Sanity CDN URLs
 export const urlForImage = (source: any): string | null => {
-  console.log("urlForImage received source:", JSON.stringify(source, null, 2)); // DEBUG LINE
+  // console.log("urlForImage received source:", JSON.stringify(source, null, 2)); // DEBUG LINE REMOVED
+  
+  // First, check if the asset is already expanded and has a direct URL
+  if (source?.asset?.url) {
+    return source.asset.url;
+  }
+
+  // If not, proceed with the original logic using _ref
   if (!source || !source.asset || !source.asset._ref) {
-    console.log("urlForImage returning null due to missing source/asset/_ref"); // DEBUG LINE
+    // console.log("urlForImage returning null due to missing source/asset/_ref and no direct source.asset.url"); // DEBUG LINE REMOVED
     return null; // Or a fallback placeholder URL
   }
 

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
-import { Check } from "lucide-react"
+import { Check, ChevronRight } from "lucide-react"
 import { getImageUrl } from "@/lib/image-loader"
 import LuxuryCard from "@/components/ui/luxury-card"
 import type { PackageItem } from "../../sanity/lib/queries"
@@ -166,35 +166,46 @@ const CTASection = ({
   buttonLink = "/packages",
   packages = [],
 }: CTASectionProps) => {
+  // const titleParts = title.split(" "); // Old title splitting, not needed with full gold-text
+  // const mainTitle = titleParts.slice(0, 2).join(" "); 
+  // const goldPart = titleParts.slice(2).join(" ");    
+
   return (
-    <section className="py-24 relative mt-12 mb-6 rounded-lg text-white">
+    <section className="pt-16 md:pt-20 pb-12 relative mt-0 mb-0 rounded-lg">
       <div className="container mx-auto px-4 relative z-10">
-        {/* Section header on card */}
-        <div className="text-center mb-8 relative">
-          <motion.div
-            {...({ /* Motion props */
-              initial: { opacity: 0, y: 20 },
-              whileInView: { opacity: 1, y: 0 },
-              transition: { duration: 0.5 },
-              viewport: { once: true },
-            } as any)} // Cast to any here
-            className="max-w-3xl mx-auto p-6 md:p-8 relative"
-          >
-            <LuxuryCard className="p-6 md:p-8" floatingParticles={false} sparkleOverlay={false}>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-4 md:mb-6 gold-text pb-2 leading-relaxed">
+        {/* New Title Card Structure */}
+        <div className="text-center mb-10 md:mb-12"> {/* Matches original CTASection bottom margin */}
+          <LuxuryCard className="max-w-3xl mx-auto py-4 px-6 md:py-5 md:px-8" variant="default" cornerAccents="none">
+            <div className="text-center">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-3 md:mb-4 gold-text pb-1 leading-relaxed">
                 {title}
               </h2>
-              <div className="w-20 md:w-24 h-0.5 bg-gradient-to-r from-transparent via-gold/50 to-transparent my-3 md:my-4 mx-auto"></div>
-              <p className="text-white/80 max-w-2xl mx-auto text-sm sm:text-base md:text-lg">{subtitle}</p>
-            </LuxuryCard>
-          </motion.div>
+              <div className="w-16 md:w-20 h-0.5 bg-gradient-to-r from-transparent via-gold/50 to-transparent my-2 md:my-3 mx-auto"></div>
+              <p className="text-white/80 max-w-xl mx-auto text-xs sm:text-sm md:text-base font-sans leading-relaxed"> {/* Added font-sans and leading-relaxed for consistency */}
+                {subtitle}
+              </p>
+            </div>
+          </LuxuryCard>
         </div>
+        {/* End New Title Card Structure */}
 
         {/* Package Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {packages.map((pkg) => (
             <PackageCard key={pkg._key} {...pkg} />
           ))}
+        </div>
+
+        {/* View More Details Link */}
+        <div className="text-center mt-12">
+          <Link
+            href="/packages"
+            className="inline-flex items-center py-2 px-6 bg-gold-light/30 hover:bg-gold-light/40 border border-gold/30 hover:border-gold/50 rounded-full text-black group text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg"
+          >
+            To view more details about the packages,
+            <span className="font-semibold mx-1.5 group-hover:underline">click here</span>
+            <ChevronRight size={18} className="ml-1 transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
         </div>
       </div>
     </section>

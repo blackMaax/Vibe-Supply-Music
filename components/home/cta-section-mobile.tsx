@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
-import { Check } from "lucide-react"
+import { Check, ChevronRight } from "lucide-react"
 import { devMedia } from "@/lib/devMedia"
 import { getImageUrl } from "@/lib/image-loader"
 import LuxuryCard from "@/components/ui/luxury-card"
@@ -134,17 +134,32 @@ const CTASectionMobile = ({
   buttonLink = "/packages",
   packages = [],
 }: CTASectionMobileProps) => {
+  // const titleParts = title.split(" "); // Old title splitting logic
+  // let mainTitle = titleParts.slice(0, -1).join(" "); 
+  // let goldPart = titleParts.slice(-1).join(" ");    
+  // if (titleParts.length <=2 ) { 
+  //     mainTitle = titleParts.length > 1 ? titleParts[0] : ""; 
+  //     goldPart = titleParts.length > 1 ? titleParts.slice(1).join(" ") : titleParts[0]; 
+  // }
+
   return (
-    <section className="py-16 relative">
+    <section className="pt-12 pb-8 relative">
       <div className="container mx-auto px-4">
-        {/* Section header - NOW WRAPPED IN LUXURYCARD */}
-        <div className="text-center mb-10">
-          <LuxuryCard className="p-6 md:p-8" floatingParticles={false} sparkleOverlay={false}>
-            <h2 className="text-3xl font-bold font-display gold-text mb-3">{title}</h2>
-            <p className="text-white/80 max-w-md mx-auto text-sm">{subtitle}</p>
-            <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-gold/40 to-transparent my-4 mx-auto"></div>
+        {/* New Title Card Structure for Mobile */}
+        <div className="text-center mb-8"> {/* Matches original CTASectionMobile bottom margin */}
+          <LuxuryCard className="max-w-xl mx-auto py-3 px-4" variant="default" cornerAccents="none">
+            <div className="text-center">
+              <h2 className="text-2xl font-display font-bold mb-2 gold-text pb-1 leading-relaxed">
+                {title}
+              </h2>
+              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-gold/50 to-transparent my-2 mx-auto"></div>
+              <p className="text-white/80 max-w-lg mx-auto text-xs font-sans leading-relaxed">
+                {subtitle}
+              </p>
+            </div>
           </LuxuryCard>
         </div>
+        {/* End New Title Card Structure for Mobile */}
 
         {/* Package Cards - Single column for mobile */}
         <div className="space-y-8">
@@ -153,8 +168,20 @@ const CTASectionMobile = ({
           ))}
         </div>
 
+        {/* View More Details Link */}
+        <div className="text-center mt-8">
+          <Link
+            href="/packages"
+            className="inline-flex items-center py-2 px-5 bg-gold-light/30 hover:bg-gold-light/40 border border-gold/30 hover:border-gold/50 rounded-full text-black group text-sm transition-all duration-300 shadow-md hover:shadow-lg"
+          >
+            To view more details about the packages,
+            <span className="font-semibold mx-1 group-hover:underline">click here</span>
+            <ChevronRight size={16} className="ml-0.5 transition-transform duration-300 group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+
         {/* Button */}
-        <div className="text-center mt-10">
+        <div className="text-center mt-6">
           <Link
             href={buttonLink || "/packages"}
             className="inline-block py-2.5 px-6 rounded-full bg-transparent border border-gold text-gold hover:bg-gold hover:text-navy transition-all duration-300"

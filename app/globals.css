@@ -782,10 +782,29 @@ footer {
   }
 
   .group:hover .rainbow-border-image-hover,
-  .rainbow-border-image-hover:hover { /* Apply effect on hover of group or self */
-    /* Background-image and animation are now in the base class */
-    box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.3), 0 8px 10px -6px rgba(212, 175, 55, 0.2);
-     /* Example gold-ish shadow, adjust as needed */
+  .group:focus-within .rainbow-border-image-hover {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  /* Floating particles animations from LuxuryCard */
+  @keyframes float-1 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+    25% { transform: translate(5px, 10px) scale(1.1); opacity: 0.7; }
+    50% { transform: translate(-5px, -10px) scale(1); opacity: 0.6; }
+    75% { transform: translate(10px, -5px) scale(1.05); opacity: 0.8; }
+  }
+  @keyframes float-2 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+    25% { transform: translate(-10px, 5px) scale(1.05); opacity: 0.8; }
+    50% { transform: translate(10px, 10px) scale(1.1); opacity: 0.5; }
+    75% { transform: translate(5px, -10px) scale(1); opacity: 0.7; }
+  }
+  @keyframes float-3 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+    25% { transform: translate(8px, -8px) scale(1.1); opacity: 0.5; }
+    50% { transform: translate(-8px, 8px) scale(1.05); opacity: 0.8; }
+    75% { transform: translate(10px, 10px) scale(1); opacity: 0.6; }
   }
 
   /* ... other utilities ... */

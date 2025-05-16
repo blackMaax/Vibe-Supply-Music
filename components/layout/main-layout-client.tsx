@@ -47,8 +47,7 @@ export default function MainLayoutClient({ children, siteSettings }: MainLayoutC
       disableTransitionOnChange
     >
       <PageBackground />
-      <Header />
-      <main className={`min-h-screen relative z-10 ${isHomepage ? "" : "pt-12"}`}>
+      <main className={`min-h-screen relative z-10`}>
         {children}
       </main>
       <Footer 

@@ -15,7 +15,8 @@ export default function FeaturedImage({
 }: FeaturedImageProps) {
   return (
     <div className="relative rounded-xl overflow-hidden border border-gold/30 bg-black/75 backdrop-blur-md h-[300px] lg:h-[250px]">
-      {/* Corner accents */}
+      {/* Corner accents - REMOVED */}
+      {/*
       <div className="absolute top-0 left-0 w-16 h-16 pointer-events-none z-10">
         <svg width="100%" height="100%" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
           <path d="M1,1 L1,20 M1,1 L20,1" stroke="#D4AF37" strokeWidth="2" fill="none" strokeOpacity="0.8" />
@@ -36,6 +37,7 @@ export default function FeaturedImage({
           <path d="M63,63 L63,44 M63,63 L44,63" stroke="#D4AF37" strokeWidth="2" fill="none" strokeOpacity="0.8" />
         </svg>
       </div>
+      */}
 
       <div className="relative w-full h-full">
         <Image src={imageSrc || "/placeholder.svg"} alt={imageAlt} fill className="object-cover" />
