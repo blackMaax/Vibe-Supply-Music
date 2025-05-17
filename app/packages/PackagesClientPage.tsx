@@ -6,9 +6,8 @@ import { motion, type MotionProps } from "framer-motion" // Added MotionProps fo
 import type { HTMLAttributes } from "react"; // Added HTMLAttributes for typing
 import PackageCard from "@/components/packages/package-card"
 // import PackageComparison from "@/components/packages/package-comparison" // REMOVED
-import TestimonialSection from "@/components/packages/testimonial-section"
 import FAQSection from "@/components/packages/faq-section"
-import { packages, /* comparisonFeatures, */ packageFAQs, packageTestimonials } from "@/lib/packages-data" // REMOVED comparisonFeatures
+import { packages, /* comparisonFeatures, */ packageFAQs, /* packageTestimonials */ } from "@/lib/packages-data" // REMOVED comparisonFeatures, packageTestimonials
 import type { SiteSettingsData } from "@/lib/queries"; // Added SiteSettingsData import
 import { urlForImage } from "@/lib/sanity-image"; // Added urlForImage import
 import Navbar from "@/components/layout/navbar"; // Added Navbar import
@@ -31,14 +30,6 @@ export default function PackagesClientPage({ siteSettings }: PackagesClientPageP
     className: customClassName
   });
 
-  const ctaSectionMotionProps: MotionProps & HTMLAttributes<HTMLDivElement> = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    transition: { duration: 0.7 },
-    viewport: { once: true },
-    className: "max-w-3xl mx-auto"
-  };
-
   return (
     <div className="min-h-screen pt-6 pb-12"> {/* Adjusted top padding */}
       {/* Logo */}
@@ -57,9 +48,28 @@ export default function PackagesClientPage({ siteSettings }: PackagesClientPageP
 
       {/* Navbar */}
       <Navbar />
+
+      {/* New Title Card for Packages Page */}
+      <div className="container mx-auto px-4 mt-12 mb-16"> {/* Adjusted margins */}
+        <LuxuryCard 
+          className="max-w-3xl mx-auto py-4 px-6 md:py-5 md:px-8" 
+          variant="default" 
+          cornerAccents="none"
+        >
+          <div className="text-center">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-3 md:mb-4 gold-text pb-1 leading-relaxed">
+              Our Event Packages
+            </h1>
+            <div className="w-16 md:w-20 h-0.5 bg-gradient-to-r from-transparent via-gold/50 to-transparent my-2 md:my-3 mx-auto"></div>
+            <p className="text-white/80 max-w-xl mx-auto text-xs sm:text-sm md:text-base font-sans leading-relaxed">
+              Explore our curated packages designed for every occasion.
+            </p>
+          </div>
+        </LuxuryCard>
+      </div>
       
       {/* Packages Section Intro - (was motion.div for title/subtitle, now just for spacing if needed) */}
-      <section className="pt-8 pb-12"> {/* Reduced vertical padding */}
+      <section className="pb-12"> {/* Removed pt-8 */}
         <div className="container mx-auto px-4">
           {/* This motion.div used to hold a subtitle. Now it's effectively a spacer or for future content. */}
           {/* Using sectionHeaderMotionProps with only a margin class. */}
@@ -75,29 +85,8 @@ export default function PackagesClientPage({ siteSettings }: PackagesClientPageP
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <TestimonialSection testimonials={packageTestimonials} />
-
       {/* FAQ Section */}
       <FAQSection faqs={packageFAQs} />
-
-      {/* CTA Section */}
-      <section className="py-16 bg-black/40">
-        <div className="container mx-auto px-4 text-center">
-          <motion.div {...ctaSectionMotionProps}>
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 gold-text">Ready to Book?</h2>
-            <p className="text-white/80 mb-8">
-              Contact us today to check availability for your event date and discuss your specific requirements.
-            </p>
-            <a
-              href="/contact"
-              className="inline-block bg-gold text-black font-bold py-3 px-8 rounded-md hover:bg-gold/80 transition-colors duration-300"
-            >
-              Get in Touch
-            </a>
-          </motion.div>
-        </div>
-      </section>
     </div>
   )
 }

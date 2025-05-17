@@ -140,7 +140,7 @@ const ContactFormSection = ({
   };
 
   return (
-    <section className={`py-24 relative ${className}`}>
+    <section className={`pt-24 pb-12 relative ${className}`}>
       <div className="container mx-auto px-4">
         {/* Section header on card - Updated to match GalleryPreview and CTA */}
         <div className="text-center mb-16">

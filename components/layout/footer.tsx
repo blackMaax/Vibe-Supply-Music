@@ -53,10 +53,11 @@ const Footer = ({
 
   return (
     <footer className="relative w-full z-10 mt-auto">
-      {/* Gold top border with subtle glow */}
+      {/* Gold top border with subtle glow - REMOVED
       <div className="h-px w-full bg-gradient-to-r from-gold/10 via-gold/60 to-gold/10 relative">
         <div className="absolute inset-0 blur-sm bg-gold/30"></div>
       </div>
+      */}
 
       <div className="container mx-auto px-4 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 bg-black/75 backdrop-blur-md border border-gold/30 rounded-2xl p-8 shadow-[inset_0_0_15px_rgba(0,0,0,0.3),0_10px_30px_rgba(0,0,0,0.15)] relative overflow-hidden">

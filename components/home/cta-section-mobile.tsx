@@ -180,8 +180,8 @@ const CTASectionMobile = ({
           </Link>
         </div>
 
-        {/* Button */}
-        <div className="text-center mt-6">
+        {/* Button - Hiding this entire block */}
+        <div className="text-center mt-6 hidden"> {/* Added hidden class */}
           <Link
             href={buttonLink || "/packages"}
             className="inline-block py-2.5 px-6 rounded-full bg-transparent border border-gold text-gold hover:bg-gold hover:text-navy transition-all duration-300"

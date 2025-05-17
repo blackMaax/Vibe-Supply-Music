@@ -2,6 +2,8 @@ import ContactFormSection from "@/components/home/contact-form-section";
 import { getContactSectionData, getSiteSettings } from "@/lib/queries";
 import { urlForImage } from "@/lib/sanity-image";
 import type { Metadata } from 'next';
+import Image from 'next/image';
+import Navbar from '@/components/layout/navbar';
 
 // Add revalidation
 export const revalidate = 0; // Or set to a higher value like 60 for production
@@ -15,6 +17,8 @@ export const metadata: Metadata = {
 export default async function ContactPage() {
   const contactSectionData = await getContactSectionData();
   const siteSettings = await getSiteSettings(); // For global contact info like email/phone
+
+  const logoToDisplay = siteSettings?.logo?.asset ? urlForImage(siteSettings.logo) : "/placeholder.svg";
 
   const imageSrc = contactSectionData?.featuredImageCard?.image
     ? urlForImage(contactSectionData.featuredImageCard.image)
@@ -33,7 +37,22 @@ export default async function ContactPage() {
   };
 
   return (
-    <main>
+    <main className="pt-6">
+      {logoToDisplay && (
+        <div className="container mx-auto px-4 mb-6 sm:mb-7 md:mb-8 flex justify-center">
+          <Image 
+            src={logoToDisplay}
+            alt={siteSettings?.logo?.alt || "Vibe Supply Logo"}
+            width={850}
+            height={340}
+            className="object-contain h-52 sm:h-60 md:h-72 lg:h-80 w-auto"
+            priority
+          />
+        </div>
+      )}
+
+      <Navbar />
+
       <ContactFormSection {...contactFormProps} />
     </main>
   );
