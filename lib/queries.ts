@@ -25,6 +25,7 @@ export interface SiteSettingsData {
   defaultSeoDescription?: string
   defaultSeoImage?: SanityImageObject 
   logo?: SanityImageObject 
+  title?: string;
   contactEmail?: string
   contactPhone?: string
   socialLinks?: { _key?: string; platform?: string; url?: string }[]
@@ -259,6 +260,20 @@ export async function getSiteSettings(): Promise<SiteSettingsData | null> {
     return await client.fetch(query)
   } catch (error) {
     console.error("Error fetching site settings:", error)
+    return null
+  }
+}
+
+export async function getSiteSettingsOptimized(): Promise<SiteSettingsData | null> {
+  const query = `*[_type == "siteSettings"][0]{
+    logo,
+    title
+  }`
+  try {
+    const data = await client.fetch(query)
+    return data
+  } catch (error) {
+    console.error("Error fetching optimized site settings:", error)
     return null
   }
 }

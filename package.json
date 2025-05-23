@@ -83,7 +83,6 @@
   },
   "pnpm": {
     "overrides": {
-      "framer-motion": "10.18.0",
       "@emotion/is-prop-valid": "1.2.2"
     },
     "peerDependencyRules": {

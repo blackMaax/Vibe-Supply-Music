@@ -1,8 +1,9 @@
 import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
+import {structureTool, type StructureResolver} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schema} from '../sanity/schemaTypes'
 
+// Define your singleton document types
 export default defineConfig({
   name: 'default',
   title: 'Vibe Supply',
