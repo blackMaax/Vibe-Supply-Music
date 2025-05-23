@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Image from "next/image"
 
 export default function PageBackground() {
   const [mounted, setMounted] = useState(false)
@@ -13,19 +12,7 @@ export default function PageBackground() {
 
   return (
     <div className="fixed inset-0 z-[-1] overflow-hidden">
-      {/* Gold image background - using the exact URL provided */}
-      <div className="absolute inset-0">
-        <Image
-          src="https://res.cloudinary.com/dtowd0j7j/image/upload/v1746194928/WhatsApp_Image_2025-04-20_at_22.27.19_78e42c49_mel962.jpg"
-          alt="Gold background"
-          fill
-          className="object-cover"
-          priority
-          sizes="100vw"
-        />
-
-        {/* Dark overlay removed */}
-      </div>
+      {/* Removed hardcoded gold image background. Only overlays/animations remain. */}
 
       {/* Subtle shimmer animation - drifting pinpoints of light */}
       {mounted && (

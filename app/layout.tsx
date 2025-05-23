@@ -76,9 +76,26 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   //   };
   // }
 
+  let bodyStyle = {};
+  // Check if siteSettings and siteBackgroundImage and its asset exist
+  if (siteSettings && siteSettings.siteBackgroundImage && siteSettings.siteBackgroundImage.asset) {
+    const bgImageUrl = urlFor(siteSettings.siteBackgroundImage); // urlFor now returns string or null
+    if (bgImageUrl) {
+      bodyStyle = {
+        backgroundImage: `url("${bgImageUrl}")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+      };
+    }
+  }
+
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${montserrat.variable} ${playfairDisplay.variable} font-sans scroll-smooth`}>
+      <body 
+        className={`${montserrat.variable} ${playfairDisplay.variable} font-sans scroll-smooth`}
+        style={bodyStyle}
+      >
         {/* Pass siteSettings to MainLayoutClient if it needs it, or use a Context Provider */}
         <MainLayoutClient siteSettings={siteSettings}>{children}</MainLayoutClient>
       </body>

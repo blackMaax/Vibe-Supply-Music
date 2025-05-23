@@ -14,6 +14,7 @@ export interface SiteSettingsData {
   logo?: { asset?: { _ref?: string, url?: string } }; // Adjust based on actual image field structure
   logoWhite?: { asset?: { _ref?: string, url?: string } };
   favicon?: { asset?: { _ref?: string, url?: string } };
+  siteBackgroundImage?: { asset?: { _ref?: string, url?: string, metadata?: any }, alt?: string };
   contactEmail?: string;
   contactPhone?: string;
   socialLinks?: Array<{ platform?: string; url?: string }>;
@@ -37,6 +38,15 @@ export async function getSiteSettings(): Promise<SiteSettingsData | null> {
     logo,
     logoWhite,
     favicon,
+    siteBackgroundImage {
+      asset->{
+        _id,
+        _ref,
+        url,
+        metadata
+      },
+      alt
+    },
     contactEmail,
     contactPhone,
     socialLinks[]{

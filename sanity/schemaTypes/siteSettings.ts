@@ -59,6 +59,22 @@ export default defineType({
       fieldset: 'branding', // Assign to branding fieldset
     },
     {
+      name: 'siteBackgroundImage',
+      title: 'Site Background Image',
+      type: 'image',
+      description: 'A large image to be used as the default background for the entire site.',
+      options: { hotspot: true }, // Hotspot is useful for images where focal point matters
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt text',
+          type: 'string',
+          description: 'Describe the image for accessibility and SEO.',
+        },
+      ],
+      fieldset: 'branding', // Assign to branding fieldset
+    },
+    {
       name: 'description',
       title: 'Site Description',
       type: 'text',
