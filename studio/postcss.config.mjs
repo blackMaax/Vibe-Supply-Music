@@ -1,0 +1,2 @@
+// Renamed (or removed) studio postcss config so that Sanity Studio does not try to load tailwindcss.
+// (If you later decide to use Tailwind in studio, reinstall tailwindcss and re-create this file.) 

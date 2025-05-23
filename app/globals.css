@@ -1,0 +1,811 @@
+/* Update the navbar styles at the top of your globals.css file */
+/* Remove the existing #main-navbar styles and replace with these */
+#main-navbar {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* The rest of your globals.css file remains unchanged */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 329 100% 62%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 43 65% 52%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.75rem;
+}
+
+/* Custom color variables */
+:root {
+  --color-gold: #d4af37;
+  --color-pink: #ff3e96;
+  --color-navy: #0a1e3c;
+  --color-teal: #20b2aa;
+  --color-purple: #9370db;
+  --color-magenta: #ff00ff;
+  --color-warm-gold: #f0e6c9;
+  --color-warm-gold-dark: #d4c28a;
+}
+
+body {
+  @apply text-navy;
+  font-family: var(--font-montserrat), sans-serif;
+}
+
+/* Removed duplicate #main-navbar styles */
+
+@layer components {
+  .btn-primary {
+    @apply bg-pink text-white font-medium py-3 px-8 rounded-full shadow-pink hover:bg-pink-dark transition-all duration-300 transform hover:scale-105 hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-navy border-2 border-navy font-medium py-3 px-8 rounded-full shadow-md hover:bg-navy/5 transition-all duration-300 hover:shadow-lg;
+  }
+
+  .btn-gold {
+    @apply bg-gold text-white font-medium py-3 px-8 rounded-full shadow-gold hover:bg-gold-dark transition-all duration-300 transform hover:scale-105 hover:shadow-lg;
+  }
+
+  .section-title {
+    @apply text-4xl md:text-5xl font-display font-bold mb-6;
+  }
+
+  .card {
+    @apply bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl;
+  }
+
+  .gold-card {
+    @apply rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl border border-gold/30 backdrop-blur-sm;
+  }
+
+  .navy-card {
+    @apply bg-navy text-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl;
+  }
+
+  /* Enhanced gold styling utilities */
+  .gold-background {
+    background-image: url("https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696122/designecologist-At-k-FQrwJM-unsplash_1_jvndd7.jpg");
+    @apply bg-cover bg-center bg-no-repeat;
+  }
+
+  .gold-border {
+    position: relative;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+  }
+
+  .gold-border::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 20%, #b38728 45%, #fbf5b7 70%, #aa771c 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .gold-shadow {
+    box-shadow: 0 4px 20px -2px rgba(212, 175, 55, 0.5);
+  }
+
+  .gold-text {
+    background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 20%, #b38728 45%, #fbf5b7 70%, #aa771c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 3s linear infinite;
+  }
+
+  .text-shadow-gold {
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  }
+
+  .gold-overlay {
+    position: relative;
+    z-index: 1;
+  }
+
+  .gold-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(10, 30, 60, 0.7), rgba(10, 30, 60, 0.5));
+    mix-blend-mode: multiply;
+    z-index: -1;
+  }
+
+  .content-section {
+    @apply relative bg-white/80 backdrop-blur-md rounded-lg shadow-lg;
+  }
+
+  /* New accent color utilities */
+  .text-accent-teal {
+    color: var(--color-teal);
+  }
+
+  .text-accent-purple {
+    color: var(--color-purple);
+  }
+
+  .bg-accent-teal {
+    background-color: var(--color-teal);
+  }
+
+  .bg-accent-purple {
+    background-color: var(--color-purple);
+  }
+
+  /* Add this new utility class */
+  .card-heading {
+    @apply pb-1 leading-relaxed;
+  }
+
+  /* Float animation for subtle movement */
+  .float-animation-subtle {
+    animation: floatSubtle 6s ease-in-out infinite;
+  }
+
+  @keyframes floatSubtle {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  /* Mobile package card specific styles */
+  .mobile-package-card {
+    /* Add any mobile-specific styles here */
+  }
+
+  /* Desktop package card specific styles */
+  .desktop-package-card {
+    /* Add any desktop-specific styles here */
+  }
+
+  /* Gold border enhanced for circular images */
+  .gold-border-enhanced {
+    border: 2px solid rgba(212, 175, 55, 0.6);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    animation: borderPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes borderPulse {
+    0%,
+    100% {
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
+/* Luxury effects */
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  @apply animate-shimmer;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Enhanced section styling */
+.luxury-section {
+  @apply relative py-24 overflow-hidden;
+}
+
+.luxury-section::before {
+  content: "";
+  @apply absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-30 pointer-events-none;
+}
+
+/* Continuous sophisticated background for content sections */
+.continuous-background {
+  position: relative;
+  background: transparent;
+}
+
+.continuous-background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Ccircle cx='10' cy='10' r='1'/%3E%3Ccircle cx='30' cy='50' r='1'/%3E%3Ccircle cx='50' cy='30' r='1'/%3E%3Ccircle cx='70' cy='70' r='1'/%3E%3Ccircle cx='90' cy='20' r='1'/%3E%3Ccircle cx='20' cy='90' r='1'/%3E%3Ccircle cx='60' cy='10' r='1'/%3E%3Ccircle cx='80' cy='40' r='1'/%3E%3Ccircle cx='40' cy='80' r='1'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Smooth transition from hero to content */
+.hero-to-content-transition {
+  position: relative;
+  height: 150px;
+  margin-top: -150px;
+  z-index: 5;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(240, 230, 201, 0.5) 50%, rgba(240, 230, 201, 1) 100%);
+  pointer-events: none;
+}
+
+/* Decorative elements */
+.luxury-blob {
+  @apply absolute rounded-full blur-2xl opacity-20 pointer-events-none;
+}
+
+/* Luxury scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gold/50 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gold;
+}
+
+/* Enhanced typography */
+.headline-highlight {
+  @apply relative inline-block;
+}
+
+.headline-highlight::after {
+  content: "";
+  @apply absolute -bottom-2 left-0 w-1/2 h-1 bg-pink rounded-full;
+}
+
+.headline-gold {
+  @apply gold-text font-display font-bold;
+}
+
+/* Animation utilities */
+.hover-lift {
+  @apply transition-all duration-500;
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px) rotate(0.5deg);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(212, 175, 55, 0.3);
+}
+
+.hover-glow {
+  @apply transition-all duration-300;
+}
+
+.hover-glow:hover {
+  @apply gold-shadow;
+}
+
+/* Add animation for the page background */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-subtle-pulse {
+  animation: subtle-pulse 15s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes subtle-pulse {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.05);
+  }
+}
+
+/* Sparkle animation */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.sparkle {
+  animation: twinkle ease-in-out infinite;
+}
+
+/* Gold sparkle animation */
+.gold-sparkle {
+  position: relative;
+  overflow: hidden;
+}
+
+.gold-sparkle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+  animation: goldSparkleFloat 15s linear infinite;
+}
+
+@keyframes goldSparkleFloat {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+  25% {
+    transform: translateX(25%) translateY(-5%);
+  }
+  50% {
+    transform: translateX(50%) translateY(0);
+  }
+  75% {
+    transform: translateX(25%) translateY(5%);
+  }
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+}
+
+/* Enhanced shimmer point animation for drifting sparkles */
+.shimmer-point {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background-color: #d4af37;
+  border-radius: 50%;
+  opacity: 0;
+  filter: blur(1px);
+  box-shadow: 0 0 4px #d4af37;
+  animation: shimmerFloat linear infinite, shimmerPulse ease-in-out infinite;
+}
+
+@keyframes shimmerFloat {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(20px, -15px);
+  }
+  50% {
+    transform: translate(40px, 10px);
+  }
+  75% {
+    transform: translate(20px, 25px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes shimmerPulse {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Enhanced hover lift with subtle rotation */
+.gold-border-animated {
+  position: relative;
+  overflow: hidden;
+}
+
+.gold-border-animated::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    transparent 20%,
+    rgba(212, 175, 55, 0.8) 40%,
+    rgba(248, 233, 161, 0.8) 50%,
+    rgba(212, 175, 55, 0.8) 60%,
+    transparent 80%
+  );
+  z-index: -1;
+  border-radius: inherit;
+  animation: borderRotate 4s linear infinite;
+}
+
+.gold-border-animated::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: inherit;
+  z-index: -1;
+}
+
+@keyframes borderRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Floating animation for cards */
+.float-animation {
+  animation: floating 6s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Enhanced gold text with better gradient and animation */
+.gold-text-enhanced {
+  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 20%, #b38728 45%, #fbf5b7 70%, #aa771c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+  animation: goldShimmer 3s linear infinite;
+}
+
+@keyframes goldShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Glowing dot animation */
+.glowing-dot {
+  position: relative;
+}
+
+.glowing-dot::before {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #d4af37;
+  box-shadow: 0 0 10px #d4af37, 0 0 20px #d4af37;
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+}
+
+/* Ensure proper page layout */
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+footer {
+  flex-shrink: 0;
+}
+
+/* Enhanced shimmer effect for luxury elements */
+.luxury-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.luxury-shimmer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 175, 55, 0.2),
+    rgba(255, 255, 255, 0.3),
+    rgba(212, 175, 55, 0.2),
+    transparent
+  );
+  animation: luxuryShimmer 5s infinite;
+}
+
+@keyframes luxuryShimmer {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+/* Radial pulse animation for accent elements */
+.pulse-accent {
+  position: relative;
+}
+
+.pulse-accent::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
+  animation: pulseAccent 2s infinite;
+}
+
+@keyframes pulseAccent {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(212, 175, 55, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+  }
+}
+
+/* Geometric pattern overlay */
+.geometric-overlay {
+  position: relative;
+}
+
+.geometric-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%23d4af37' stroke-width='0.5' stroke-opacity='0.2'%3E%3Cpath d='M30 30l30-30M30 30L0 0M30 30l30 30M30 30L0 60'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* Enhanced text shadow for luxury headings */
+.luxury-text-shadow {
+  text-shadow: 0 0 1px rgba(212, 175, 55, 0.5), 0 0 2px rgba(212, 175, 55, 0.3), 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+/* Animated gradient text */
+.gradient-text-animated {
+  background: linear-gradient(to right, #d4af37 0%, #f8e9a1 25%, #d4af37 50%, #f8e9a1 75%, #d4af37 100%);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradientTextShift 8s linear infinite;
+}
+
+@keyframes gradientTextShift {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Subtle rotation animation for decorative elements */
+.rotate-subtle {
+  animation: rotateSubtle 20s linear infinite;
+}
+
+@keyframes rotateSubtle {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animated border glow */
+.border-glow {
+  position: relative;
+}
+
+.border-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: inherit;
+  animation: borderGlowPulse 3s ease-in-out infinite;
+}
+
+@keyframes borderGlowPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+  }
+}
+
+/* Add this to the end of your globals.css file */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Added for animated rainbow border */
+  @property --rainbow-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  @keyframes rainbow-border-rotate {
+    to {
+      --rainbow-angle: 360deg;
+    }
+  }
+
+  .rainbow-border-wrapper {
+    --rainbow-colors: #ffc0cb, #ffdab9, #ffffcc, #c1e1c1, #b0e0e6, #e6e6fa, #f5cff5; /* Pastel ROYGBIV */
+    display: inline-block; /* So it wraps the button size */
+    padding: 2px; /* This creates the border thickness */
+    border-radius: 9999px; /* Tailwind's rounded-full value */
+    background: conic-gradient(
+      from var(--rainbow-angle) at 50% 50%,
+      var(--rainbow-colors),
+      #ffc0cb /* Repeat first pastel color for smooth loop */
+    );
+    animation: rainbow-border-rotate 4s linear infinite;
+    /* The button placed inside this wrapper will need its own background 
+       to cover the center of this gradient, and its own border-radius. */
+  }
+
+  .rainbow-border-image-hover {
+    --rainbow-angle: 0deg;
+    --rainbow-colors-hover: #ffc0cb, #ffdab9, #ffffcc, #c1e1c1, #b0e0e6, #e6e6fa, #f5cff5;
+    /* pastel --rainbow-colors-hover: #ffadad, #ffd6a5, #fdffb6, #caffbf, #9bf6ff, #a0c4ff, #bdb2ff, #ffc6ff; vibrant */
+    padding: 2px; /* Border thickness */
+    border-radius: 0.75rem; /* Corresponds to rounded-xl */
+    background-image: conic-gradient(
+      from var(--rainbow-angle) at 50% 50%,
+      var(--rainbow-colors-hover),
+      #ffc0cb /* Repeat first color for smooth loop */
+    ); /* Moved from hover to base */
+    animation: rainbow-border-rotate 4s linear infinite; /* Moved from hover to base */
+    box-shadow: 0 0 0px rgba(0,0,0,0); /* Default shadow: none */
+    transition: box-shadow 0.4s ease-out; /* Only transition shadow now */
+  }
+
+  .group:hover .rainbow-border-image-hover,
+  .group:focus-within .rainbow-border-image-hover {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+
+  /* Floating particles animations from LuxuryCard */
+  @keyframes float-1 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+    25% { transform: translate(5px, 10px) scale(1.1); opacity: 0.7; }
+    50% { transform: translate(-5px, -10px) scale(1); opacity: 0.6; }
+    75% { transform: translate(10px, -5px) scale(1.05); opacity: 0.8; }
+  }
+  @keyframes float-2 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+    25% { transform: translate(-10px, 5px) scale(1.05); opacity: 0.8; }
+    50% { transform: translate(10px, 10px) scale(1.1); opacity: 0.5; }
+    75% { transform: translate(5px, -10px) scale(1); opacity: 0.7; }
+  }
+  @keyframes float-3 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+    25% { transform: translate(8px, -8px) scale(1.1); opacity: 0.5; }
+    50% { transform: translate(-8px, 8px) scale(1.05); opacity: 0.8; }
+    75% { transform: translate(10px, 10px) scale(1); opacity: 0.6; }
+  }
+
+  /* ... other utilities ... */
+}
