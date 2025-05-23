@@ -3,13 +3,14 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Instagram, Facebook, Twitter, Mail, Phone, Clock, Link as LinkIcon, Youtube, Linkedin, MessageCircle, Pin, Film } from "lucide-react"
-import { getImageUrl } from "@/lib/static-data"
 import { useState, useEffect } from "react"
 import React from "react"
+import { urlForImage } from "@/lib/sanity-image"
 
 // Define the props for the Footer component
 interface FooterProps {
   logoUrl?: string | null;
+  logoAsset?: any; // Sanity image asset
   contactEmail?: string;
   contactPhone?: string;
   socialLinks?: Array<{ _key?: string; platform?: string; url?: string }>;
@@ -36,6 +37,7 @@ const getSocialIcon = (platform?: string) => {
 
 const Footer = ({ 
   logoUrl, 
+  logoAsset, 
   contactEmail, 
   contactPhone, 
   socialLinks = [],
@@ -46,7 +48,8 @@ const Footer = ({
     setIsMounted(true);
   }, []);
 
-  const displayLogo = logoUrl || getImageUrl("logoWhite") || "/placeholder.svg";
+  // Get logo URL from Sanity or use provided logoUrl
+  const displayLogo = logoAsset ? urlForImage(logoAsset) : logoUrl || "/placeholder.svg?height=100&width=200&text=Logo";
   const displayEmail = contactEmail || "info@example.com";
   const displayPhone = contactPhone || "+1 234 567 8900";
   const currentYear = new Date().getFullYear();

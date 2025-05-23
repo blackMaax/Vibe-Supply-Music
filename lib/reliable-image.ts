@@ -1,7 +1,8 @@
-import { getImageUrl } from "./static-data"
+import { urlForImage } from "@/lib/sanity-image"
 
 // Function to get an image with multiple fallbacks
-export function getReliableImage(key: string): string {
-  console.log(`Getting reliable image for key: ${key}`)
-  return getImageUrl(key)
+export function getReliableImage(source: any): string {
+  console.log(`Getting reliable image for source:`, source)
+  const url = urlForImage(source)
+  return url || `/placeholder.svg?height=600&width=800&text=fallback`
 }

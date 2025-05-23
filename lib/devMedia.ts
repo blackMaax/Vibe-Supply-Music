@@ -1,27 +1,36 @@
-import { getImageUrl } from "./static-data"
+import { urlForImage } from "@/lib/sanity-image"
 
 /**
  * Development-only media map
  * Provides placeholder URLs for all image fields when CMS data is not available
  */
 
-// Create a type-safe devMedia object that uses getImageUrl
+// Create a type-safe devMedia object that uses urlForImage
 export const devMedia: Record<string, string> = new Proxy(
   {},
   {
     get: (target, prop) => {
-      return getImageUrl(prop as string)
+      return getPlaceholderUrl(prop as string)
     },
   },
 )
 
 // Function to safely get media with fallbacks
-export function getDevMedia(key: string, fallbackType = "default"): string {
+export function getDevMedia(source: any, fallbackType = "default"): string {
   try {
-    // Use the image loader to ensure we have a fallback
-    return getImageUrl(key)
+    // Try to get the Sanity image URL first
+    const url = urlForImage(source)
+    if (url) return url
+    
+    // Fallback to placeholder if no Sanity image
+    return getPlaceholderUrl(fallbackType)
   } catch (error) {
-    console.error(`Error accessing devMedia.${key}:`, error)
-    return `/placeholder.svg?height=600&width=800&text=${key}`
+    console.error(`Error accessing devMedia:`, error)
+    return getPlaceholderUrl(fallbackType)
   }
+}
+
+// Helper function for placeholder URLs
+function getPlaceholderUrl(key: string): string {
+  return `/placeholder.svg?height=600&width=800&text=${key}`
 }

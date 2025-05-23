@@ -2,14 +2,31 @@
 
 import type React from "react"
 import { usePathname } from "next/navigation"
+import dynamic from 'next/dynamic'
 import { ThemeProvider } from "@/components/theme-provider"
-import Header from "@/components/layout/header"
-import Footer from "@/components/layout/footer"
-import PageBackground from "@/components/layout/page-background"
-import DebugInfo from "@/components/layout/debug-info"
-import CookieBanner from "@/components/layout/cookie-banner"
 import type { SiteSettingsData } from "@/sanity/lib/queries"
 import { urlForImage as urlFor } from "@/lib/sanity-image"
+
+// Lazy load non-critical components
+const DebugInfo = dynamic(() => import("@/components/layout/debug-info"), {
+  ssr: false,
+  loading: () => null
+})
+
+const CookieBanner = dynamic(() => import("@/components/layout/cookie-banner"), {
+  ssr: false,
+  loading: () => null
+})
+
+// Add Footer as a dynamic import
+const Footer = dynamic(() => import("@/components/layout/footer"), {
+  loading: () => <div className="h-32 bg-black/50" />
+})
+
+// Add PageBackground as a dynamic import
+const PageBackground = dynamic(() => import("@/components/layout/page-background"), {
+  loading: () => null
+})
 
 interface MainLayoutClientProps {
   children: React.ReactNode;

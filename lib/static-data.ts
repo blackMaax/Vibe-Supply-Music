@@ -78,67 +78,16 @@ export const staticData = {
   },
 }
 
-// Direct image URLs that are guaranteed to work
-export const directImageUrls = {
-  logo: "https://res.cloudinary.com/dtowd0j7j/image/upload/v1746711559/vibe_supply_pink_quavers_u7uowi.png",
-  logoWhite: "https://res.cloudinary.com/dtowd0j7j/image/upload/v1746711559/vibe_supply_pink_quavers_u7uowi.png",
-  heroImage:
-    "https://res.cloudinary.com/dtowd0j7j/image/upload/v1746194928/WhatsApp_Image_2025-04-20_at_22.27.19_78e42c49_mel962.jpg",
-  performance1:
-    "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696121/artem-polezhaev-1P9ZVlqMmAw-unsplash_1_vablvm.jpg",
-  performance2:
-    "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696119/bernie-almanzar-wiHKRoNKJYw-unsplash_1_ngk0qu.jpg",
-  performance3:
-    "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696119/hamza-nouasria--3pvRUfQc-c-unsplash_1_y0aww7.jpg",
-  performance4:
-    "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696119/jim-nyamao-B5DIuNGvEvM-unsplash_1_enecup.jpg",
-  performance5:
-    "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696118/kari-bjorn-photography-mF-K6v-fIqg-unsplash_1_ffdtax.jpg",
-  performance6:
-    "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696119/cord-allman-hHg9eWmvaP0-unsplash_1_lstbvu.jpg",
-  performance7:
-    "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696118/jim-nyamao-2_D8oTC10Sk-unsplash_1_pftrxm.jpg",
-  performance8:
-    "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696117/alan-morales-6FhP-g2M1xc-unsplash_1_f5brcu.jpg",
-  performance9:
-    "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696118/jahanzeb-ahsan-im7H-OKyrug-unsplash_1_lyy4pr.jpg",
-  performance10:
-    "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696117/nice-m-nshuti-ZtVLotTFjhs-unsplash_1_duoyx2.jpg",
-  performance11: "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696117/IMG-20250420-WA0011_sws2s7.jpg",
-  bandMember1: "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696573/IMG-20250420-WA0012_ah4rsa.jpg",
-  bandMember2: "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696573/IMG-20250420-WA0008_zphxeq.jpg",
-  bandMember3: "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696572/IMG-20250420-WA0010_eejakt.jpg",
-  bandMember4: "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696573/IMG-20250420-WA0009_gppdgf.jpg",
-  goldBackground:
-    "https://res.cloudinary.com/dtowd0j7j/image/upload/v1745696122/designecologist-At-k-FQrwJM-unsplash_1_jvndd7.jpg",
-}
-
-// Function to get an image URL with fallback
-export function getImageUrl(key: string): string {
-  // If we have a direct URL for this key, use it
-  if (key in directImageUrls) {
-    return directImageUrls[key as keyof typeof directImageUrls]
-  }
-
-  // Otherwise use a placeholder
+// Function to get a placeholder image URL
+export function getPlaceholderUrl(key: string): string {
   return `/placeholder.svg?height=600&width=800&text=${key}`
 }
 
-// Function to get a gallery image
-export function getGalleryImage(index: number): string {
-  const galleryKeys = [
-    "performance1",
-    "performance2",
-    "performance3",
-    "performance4",
-    "performance5",
-    "performance6",
-    "performance7",
-    "performance8",
-    "performance9",
-  ]
-
-  // Use modulo to cycle through available gallery images
-  const key = galleryKeys[index % galleryKeys.length]
-  return getImageUrl(key)
+// Function to get a gallery image from Sanity
+export function getGalleryImage(index: number, images: any[] = []): string {
+  if (images && images.length > 0) {
+    const image = images[index % images.length]
+    return image?.url || getPlaceholderUrl('gallery')
+  }
+  return getPlaceholderUrl('gallery')
 }

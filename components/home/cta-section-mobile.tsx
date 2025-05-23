@@ -4,11 +4,10 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { Check, ChevronRight } from "lucide-react"
-import { devMedia } from "@/lib/devMedia"
-import { getImageUrl } from "@/lib/image-loader"
 import LuxuryCard from "@/components/ui/luxury-card"
 import type { PackageItem } from "../../sanity/lib/queries"
-import { urlForImage as urlFor } from "@/lib/sanity-image"
+import { urlForImage } from "@/lib/sanity-image"
+import { Button } from "@/components/ui/button"
 
 interface MobilePackageCardProps {
   _key?: string
@@ -21,7 +20,8 @@ interface MobilePackageCardProps {
 
 // Mobile-optimized version of the PackageCard
 const MobilePackageCard = ({ name, description, features = [], isPopular = false, image }: MobilePackageCardProps) => {
-  const resolvedImageSrc = (image && image.asset ? urlFor(image as any) : null) || devMedia.performance3
+  // Get image URL from Sanity, ensuring it's always a string
+  const resolvedImageSrc = image?.asset ? urlForImage(image) || "/placeholder.svg?height=600&width=800&text=Package" : "/placeholder.svg?height=600&width=800&text=Package"
   const imageAltText = image?.alt || `${name} package`
 
   return (
@@ -122,76 +122,44 @@ const MobilePackageCard = ({ name, description, features = [], isPopular = false
 interface CTASectionMobileProps {
   title?: string
   subtitle?: string
-  buttonText?: string
-  buttonLink?: string
-  packages?: PackageItem[]
+  ctaText?: string
+  ctaLink?: string
+  image?: any // Sanity image asset
 }
 
-const CTASectionMobile = ({
-  title = "Choose Your Perfect Package",
-  subtitle = "Tailored entertainment solutions for your special event",
-  buttonText = "View All Packages",
-  buttonLink = "/packages",
-  packages = [],
-}: CTASectionMobileProps) => {
-  // const titleParts = title.split(" "); // Old title splitting logic
-  // let mainTitle = titleParts.slice(0, -1).join(" "); 
-  // let goldPart = titleParts.slice(-1).join(" ");    
-  // if (titleParts.length <=2 ) { 
-  //     mainTitle = titleParts.length > 1 ? titleParts[0] : ""; 
-  //     goldPart = titleParts.length > 1 ? titleParts.slice(1).join(" ") : titleParts[0]; 
-  // }
+export default function CTASectionMobile({
+  title = "Ready to Make Your Event Unforgettable?",
+  subtitle = "Book a consultation with us today and let's create something special together.",
+  ctaText = "Book a Consultation",
+  ctaLink = "/contact",
+  image,
+}: CTASectionMobileProps) {
+  // Get image URL from Sanity, ensuring it's always a string
+  const imageUrl = image?.asset ? urlForImage(image) || "/placeholder.svg?height=600&width=800&text=CTA+Image" : "/placeholder.svg?height=600&width=800&text=CTA+Image"
 
   return (
-    <section className="pt-12 pb-8 relative">
+    <section className="py-12 md:hidden">
       <div className="container mx-auto px-4">
-        {/* New Title Card Structure for Mobile */}
-        <div className="text-center mb-8"> {/* Matches original CTASectionMobile bottom margin */}
-          <LuxuryCard className="max-w-xl mx-auto py-3 px-4" variant="default" cornerAccents="none">
-            <div className="text-center">
-              <h2 className="text-2xl font-display font-bold mb-2 gold-text pb-1 leading-relaxed">
-                {title}
-              </h2>
-              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-gold/50 to-transparent my-2 mx-auto"></div>
-              <p className="text-white/80 max-w-lg mx-auto text-xs font-sans leading-relaxed">
-                {subtitle}
-              </p>
-            </div>
-          </LuxuryCard>
-        </div>
-        {/* End New Title Card Structure for Mobile */}
-
-        {/* Package Cards - Single column for mobile */}
-        <div className="space-y-8">
-          {packages.map((pkg) => (
-            <MobilePackageCard key={pkg._key} name={pkg.name} description={pkg.tagline} features={pkg.features} image={pkg.image} isPopular={pkg.isPopular} />
-          ))}
-        </div>
-
-        {/* View More Details Link */}
-        <div className="text-center mt-8">
-          <Link
-            href="/packages"
-            className="inline-flex items-center py-2 px-5 bg-gold-light/30 hover:bg-gold-light/40 border border-gold/30 hover:border-gold/50 rounded-full text-black group text-sm transition-all duration-300 shadow-md hover:shadow-lg"
-          >
-            To view more details about the packages,
-            <span className="font-semibold mx-1 group-hover:underline">click here</span>
-            <ChevronRight size={16} className="ml-0.5 transition-transform duration-300 group-hover:translate-x-0.5" />
-          </Link>
-        </div>
-
-        {/* Button - Hiding this entire block */}
-        <div className="text-center mt-6 hidden"> {/* Added hidden class */}
-          <Link
-            href={buttonLink || "/packages"}
-            className="inline-block py-2.5 px-6 rounded-full bg-transparent border border-gold text-gold hover:bg-gold hover:text-navy transition-all duration-300"
-          >
-            {buttonText}
-          </Link>
+        <div className="flex flex-col gap-8">
+          <div>
+            <h2 className="text-2xl font-bold mb-4">{title}</h2>
+            <p className="text-base text-gray-600 mb-6">{subtitle}</p>
+            <Link href={ctaLink}>
+              <Button size="lg" className="w-full bg-black text-white hover:bg-gray-800">
+                {ctaText}
+              </Button>
+            </Link>
+          </div>
+          <div>
+            <LuxuryCard
+              className="h-full"
+              title="Your Event"
+              imageSrc={imageUrl}
+              imageAlt="Event consultation"
+            />
+          </div>
         </div>
       </div>
     </section>
   )
 }
-
-export default CTASectionMobile

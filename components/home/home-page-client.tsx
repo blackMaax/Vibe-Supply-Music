@@ -1,11 +1,7 @@
 "use client"
 
+import dynamic from 'next/dynamic'
 import HeroBanner from "@/components/home/hero-banner"
-import CTASection from "@/components/home/cta-section"
-import LuxuryCard from "@/components/ui/luxury-card"
-import ContactFormSection from "@/components/home/contact-form-section"
-import GalleryPreviewSection from "@/components/home/gallery-preview-section"
-import CTASectionMobile from "@/components/home/cta-section-mobile"
 import { useIsMobile } from "@/hooks/use-mobile"
 import type {
   SiteSettingsData,
@@ -17,6 +13,27 @@ import type {
 } from "../../lib/queries"
 import { urlForImage } from "@/lib/sanity-image"
 import { useRef } from 'react';
+
+// Lazy load non-critical components with optimized loading states
+const CTASection = dynamic(() => import("@/components/home/cta-section"), {
+  loading: () => <div className="h-96 bg-black/20 animate-pulse rounded-lg" />,
+  ssr: true // Enable SSR for better initial load
+})
+
+const CTASectionMobile = dynamic(() => import("@/components/home/cta-section-mobile"), {
+  loading: () => <div className="h-96 bg-black/20 animate-pulse rounded-lg" />,
+  ssr: true
+})
+
+const ContactFormSection = dynamic(() => import("@/components/home/contact-form-section"), {
+  loading: () => <div className="h-[600px] bg-black/20 animate-pulse rounded-lg" />,
+  ssr: false // Disable SSR for form to reduce initial bundle size
+})
+
+const GalleryPreviewSection = dynamic(() => import("@/components/home/gallery-preview-section"), {
+  loading: () => <div className="h-[400px] bg-black/20 animate-pulse rounded-lg" />,
+  ssr: true
+})
 
 interface HomePageClientProps {
   siteSettings: SiteSettingsData | null;

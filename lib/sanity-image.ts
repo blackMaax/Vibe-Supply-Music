@@ -1,13 +1,17 @@
 // Remove the static-data import, we no longer need it for this function
 // import { getImageUrl } from "./static-data"
 
-// Helper to construct Sanity CDN URLs
-export const urlForImage = (source: any): string | null => {
-  // console.log("urlForImage received source:", JSON.stringify(source, null, 2)); // DEBUG LINE REMOVED
-  
+// Helper to construct Sanity CDN URLs with optimization parameters
+export const urlForImage = (source: any, width?: number, height?: number): string | null => {
   // First, check if the asset is already expanded and has a direct URL
   if (source?.asset?.url) {
-    return source.asset.url;
+    const url = new URL(source.asset.url);
+    // Add optimization parameters to direct URLs
+    url.searchParams.set('auto', 'format');
+    url.searchParams.set('q', '80');
+    if (width) url.searchParams.set('w', width.toString());
+    if (height) url.searchParams.set('h', height.toString());
+    return url.toString();
   }
 
   // If not, proceed with the original logic using _ref
@@ -36,18 +40,24 @@ export const urlForImage = (source: any): string | null => {
   const dimensions = parts[2]; // e.g., "1200x800"
   const format = parts[3];    // e.g., "jpg"
 
-  // Basic URL construction
-  // You can add query parameters for width, height, format, quality, etc.
-  // e.g., `?w=300&h=200&fit=crop&auto=format`
-  // For now, let's return the original uploaded image.
-  const imageUrl = `https://cdn.sanity.io/images/${projectId}/${dataset}/${assetId}-${dimensions}.${format}`;
-  
+  // Construct base URL
+  const baseUrl = `https://cdn.sanity.io/images/${projectId}/${dataset}/${assetId}-${dimensions}.${format}`;
+  const url = new URL(baseUrl);
+
+  // Add optimization parameters
+  url.searchParams.set('auto', 'format'); // Automatically choose the best format
+  url.searchParams.set('q', '80'); // Set quality to 80% (good balance between quality and size)
+  url.searchParams.set('fit', 'max'); // Maintain aspect ratio while fitting within dimensions
+  url.searchParams.set('fm', 'webp'); // Use WebP format for better compression
+  if (width) url.searchParams.set('w', width.toString());
+  if (height) url.searchParams.set('h', height.toString());
+
   // This is a simplified builder. The official @sanity/image-url offers more features
   // like cropping, resizing, formatting, etc. For basic display, this should work.
   // If you need those advanced features, we might need to rethink how to make
   // a lightweight version of the builder available or ensure @sanity/image-url can be used.
 
-  return imageUrl;
+  return url.toString();
 };
 
 // If you still need the old getImageUrl for other purposes, keep it.

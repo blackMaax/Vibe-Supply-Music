@@ -1,11 +1,21 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 
 export default function PageBackground() {
   const [mounted, setMounted] = useState(false)
 
-  // Only render animations after component is mounted to avoid hydration issues
+  // Pre-calculate shimmer points to avoid recalculation on every render
+  const shimmerPoints = useMemo(() => 
+    Array.from({ length: 15 }, (_, i) => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      delay: `${Math.random() * 10}s`,
+      duration: `${15 + Math.random() * 20}s`,
+    })), 
+    [] // Empty dependency array since we only need to calculate once
+  )
+
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -18,15 +28,16 @@ export default function PageBackground() {
       {mounted && (
         <div className="absolute inset-0 pointer-events-none">
           <div className="shimmer-container">
-            {[...Array(15)].map((_, i) => (
+            {shimmerPoints.map((point, i) => (
               <div
                 key={i}
                 className="shimmer-point"
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 10}s`,
-                  animationDuration: `${15 + Math.random() * 20}s`,
+                  left: point.left,
+                  top: point.top,
+                  animationDelay: point.delay,
+                  animationDuration: point.duration,
+                  willChange: 'transform, opacity', // Hint to browser for optimization
                 }}
               ></div>
             ))}
@@ -40,6 +51,7 @@ export default function PageBackground() {
         style={{
           background: "radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.3) 100%)",
           opacity: 0.5,
+          willChange: 'opacity', // Hint to browser for optimization
         }}
       ></div>
 
@@ -48,6 +60,7 @@ export default function PageBackground() {
           position: absolute;
           inset: 0;
           overflow: hidden;
+          transform: translateZ(0); /* Force GPU acceleration */
         }
         
         .shimmer-point {
@@ -60,23 +73,24 @@ export default function PageBackground() {
           filter: blur(1px);
           box-shadow: 0 0 4px #D4AF37;
           animation: shimmerFloat linear infinite, shimmerPulse ease-in-out infinite;
+          transform: translateZ(0); /* Force GPU acceleration */
         }
         
         @keyframes shimmerFloat {
           0% {
-            transform: translate(0, 0);
+            transform: translate3d(0, 0, 0);
           }
           25% {
-            transform: translate(20px, -15px);
+            transform: translate3d(20px, -15px, 0);
           }
           50% {
-            transform: translate(40px, 10px);
+            transform: translate3d(40px, 10px, 0);
           }
           75% {
-            transform: translate(20px, 25px);
+            transform: translate3d(20px, 25px, 0);
           }
           100% {
-            transform: translate(0, 0);
+            transform: translate3d(0, 0, 0);
           }
         }
         

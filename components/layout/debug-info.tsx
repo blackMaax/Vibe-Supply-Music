@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { directImageUrls } from "@/lib/static-data"
 
 export default function DebugInfo() {
   const [isOpen, setIsOpen] = useState(false)
@@ -26,20 +25,16 @@ export default function DebugInfo() {
       })
     }
 
-    // Test loading some key images
-    const testImages = [
-      { key: "logo", url: directImageUrls.logo },
-      { key: "heroImage", url: directImageUrls.heroImage },
-      { key: "performance1", url: directImageUrls.performance1 },
-      { key: "placeholder", url: "/placeholder.svg?height=200&width=200&text=Test" },
-    ]
+    // Test loading placeholder image
+    const testImage = {
+      key: "placeholder",
+      url: "/placeholder.svg?height=200&width=200&text=Test"
+    }
 
-    testImages.forEach(({ key, url }) => {
-      const img = new Image()
-      img.onload = () => setImageStatus((prev) => ({ ...prev, [key]: "Loaded" }))
-      img.onerror = () => setImageStatus((prev) => ({ ...prev, [key]: "Failed" }))
-      img.src = url
-    })
+    const img = new Image()
+    img.onload = () => setImageStatus((prev) => ({ ...prev, [testImage.key]: "Loaded" }))
+    img.onerror = () => setImageStatus((prev) => ({ ...prev, [testImage.key]: "Failed" }))
+    img.src = testImage.url
   }, [])
 
   return (

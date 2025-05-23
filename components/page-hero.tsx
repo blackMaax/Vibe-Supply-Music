@@ -4,7 +4,7 @@ import type React from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import SectionDivider from "@/components/layout/section-divider"
-import { getImageUrl } from "@/lib/static-data"
+import { urlForImage } from "@/lib/sanity-image"
 import LuxuryCard from "@/components/ui/luxury-card"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
@@ -13,6 +13,7 @@ interface PageHeroProps {
   title: string
   subtitle?: string
   backgroundImage?: string
+  backgroundImageAsset?: any // Sanity image asset
   showDivider?: boolean
   className?: string
 }
@@ -20,10 +21,14 @@ interface PageHeroProps {
 export default function PageHero({
   title,
   subtitle,
-  backgroundImage = "https://res.cloudinary.com/dtowd0j7j/image/upload/v1746194928/WhatsApp_Image_2025-04-20_at_22.27.19_78e42c49_mel962.jpg",
+  backgroundImage,
+  backgroundImageAsset,
   showDivider = true,
   className = "",
 }: PageHeroProps) {
+  // Get image URL from Sanity or use provided backgroundImage
+  const imageUrl = backgroundImageAsset ? urlForImage(backgroundImageAsset) : backgroundImage
+
   return (
     <section
       className={`relative overflow-hidden text-white pt-32 mt-24 pb-32 min-h-[600px] flex items-center ${className}`}
@@ -31,11 +36,12 @@ export default function PageHero({
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <Image
-          src={backgroundImage || getImageUrl("heroImage")}
-          alt="Hero Background"
+          src={imageUrl || "/placeholder.svg?height=600&width=1200&text=Hero+Image"}
+          alt={title}
           fill
           className="object-cover"
           priority
+          sizes="100vw"
         />
 
         {/* Gold line patterns */}

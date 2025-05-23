@@ -13,11 +13,17 @@ import type { Metadata } from 'next' // Import Metadata type
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
+  display: 'swap',
+  preload: true,
+  adjustFontFallback: true,
 })
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair-display",
+  display: 'swap',
+  preload: true,
+  adjustFontFallback: true,
 })
 
 // metadata can now be safely exported

@@ -4,10 +4,10 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { Check, ChevronRight } from "lucide-react"
-import { getImageUrl } from "@/lib/image-loader"
 import LuxuryCard from "@/components/ui/luxury-card"
 import type { PackageItem } from "../../sanity/lib/queries"
-import { urlForImage as urlFor } from "@/lib/sanity-image"
+import { urlForImage } from "@/lib/sanity-image"
+import { Button } from "@/components/ui/button"
 
 interface PackageCardProps {
   _key?: string
@@ -19,7 +19,8 @@ interface PackageCardProps {
 }
 
 const PackageCard = ({ name, tagline, features = [], isPopular = false, image }: PackageCardProps) => {
-  const resolvedImageSrc = (image && image.asset ? urlFor(image as any) : null) || getImageUrl("performance3");
+  // Get image URL from Sanity, ensuring it's always a string
+  const resolvedImageSrc = image?.asset ? urlForImage(image) || "/placeholder.svg?height=600&width=800&text=Package" : "/placeholder.svg?height=600&width=800&text=Package"
   const imageAltText = image?.alt || `${name} package`
 
   return (
@@ -153,63 +154,49 @@ const PackageCard = ({ name, tagline, features = [], isPopular = false, image }:
 interface CTASectionProps {
   title?: string
   subtitle?: string
-  buttonText?: string
-  buttonLink?: string
-  packages?: PackageItem[]
-  imageSrc?: string
+  ctaText?: string
+  ctaLink?: string
+  image?: any // Sanity image asset
+  packages?: PackageCardProps[] // Add packages prop
 }
 
-const CTASection = ({
-  title = "Ready to Elevate Your Event?",
-  subtitle = "Tailored entertainment solutions for your special event",
-  buttonText = "View Our Packages",
-  buttonLink = "/packages",
-  packages = [],
-}: CTASectionProps) => {
-  // const titleParts = title.split(" "); // Old title splitting, not needed with full gold-text
-  // const mainTitle = titleParts.slice(0, 2).join(" "); 
-  // const goldPart = titleParts.slice(2).join(" ");    
+export default function CTASection({
+  title = "Ready to Make Your Event Unforgettable?",
+  subtitle = "Book a consultation with us today and let's create something special together.",
+  ctaText = "Book a Consultation",
+  ctaLink = "/contact",
+  image,
+  packages = [], // Default to empty array
+}: CTASectionProps) {
+  // Get image URL from Sanity, ensuring it's always a string
+  const imageUrl = image?.asset ? urlForImage(image) || "/placeholder.svg?height=600&width=800&text=CTA+Image" : "/placeholder.svg?height=600&width=800&text=CTA+Image"
 
   return (
-    <section className="pt-16 md:pt-20 pb-12 relative mt-0 mb-0 rounded-lg">
-      <div className="container mx-auto px-4 relative z-10">
-        {/* New Title Card Structure */}
-        <div className="text-center mb-10 md:mb-12"> {/* Matches original CTASection bottom margin */}
-          <LuxuryCard className="max-w-3xl mx-auto py-4 px-6 md:py-5 md:px-8" variant="default" cornerAccents="none">
-            <div className="text-center">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-3 md:mb-4 gold-text pb-1 leading-relaxed">
-                {title}
-              </h2>
-              <div className="w-16 md:w-20 h-0.5 bg-gradient-to-r from-transparent via-gold/50 to-transparent my-2 md:my-3 mx-auto"></div>
-              <p className="text-white/80 max-w-xl mx-auto text-xs sm:text-sm md:text-base font-sans leading-relaxed"> {/* Added font-sans and leading-relaxed for consistency */}
-                {subtitle}
-              </p>
-            </div>
-          </LuxuryCard>
-        </div>
-        {/* End New Title Card Structure */}
-
-        {/* Package Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {packages.map((pkg) => (
-            <PackageCard key={pkg._key} {...pkg} />
-          ))}
-        </div>
-
-        {/* View More Details Link */}
-        <div className="text-center mt-12">
-          <Link
-            href="/packages"
-            className="inline-flex items-center py-2 px-6 bg-gold-light/30 hover:bg-gold-light/40 border border-gold/30 hover:border-gold/50 rounded-full text-black group text-sm sm:text-base transition-all duration-300 shadow-md hover:shadow-lg"
-          >
-            To view more details about the packages,
-            <span className="font-semibold mx-1.5 group-hover:underline">click here</span>
-            <ChevronRight size={18} className="ml-1 transition-transform duration-300 group-hover:translate-x-1" />
+    <section className="py-16 md:py-24">
+      <div className="container mx-auto px-4">
+        {/* Title Card */}
+        <LuxuryCard className="max-w-3xl mx-auto py-4 px-6 md:py-5 md:px-8 mb-12" variant="default" cornerAccents="none">
+          <div className="text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-3 md:mb-4 gold-text pb-1 leading-relaxed">{title}</h2>
+            <div className="w-16 md:w-20 h-0.5 bg-gradient-to-r from-transparent via-gold/50 to-transparent my-2 md:my-3 mx-auto"></div>
+            <p className="text-white/80 max-w-xl mx-auto text-xs sm:text-sm md:text-base font-sans leading-relaxed">{subtitle}</p>
+          </div>
+        </LuxuryCard>
+        {packages.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+            {packages.map((pkg, idx) => (
+              <PackageCard key={pkg._key || idx} {...pkg} />
+            ))}
+          </div>
+        )}
+        {/* Gold-tinted, rounded link for more details */}
+        <div className="flex justify-center mb-8">
+          <Link href="/packages" className="inline-flex items-center px-6 py-3 rounded-full bg-gold/10 hover:bg-gold/30 text-black font-medium shadow-md transition-all duration-200 border border-gold/40 backdrop-blur-md">
+            <span className="mr-2">To view more details about the packages, <span className="font-bold">click here</span></span>
+            <ChevronRight className="w-5 h-5" />
           </Link>
         </div>
       </div>
     </section>
   )
 }
-
-export default CTASection

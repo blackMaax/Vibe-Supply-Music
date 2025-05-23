@@ -1,10 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
-import { motion } from "framer-motion"
+import { motion, type HTMLMotionProps } from "framer-motion"
 import { X } from "lucide-react"
-import { getGalleryImage } from "@/lib/static-data"
+import { urlForImage } from "@/lib/sanity-image"
 import LuxuryCard from "@/components/ui/luxury-card"
 
 interface GalleryImage {
@@ -13,6 +13,7 @@ interface GalleryImage {
   caption?: string
   asset: {
     _ref: string
+    url?: string
   }
 }
 
@@ -21,8 +22,40 @@ interface GalleryGridProps {
   performanceMode?: boolean
 }
 
+// Create a properly typed motion div component that accepts HTML attributes
+const MotionDiv = motion<HTMLMotionProps<"div">>("div")
+
 const GalleryGrid = ({ images = [], performanceMode = false }: GalleryGridProps) => {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null)
+  const [viewportWidth, setViewportWidth] = useState<number>(0)
+
+  // Update viewport width on mount and resize
+  useEffect(() => {
+    const updateWidth = () => setViewportWidth(window.innerWidth)
+    updateWidth()
+    window.addEventListener('resize', updateWidth)
+    return () => window.removeEventListener('resize', updateWidth)
+  }, [])
+
+  // Calculate appropriate image sizes based on viewport
+  const getImageSize = (isFullscreen: boolean = false) => {
+    if (isFullscreen) {
+      // For fullscreen view, use viewport width
+      return { width: viewportWidth, height: Math.round(viewportWidth * 0.75) }
+    }
+    // For grid view, use smaller sizes
+    if (viewportWidth >= 1536) return { width: 800, height: 600 } // 2xl
+    if (viewportWidth >= 1280) return { width: 600, height: 450 } // xl
+    if (viewportWidth >= 1024) return { width: 500, height: 375 } // lg
+    if (viewportWidth >= 768) return { width: 400, height: 300 }  // md
+    return { width: 300, height: 225 } // sm and below
+  }
+
+  // Get image URL from Sanity with appropriate size
+  const getImageSrc = (image: GalleryImage, isFullscreen: boolean = false): string => {
+    const size = getImageSize(isFullscreen)
+    return urlForImage(image, size.width, size.height) || "/placeholder.svg?height=600&width=800&text=gallery"
+  }
 
   // If no images are provided, use fallback data
   const fallbackImages = [
@@ -78,229 +111,76 @@ const GalleryGrid = ({ images = [], performanceMode = false }: GalleryGridProps)
 
   const displayImages = images.length > 0 ? images : fallbackImages
 
-  // Get image URL with fallback
-  const getImageSrc = (index: number): string => {
-    return getGalleryImage(index)
-  }
-
   const imageToDisplay = selectedImage || { _key: '', asset: { _ref: '' } }; // Ensure selectedImage isn't null
-  const selectedImageSrc = selectedImage ? getImageSrc(displayImages.findIndex(img => img._key === selectedImage._key)) : null;
+  const selectedImageSrc = selectedImage ? getImageSrc(selectedImage) : null;
 
   return (
-    <>
-      {/* Custom grid layout based on the sketch */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
-        {/* Large vertical tile on the left */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true, margin: "100px" }}
-          className="md:row-span-2 h-[500px] md:h-auto"
-          style={{ willChange: "opacity, transform" }}
-        >
-          <LuxuryCard
-            variant="gallery-item"
-            className="h-full"
-            title={(displayImages[0] && displayImages[0].caption) || "Performance 1"}
-            imageSrc={getImageSrc(0) || "/placeholder.svg"}
-            imageAlt={(displayImages[0] && displayImages[0].alt) || "Gallery image 1"}
-            onClick={() => displayImages[0] && setSelectedImage(displayImages[0])}
-            performanceMode={performanceMode}
-            floatingParticles={!performanceMode}
-            sparkleOverlay={!performanceMode}
-          />
-        </motion.div>
-
-        {/* Two square tiles side by side */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          viewport={{ once: true, margin: "100px" }}
-          className="h-[240px]"
-          style={{ willChange: "opacity, transform" }}
-        >
-          <LuxuryCard
-            variant="gallery-item"
-            className="h-full"
-            title={(displayImages[1] && displayImages[1].caption) || "Performance 2"}
-            imageSrc={getImageSrc(1) || "/placeholder.svg"}
-            imageAlt={(displayImages[1] && displayImages[1].alt) || "Gallery image 2"}
-            onClick={() => displayImages[1] && setSelectedImage(displayImages[1])}
-            performanceMode={performanceMode}
-            floatingParticles={!performanceMode}
-            sparkleOverlay={!performanceMode}
-          />
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          viewport={{ once: true, margin: "100px" }}
-          className="h-[240px]"
-          style={{ willChange: "opacity, transform" }}
-        >
-          <LuxuryCard
-            variant="gallery-item"
-            className="h-full"
-            title={(displayImages[2] && displayImages[2].caption) || "Performance 3"}
-            imageSrc={getImageSrc(2) || "/placeholder.svg"}
-            imageAlt={(displayImages[2] && displayImages[2].alt) || "Gallery image 3"}
-            onClick={() => displayImages[2] && setSelectedImage(displayImages[2])}
-            performanceMode={performanceMode}
-            floatingParticles={!performanceMode}
-            sparkleOverlay={!performanceMode}
-          />
-        </motion.div>
-
-        {/* Full-width rectangle */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          viewport={{ once: true, margin: "100px" }}
-          className="md:col-span-3 h-[300px]"
-          style={{ willChange: "opacity, transform" }}
-        >
-          <LuxuryCard
-            variant="gallery-item"
-            className="h-full"
-            title={(displayImages[3] && displayImages[3].caption) || "Performance 4"}
-            imageSrc={getImageSrc(3) || "/placeholder.svg"}
-            imageAlt={(displayImages[3] && displayImages[3].alt) || "Gallery image 4"}
-            onClick={() => displayImages[3] && setSelectedImage(displayImages[3])}
-            performanceMode={performanceMode}
-            floatingParticles={!performanceMode}
-            sparkleOverlay={!performanceMode}
-          />
-        </motion.div>
-
-        {/* Wide horizontal rectangle and tall rectangle side by side */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          viewport={{ once: true, margin: "100px" }}
-          className="md:col-span-2 h-[250px]"
-          style={{ willChange: "opacity, transform" }}
-        >
-          <LuxuryCard
-            variant="gallery-item"
-            className="h-full"
-            title={(displayImages[4] && displayImages[4].caption) || "Performance 5"}
-            imageSrc={getImageSrc(4) || "/placeholder.svg"}
-            imageAlt={(displayImages[4] && displayImages[4].alt) || "Gallery image 5"}
-            onClick={() => displayImages[4] && setSelectedImage(displayImages[4])}
-            performanceMode={performanceMode}
-            floatingParticles={!performanceMode}
-            sparkleOverlay={!performanceMode}
-          />
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          viewport={{ once: true, margin: "100px" }}
-          className="h-[250px]"
-          style={{ willChange: "opacity, transform" }}
-        >
-          <LuxuryCard
-            variant="gallery-item"
-            className="h-full"
-            title={(displayImages[5] && displayImages[5].caption) || "Performance 6"}
-            imageSrc={getImageSrc(5) || "/placeholder.svg"}
-            imageAlt={(displayImages[5] && displayImages[5].alt) || "Gallery image 6"}
-            onClick={() => displayImages[5] && setSelectedImage(displayImages[5])}
-            performanceMode={performanceMode}
-            floatingParticles={!performanceMode}
-            sparkleOverlay={!performanceMode}
-          />
-        </motion.div>
-
-        {/* Two smaller squares at the bottom */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          viewport={{ once: true, margin: "100px" }}
-          className="md:col-span-1 h-[200px]"
-          style={{ willChange: "opacity, transform" }}
-        >
-          <LuxuryCard
-            variant="gallery-item"
-            className="h-full"
-            title={(displayImages[6] && displayImages[6].caption) || "Performance 7"}
-            imageSrc={getImageSrc(6) || "/placeholder.svg"}
-            imageAlt={(displayImages[6] && displayImages[6].alt) || "Gallery image 7"}
-            onClick={() => displayImages[6] && setSelectedImage(displayImages[6])}
-            performanceMode={performanceMode}
-            floatingParticles={!performanceMode}
-            sparkleOverlay={!performanceMode}
-          />
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
-          viewport={{ once: true, margin: "100px" }}
-          className="md:col-span-2 h-[200px]"
-          style={{ willChange: "opacity, transform" }}
-        >
-          <LuxuryCard
-            variant="gallery-item"
-            className="h-full"
-            title={(displayImages[7] && displayImages[7].caption) || "Performance 8"}
-            imageSrc={getImageSrc(7) || "/placeholder.svg"}
-            imageAlt={(displayImages[7] && displayImages[7].alt) || "Gallery image 8"}
-            onClick={() => displayImages[7] && setSelectedImage(displayImages[7])}
-            performanceMode={performanceMode}
-            floatingParticles={!performanceMode}
-            sparkleOverlay={!performanceMode}
-          />
-        </motion.div>
+    <div className="relative w-full">
+      {/* Grid view */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {displayImages.map((img, index) => (
+          <MotionDiv
+            key={img._key || `gallery-${index}`}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 + index * 0.15 }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="relative aspect-[4/3] overflow-hidden rounded-lg cursor-pointer"
+            onClick={() => setSelectedImage(img)}
+          >
+            <Image
+              src={getImageSrc(img)}
+              alt={img.alt || "Gallery image"}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+              className="object-cover transition-transform duration-300 hover:scale-105"
+              priority={index < 4} // Prioritize loading first 4 images
+            />
+            {img.caption && (
+              <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-2 text-white text-sm">
+                {img.caption}
+              </div>
+            )}
+          </MotionDiv>
+        ))}
       </div>
 
-      {/* Lightbox */}
+      {/* Fullscreen view */}
       {selectedImage && (
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
           onClick={() => setSelectedImage(null)}
         >
-          <button
-            className="absolute top-4 right-4 bg-white/10 rounded-full p-2 text-white hover:bg-white/20 transition-colors duration-300"
-            onClick={() => setSelectedImage(null)}
-          >
-            <X size={24} />
-          </button>
-
-          <div className="relative w-full max-w-5xl max-h-[80vh] rounded-xl overflow-hidden">
+          <div className="relative w-full h-full max-w-7xl max-h-[90vh]">
             <Image
-              src={selectedImageSrc || getGalleryImage(0) || "/placeholder.svg"}
-              alt={imageToDisplay.alt || "Selected gallery image"}
-              width={1200}
-              height={800}
-              className="object-contain w-full h-full"
-              loading="lazy"
-              onError={(e) => {
-                console.error("Error loading lightbox image:", e)
-                // @ts-ignore - fallback to placeholder
-                e.target.src = "/placeholder.svg?height=800&width=1200&text=Gallery+Image"
-              }}
+              src={getImageSrc(selectedImage, true)}
+              alt={selectedImage.alt || "Gallery image"}
+              fill
+              sizes="100vw"
+              className="object-contain"
+              priority
             />
-
-            {imageToDisplay.caption || "No caption available"}
+            <button
+              className="absolute top-4 right-4 text-white bg-black/50 rounded-full p-2 hover:bg-black/70"
+              onClick={(e) => {
+                e.stopPropagation()
+                setSelectedImage(null)
+              }}
+            >
+              <X className="w-6 h-6" />
+            </button>
+            {selectedImage.caption && (
+              <div className="absolute bottom-4 left-4 right-4 bg-black/60 p-4 text-white rounded-lg">
+                {selectedImage.caption}
+              </div>
+            )}
           </div>
-        </motion.div>
+        </MotionDiv>
       )}
-    </>
+    </div>
   )
 }
 

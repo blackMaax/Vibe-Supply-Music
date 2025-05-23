@@ -434,6 +434,21 @@ export default function LuxuryCard({
     motionComponentProps.onClick = onClick;
   }
 
+  // For static/default variant, render a regular div (no motion)
+  if (variant === "default" && !onClick && !actionLink) {
+    return (
+      <div
+        className={`relative rounded-2xl transition-all duration-500 ${getPadding()} ${getAdditionalClasses()} ${className}`}
+        style={{
+          ...getBackgroundStyle(),
+          minHeight: "fit-content",
+        }}
+      >
+        {renderCardContent()}
+      </div>
+    )
+  }
+
   // Render the card
   // If it's a clickable card with an actionLink, wrap with Link and use motion.a
   if (isClickable && actionLink) {

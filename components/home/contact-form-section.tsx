@@ -9,8 +9,14 @@ import { useForm, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { toast } from "sonner"
-import ReCAPTCHA from "react-google-recaptcha";
+import dynamic from 'next/dynamic';
 import { useRef, useState, useEffect } from "react";
+
+// Lazy load reCAPTCHA
+const ReCAPTCHA = dynamic(() => import('react-google-recaptcha'), {
+  ssr: false,
+  loading: () => <div className="h-[60px] w-[60px] animate-pulse bg-gray-200/20 rounded" />
+});
 
 // Zod Schema for validation
 const contactFormSchema = z.object({
@@ -74,6 +80,7 @@ const ContactFormSection = ({
     resolver: zodResolver(contactFormSchema),
     mode: "onChange"
   });
+  const [isRecaptchaLoaded, setIsRecaptchaLoaded] = useState(false);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [formSuccessMessage, setFormSuccessMessage] = useState<string | null>(null);
 
@@ -83,6 +90,26 @@ const ContactFormSection = ({
       setFormSuccessMessage(null);
     }
   }, [watchedFields, dirtyFields, formSuccessMessage]);
+
+  // Only load reCAPTCHA when form is interacted with
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsRecaptchaLoaded(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const formElement = document.querySelector('form');
+    if (formElement) {
+      observer.observe(formElement);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleRecaptcha = async () => {
     if (!recaptchaRef.current) {
@@ -256,14 +283,16 @@ const ContactFormSection = ({
                   )}
 
                   <div className="mt-3 text-center">
-                    <div className="recaptcha-badge-wrapper" style={{ transform: 'scale(0.77)', transformOrigin: 'center', display: 'inline-block', height: '60px' }}>
-                      <ReCAPTCHA
-                        ref={recaptchaRef}
-                        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-                        size="invisible"
-                        badge="inline"
-                      />
-                    </div>
+                    {isRecaptchaLoaded && (
+                      <div className="recaptcha-badge-wrapper" style={{ transform: 'scale(0.77)', transformOrigin: 'center', display: 'inline-block', height: '60px' }}>
+                        <ReCAPTCHA
+                          ref={recaptchaRef}
+                          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+                          size="invisible"
+                          badge="inline"
+                        />
+                      </div>
+                    )}
                     <style jsx global>{`
                       .grecaptcha-badge {
                         visibility: hidden !important;
