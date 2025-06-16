@@ -42,7 +42,7 @@ interface ContactFormSectionProps {
   socialLinks?: Array<{ _key?: string; platform?: string; url?: string }>;
 }
 
-const RECAPTCHA_ACTION = process.env.NEXT_PUBLIC_RECAPTCHA_V3_EXPECTED_ACTION || "contact_form_submit";
+const RECAPTCHA_ACTION = process.env.NEXT_PUBLIC_RECAPTCHA_V3_EXPECTED_ACTION || "submitContactForm";
 
 const getSocialIcon = (platform?: string) => {
   switch (platform?.toLowerCase()) {
