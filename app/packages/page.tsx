@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 }
 
 // Add revalidation
-export const revalidate = 60
+// export const revalidate = 60 // Disabled for testing
 
 export default async function PackagesPage() {
   const data = await getPackagePageDataOptimized()

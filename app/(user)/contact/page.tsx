@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 };
 
 // Add revalidation
-export const revalidate = 60; // Or set to a higher value like 60 for production
+// export const revalidate = 60; // Disabled for testing
 
 export default async function ContactPage() {
   const siteSettings = await getSiteSettingsOptimized();
@@ -44,7 +44,7 @@ export default async function ContactPage() {
     title: contactSectionData?.sectionTitle || "Get in Touch",
     subtitle: contactSectionData?.sectionSubtitle || "Ready to elevate your event? Contact us.",
     imageSrc: imageSrc || "/placeholder.jpg",
-    imageAlt: contactSectionData?.featuredImageCard?.imageAlt || "Contact Vibe Supply",
+    imageAlt: "Contact Vibe Supply",
     featuredImageTitle: contactSectionData?.featuredImageCard?.imageTitle,
     featuredImageSubtitle: contactSectionData?.featuredImageCard?.imageSubtitle,
     contactEmail: siteSettings?.contactEmail,
@@ -58,7 +58,7 @@ export default async function ContactPage() {
         <div className="container mx-auto px-4 mb-8 flex justify-center">
           <Image 
             src={logoToDisplay}
-            alt={siteSettings?.logo?.alt || "Vibe Supply Logo"}
+            alt="Vibe Supply Logo"
             width={850}
             height={340}
             className="object-contain h-52 sm:h-60 md:h-72 lg:h-80 w-auto"

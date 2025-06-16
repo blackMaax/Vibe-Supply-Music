@@ -16,7 +16,6 @@ export interface SanityAsset {
 
 export interface SanityImageObject {
   asset: SanityAsset;
-  alt?: string;
   caption?: string;
 }
 
@@ -58,7 +57,6 @@ export interface PackageSectionData {
 
 export interface HeroImageItem {
   _key?: string;
-  alt?: string;
   title?: string; 
   asset: SanityAsset;
 }
@@ -69,7 +67,6 @@ export interface MainHeroData {
 
 export interface GalleryImageItemSanity {
   _key: string;
-  alt?: string;
   caption?: string;
   showCaption?: boolean;
   image: SanityImageObject;
@@ -99,7 +96,6 @@ export interface ContactSectionData {
   sectionSubtitle?: string;
   featuredImageCard?: {
     image?: SanityImageObject;
-    imageAlt?: string;
     imageTitle?: string;
     imageSubtitle?: string;
   };
@@ -130,7 +126,6 @@ export interface AboutUsSectionData {
         };
       };
     };
-    alt?: string;
     position?: 'left' | 'right';
   };
   mainContentTitle?: string;
@@ -149,7 +144,6 @@ export interface AboutUsSectionData {
         };
       };
     };
-    alt?: string;
     position?: 'left' | 'right';
   };
 }
@@ -219,7 +213,6 @@ export interface AboutPageData {
           };
         };
       };
-      alt?: string;
       position?: 'left' | 'right';
     };
     mainContentTitle?: string;
@@ -238,7 +231,6 @@ export interface AboutPageData {
           };
         };
       };
-      alt?: string;
       position?: 'left' | 'right';
     };
   };
@@ -250,7 +242,7 @@ export interface AboutPageData {
   };
 }
 
-// --- Query Functions ---
+// --- Fetch Functions ---
 
 export async function getSiteSettings(): Promise<SiteSettingsData | null> {
   try {
@@ -264,8 +256,7 @@ export async function getSiteSettings(): Promise<SiteSettingsData | null> {
           metadata {
             dimensions
           }
-        },
-        alt
+        }
       }
     }`
     return await client.fetch(query)
@@ -287,8 +278,7 @@ export async function getSiteSettingsOptimized(): Promise<SiteSettingsData | nul
         metadata {
           dimensions
         }
-      },
-      alt
+      }
     },
     contactEmail,
     contactPhone,
@@ -312,7 +302,6 @@ export async function getHomepageData(): Promise<HomepageData | null> {
       mainHero {
         images[] {
           _key,
-          alt,
           title,
           asset -> {
             _id,
@@ -342,8 +331,7 @@ export async function getHomepageData(): Promise<HomepageData | null> {
               metadata {
                 dimensions
               }
-            },
-            alt
+            }
           },
           isPopular,
           features
@@ -354,7 +342,6 @@ export async function getHomepageData(): Promise<HomepageData | null> {
         subtitle,
         images[] {
           _key,
-          alt,
           caption,
           showCaption,
           image {
@@ -396,7 +383,6 @@ export async function getContactSectionData(): Promise<ContactSectionData | null
             }
           }
         },
-        imageAlt,
         imageTitle,
         imageSubtitle
       }
@@ -422,7 +408,6 @@ export async function getHomepageDataOptimized(): Promise<{
         mainHero {
           images[] {
             _key,
-            alt,
             title,
             asset -> {
               _id,
@@ -451,8 +436,7 @@ export async function getHomepageDataOptimized(): Promise<{
                 metadata {
                   dimensions
                 }
-              },
-              alt
+              }
             },
             isPopular,
             features
@@ -463,7 +447,6 @@ export async function getHomepageDataOptimized(): Promise<{
           subtitle,
           images[] {
             _key,
-            alt,
             caption,
             showCaption,
             image {
@@ -495,7 +478,6 @@ export async function getHomepageDataOptimized(): Promise<{
               }
             }
           },
-          imageAlt,
           imageTitle,
           imageSubtitle
         }
@@ -529,8 +511,7 @@ export async function getAboutPageDataOptimized(): Promise<{
             _id,
             _ref,
             url
-          },
-          alt
+          }
         },
         contactEmail,
         contactPhone,
@@ -546,21 +527,28 @@ export async function getAboutPageDataOptimized(): Promise<{
             asset-> {
               _id,
               _ref,
-              url
+              url,
+              metadata {
+                dimensions
+              }
             },
-            alt,
             position
           },
           mainContentTitle,
           ourStoryParagraph,
-          keyPoints,
+          keyPoints[] {
+            _key,
+            text
+          },
           featuredImage {
             asset-> {
               _id,
               _ref,
-              url
+              url,
+              metadata {
+                dimensions
+              }
             },
-            alt,
             position
           }
         },
@@ -578,39 +566,55 @@ export async function getAboutPageDataOptimized(): Promise<{
                 _id,
                 _ref,
                 url
-              },
-              alt
+              }
             },
-            socialLinks
+            socialLinks[] {
+              _key,
+              platform,
+              url
+            }
           }
         }
       },
       "contactSectionData": *[_type == "contactSection"][0] {
+        _id,
+        _type,
         sectionTitle,
         sectionSubtitle,
         featuredImageCard {
           image {
-            asset-> {
+            asset -> {
               _id,
               _ref,
-              url
-            },
-            alt
+              url,
+              metadata {
+                dimensions
+              }
+            }
           },
-          imageAlt,
           imageTitle,
           imageSubtitle
         }
       }
     }`
-    return await client.fetch(query)
+
+    const data = await client.fetch(query)
+    
+    if (!data?.siteSettings || !data?.aboutPageData) {
+      throw new Error('Required data missing from Sanity')
+    }
+
+    return {
+      siteSettings: data.siteSettings,
+      aboutPageData: data.aboutPageData,
+      contactSectionData: data.contactSectionData || null,
+    }
   } catch (error) {
     console.error("Error fetching about page data:", error)
     return null
   }
 }
 
-// Function to fetch Package Page data
 export async function getPackagePageData(): Promise<PackagePageData | null> {
   try {
     const query = `*[_type == "packagePage"][0] {
@@ -635,8 +639,7 @@ export async function getPackagePageData(): Promise<PackagePageData | null> {
               metadata {
                 dimensions
               }
-            },
-            alt
+            }
           },
           isPopular,
           features
@@ -653,8 +656,7 @@ export async function getPackagePageData(): Promise<PackagePageData | null> {
             metadata {
               dimensions
             }
-          },
-          alt
+          }
         }
       },
       faqSection {
@@ -672,8 +674,7 @@ export async function getPackagePageData(): Promise<PackagePageData | null> {
               metadata {
                 dimensions
               }
-            },
-            alt
+            }
           },
           imagePosition
         }
@@ -693,7 +694,18 @@ export async function getPackagePageDataOptimized(): Promise<{
 }> {
   try {
     const query = `{
-      "siteSettings": *[_type == "siteSettings"][0],
+      "siteSettings": *[_type == "siteSettings"][0] {
+        logo {
+          asset-> {
+            _id,
+            _ref,
+            url
+          }
+        },
+        contactEmail,
+        contactPhone,
+        socialLinks
+      },
       "packagePageData": *[_type == "packagePage"][0] {
         _id,
         _type,
@@ -716,8 +728,7 @@ export async function getPackagePageDataOptimized(): Promise<{
                 metadata {
                   dimensions
                 }
-              },
-              alt
+              }
             },
             isPopular,
             features
@@ -734,8 +745,7 @@ export async function getPackagePageDataOptimized(): Promise<{
               metadata {
                 dimensions
               }
-            },
-            alt
+            }
           }
         },
         faqSection {
@@ -753,14 +763,14 @@ export async function getPackagePageDataOptimized(): Promise<{
                 metadata {
                   dimensions
                 }
-              },
-              alt
+              }
             },
             imagePosition
           }
         }
       }
-    }`;
+    }`
+
     const result = await client.fetch(query);
     return {
       siteSettings: result.siteSettings || null,
