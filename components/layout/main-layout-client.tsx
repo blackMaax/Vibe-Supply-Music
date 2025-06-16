@@ -6,8 +6,9 @@ import dynamic from 'next/dynamic'
 import { ThemeProvider } from "@/components/theme-provider"
 import type { SiteSettingsData } from "@/sanity/lib/queries"
 import { urlForImage as urlFor } from "@/lib/sanity-image"
+import { Suspense } from 'react'
 
-// Lazy load non-critical components
+// Lazy load non-critical components with better error handling
 const DebugInfo = dynamic(() => import("@/components/layout/debug-info"), {
   ssr: false,
   loading: () => null
@@ -18,14 +19,16 @@ const CookieBanner = dynamic(() => import("@/components/layout/cookie-banner"), 
   loading: () => null
 })
 
-// Add Footer as a dynamic import
+// Add Footer as a dynamic import with fallback
 const Footer = dynamic(() => import("@/components/layout/footer"), {
-  loading: () => <div className="h-32 bg-black/50" />
+  loading: () => <div className="h-32 bg-black/50" />,
+  ssr: true
 })
 
 // Add PageBackground as a dynamic import
 const PageBackground = dynamic(() => import("@/components/layout/page-background"), {
-  loading: () => null
+  loading: () => null,
+  ssr: false
 })
 
 interface MainLayoutClientProps {
@@ -48,13 +51,21 @@ export default function MainLayoutClient({ children, siteSettings }: MainLayoutC
         enableSystem
         disableTransitionOnChange
       >
-        {children} 
+        <Suspense fallback={<div>Loading...</div>}>
+          {children}
+        </Suspense>
       </ThemeProvider>
     )
   }
 
-  // Default layout for the rest of the site
-  const footerLogoUrl = siteSettings?.logoWhite ? urlFor(siteSettings.logoWhite) : null;
+  // Safely get footer logo URL
+  let footerLogoUrl: string | null = null;
+  try {
+    footerLogoUrl = siteSettings?.logoWhite ? urlFor(siteSettings.logoWhite) : null;
+  } catch (error) {
+    // Silently handle image URL errors
+    footerLogoUrl = null;
+  }
 
   return (
     <ThemeProvider
@@ -63,19 +74,29 @@ export default function MainLayoutClient({ children, siteSettings }: MainLayoutC
       enableSystem
       disableTransitionOnChange
     >
-      <PageBackground />
+      <Suspense fallback={null}>
+        <PageBackground />
+      </Suspense>
       <main className={`min-h-screen relative z-10`}>
-        {children}
+        <Suspense fallback={<div className="min-h-screen bg-black/20" />}>
+          {children}
+        </Suspense>
       </main>
-      <Footer 
-        logoUrl={footerLogoUrl}
-        contactEmail={siteSettings?.contactEmail}
-        contactPhone={siteSettings?.contactPhone}
-        socialLinks={siteSettings?.socialLinks}
-        footerText={siteSettings?.footerText}
-      />
-      <DebugInfo />
-      <CookieBanner />
+      <Suspense fallback={<div className="h-32 bg-black/50" />}>
+        <Footer 
+          logoUrl={footerLogoUrl}
+          contactEmail={siteSettings?.contactEmail}
+          contactPhone={siteSettings?.contactPhone}
+          socialLinks={siteSettings?.socialLinks}
+          footerText={siteSettings?.footerText}
+        />
+      </Suspense>
+      <Suspense fallback={null}>
+        <DebugInfo />
+      </Suspense>
+      <Suspense fallback={null}>
+        <CookieBanner />
+      </Suspense>
     </ThemeProvider>
   )
 } 

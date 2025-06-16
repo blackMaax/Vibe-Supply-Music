@@ -26,13 +26,13 @@ const CookieBanner = () => {
     localStorage.setItem("cookie-preference", "accepted")
     setShowBanner(false)
     // Here you would initialize analytics or other cookie-dependent services
-    console.log("Cookies accepted")
+    // Development only: console.log("Cookies accepted")
   }
 
   const handleDecline = () => {
     localStorage.setItem("cookie-preference", "declined")
     setShowBanner(false)
-    console.log("Cookies declined")
+    // Development only: console.log("Cookies declined")
   }
 
   if (!showBanner) {

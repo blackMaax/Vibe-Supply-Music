@@ -80,25 +80,14 @@ export default function AboutUsSection({ data }: AboutUsSectionProps) {
             </div>
 
             {/* Ethos Image Card */}
-            <div
-              className={`relative rounded-xl overflow-hidden gold-border min-h-[200px] lg:min-h-0 h-auto lg:h-full ${data.ethosImage?.position === 'left' ? 'lg:order-1' : 'lg:order-2'}`}
-            >
-              <div className="relative rounded-xl overflow-hidden gold-border w-full h-full">
-                <Image
-                  src={data.ethosImage?.asset ? urlForImage(data.ethosImage) || "/placeholder.jpg" : "/placeholder.jpg"}
-                  alt={data.ethosImage?.alt || "Vibe Supply Ethos"}
-                  fill
-                  className="object-cover"
-                />
-                {/* Enhanced border glow on hover */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 rounded-xl"
-                  style={{
-                    boxShadow: "inset 0 0 15px rgba(212, 175, 55, 0.3)",
-                  }}
-                ></div>
-              </div>
-            </div>
+            <LuxuryCard
+              variant="gallery-item"
+              cornerAccents="none"
+              sparkleOverlay={true}
+              className={`min-h-[200px] lg:min-h-0 h-auto lg:h-full ${data.ethosImage?.position === 'left' ? 'lg:order-1' : 'lg:order-2'}`}
+              imageSrc={data.ethosImage?.asset ? urlForImage(data.ethosImage) || "/placeholder.jpg" : "/placeholder.jpg"}
+              imageAlt={data.ethosImage?.alt || "Vibe Supply Ethos"}
+            />
           </div>
 
           {/* Main About Us Content Section (formerly handled by the second AboutUsSection call) */}
@@ -144,25 +133,14 @@ export default function AboutUsSection({ data }: AboutUsSectionProps) {
             </div>
 
             {/* Right Column: Image */}
-            <div
-              className={`relative rounded-xl overflow-hidden gold-border min-h-[200px] lg:min-h-0 h-auto lg:h-full ${data.featuredImage?.position === 'left' ? 'lg:order-1' : 'lg:order-2'}`}
-            >
-              <div className="relative rounded-xl overflow-hidden gold-border w-full h-full">
-                <Image
-                  src={data.featuredImage?.asset ? urlForImage(data.featuredImage) || "/placeholder.svg" : "/placeholder.svg"}
-                  alt={data.featuredImage?.alt || "About Us Featured Image"}
-                  fill
-                  className="object-cover"
-                />
-                {/* Enhanced border glow on hover */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 rounded-xl"
-                  style={{
-                    boxShadow: "inset 0 0 15px rgba(212, 175, 55, 0.3)",
-                  }}
-                ></div>
-              </div>
-            </div>
+            <LuxuryCard
+              variant="gallery-item"
+              cornerAccents="none"
+              sparkleOverlay={true}
+              className={`min-h-[200px] lg:min-h-0 h-auto lg:h-full ${data.featuredImage?.position === 'left' ? 'lg:order-1' : 'lg:order-2'}`}
+              imageSrc={data.featuredImage?.asset ? urlForImage(data.featuredImage) || "/placeholder.svg" : "/placeholder.svg"}
+              imageAlt={data.featuredImage?.alt || "About Us Featured Image"}
+            />
           </div>
         </div>
       </div>

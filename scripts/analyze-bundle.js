@@ -1,3 +1,30 @@
+#!/usr/bin/env node
+
+/**
+ * Bundle Analysis Script for Vibe Supply
+ * Helps identify performance bottlenecks and optimize JavaScript payload
+ */
+
+const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+console.log('🔍 Analyzing bundle size and performance...\n');
+
+// Install webpack-bundle-analyzer if not present
+try {
+  require.resolve('@next/bundle-analyzer');
+} catch (e) {
+  console.log('📦 Installing bundle analyzer...');
+  execSync('npm install --save-dev @next/bundle-analyzer', { stdio: 'inherit' });
+}
+
+// Create bundle analyzer config
+const bundleAnalyzerConfig = `
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -31,11 +58,8 @@ const nextConfig = {
       'recharts',
       'embla-carousel-react',
     ],
-    // Optimize CSS loading
     optimizeCss: true,
-    // Enable server components optimization
     serverComponentsExternalPackages: ['@sanity/image-url', 'nodemailer'],
-    // Turbo mode for faster builds
     turbo: {
       rules: {
         '*.svg': {
@@ -45,15 +69,11 @@ const nextConfig = {
       },
     },
   },
-  // Configure webpack for better chunking
   webpack: (config, { dev, isServer }) => {
-    // Production optimizations
     if (!dev && !isServer) {
-      // Enable tree shaking for better dead code elimination
       config.optimization.usedExports = true;
       config.optimization.sideEffects = false;
       
-      // Split chunks optimization
       config.optimization.splitChunks = {
         chunks: 'all',
         minSize: 20000,
@@ -62,35 +82,30 @@ const nextConfig = {
         maxAsyncRequests: 30,
         maxInitialRequests: 30,
         cacheGroups: {
-          // Vendor chunks
           vendor: {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendors',
             priority: 10,
             reuseExistingChunk: true,
           },
-          // Radix UI components
           radixUI: {
             test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
             name: 'radix-ui',
             priority: 20,
             reuseExistingChunk: true,
           },
-          // Framer Motion
           framerMotion: {
             test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
             name: 'framer-motion',
             priority: 20,
             reuseExistingChunk: true,
           },
-          // Sanity
           sanity: {
             test: /[\\/]node_modules[\\/](next-sanity|sanity|@sanity)[\\/]/,
             name: 'sanity',
             priority: 20,
             reuseExistingChunk: true,
           },
-          // UI components
           ui: {
             test: /[\\/]components[\\/]ui[\\/]/,
             name: 'ui-components',
@@ -105,12 +120,10 @@ const nextConfig = {
         },
       };
 
-      // Minimize bundle size
       config.optimization.moduleIds = 'deterministic';
       config.optimization.chunkIds = 'deterministic';
     }
 
-    // Alias for smaller lodash imports
     config.resolve.alias = {
       ...config.resolve.alias,
       'lodash': 'lodash-es',
@@ -118,12 +131,48 @@ const nextConfig = {
 
     return config;
   },
-  // Enable compression
   compress: true,
-  // Reduce bundle size by excluding source maps in production
   productionBrowserSourceMaps: false,
-  // Optimize fonts
   optimizeFonts: true,
 }
 
-export default nextConfig
+module.exports = withBundleAnalyzer(nextConfig)
+`;
+
+// Write the config
+fs.writeFileSync('next.config.analyzer.mjs', bundleAnalyzerConfig);
+
+console.log('🚀 Running bundle analysis...');
+console.log('   This will build your app and open the bundle analyzer in your browser.\n');
+
+// Run the analysis
+try {
+  execSync('ANALYZE=true npm run build', { 
+    stdio: 'inherit',
+    env: { ...process.env, ANALYZE: 'true' }
+  });
+} catch (error) {
+  console.error('❌ Bundle analysis failed:', error.message);
+  process.exit(1);
+}
+
+console.log('\n✅ Bundle analysis complete!');
+console.log('📊 The bundle analyzer should have opened in your browser.');
+console.log('🔍 Look for:');
+console.log('   • Large dependencies that could be optimized');
+console.log('   • Unused code that can be removed');
+console.log('   • Components that could be lazy-loaded');
+console.log('   • Duplicate dependencies');
+
+// Performance recommendations
+console.log('\n💡 Performance Recommendations:');
+console.log('1. Use dynamic imports for heavy components');
+console.log('2. Implement code splitting at route level');
+console.log('3. Optimize images and fonts');
+console.log('4. Remove unused dependencies');
+console.log('5. Use React.memo for expensive components');
+console.log('6. Implement virtual scrolling for long lists');
+console.log('7. Use service workers for caching');
+
+// Clean up
+fs.unlinkSync('next.config.analyzer.mjs'); 

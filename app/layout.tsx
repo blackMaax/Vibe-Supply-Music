@@ -7,7 +7,7 @@ import { Montserrat, Playfair_Display } from "next/font/google"
 import MainLayoutClient from "@/components/layout/main-layout-client" // Import the new client component
 import { getSiteSettings, type SiteSettingsData } from "@/sanity/lib/queries" // Corrected import path for SiteSettingsData and getSiteSettings
 import { urlFor } from "@/sanity/lib/image"; // Correct import for Sanity image URL builder
-import type { Metadata } from 'next' // Import Metadata type
+import type { Metadata, Viewport } from 'next' // Import Metadata and Viewport types
 // usePathname import REMOVED
 
 const montserrat = Montserrat({
@@ -16,6 +16,8 @@ const montserrat = Montserrat({
   display: 'swap',
   preload: true,
   adjustFontFallback: true,
+  fallback: ['system-ui', 'arial'],
+  weight: ['300', '400', '500', '600', '700'], // Only load needed weights
 })
 
 const playfairDisplay = Playfair_Display({
@@ -24,7 +26,15 @@ const playfairDisplay = Playfair_Display({
   display: 'swap',
   preload: true,
   adjustFontFallback: true,
+  fallback: ['Georgia', 'serif'],
+  weight: ['400', '500', '600', '700'], // Only load needed weights
 })
+
+// Viewport configuration - separated from metadata
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+}
 
 // metadata can now be safely exported
 // We will update this later to use fetched SEO defaults
@@ -51,15 +61,8 @@ export async function generateMetadata(): Promise<Metadata> {
     description: settings?.defaultSeoDescription || "High-energy live band for unforgettable events.",
     icons: {
       icon: faviconUrl,
-      // You can add other icon types here if configured in Sanity
-      // apple: appleIconUrl,
     },
-    // Add other metadata fields from settings as needed
-    // openGraph: {
-    //   title: settings?.defaultSeoTitle || "Vibe Supply",
-    //   description: settings?.defaultSeoDescription || "Default description",
-    //   images: settings?.defaultSeoImage?.asset?.url ? [getImageUrl(settings.defaultSeoImage.asset as any)] : [],
-    // },
+    robots: 'index, follow',
   };
 }
 
@@ -98,6 +101,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* DNS prefetch for external resources */}
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+      </head>
       <body 
         className={`${montserrat.variable} ${playfairDisplay.variable} font-sans scroll-smooth`}
         style={bodyStyle}

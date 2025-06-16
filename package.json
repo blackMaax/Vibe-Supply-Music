@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "node scripts/analyze-bundle.js",
+    "build:analyze": "ANALYZE=true next build",
+    "performance": "npm run build && npm run analyze"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "1.2.2",

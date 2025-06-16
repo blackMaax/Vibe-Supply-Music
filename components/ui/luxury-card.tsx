@@ -131,18 +131,33 @@ export default function LuxuryCard({
       }
     }
 
+    // Alternate between three gradients based on index
+    let gradient = "linear-gradient(135deg, #181c2b 0%, #232946 100%)";
+    if (typeof index === "number") {
+      if (index % 3 === 1) gradient = "linear-gradient(135deg, #2d1636 0%, #3a2747 100%)";
+      if (index % 3 === 2) gradient = "linear-gradient(135deg, #16363a 0%, #27473a 100%)";
+    }
+
+    const fabricTexture = 'url("https://www.transparenttextures.com/patterns/large-leather.png")';
+
     if (variant === "package" && isHighlighted) {
       return {
-        background: "rgba(0, 0, 0, 0.4)",
-        backdropFilter: "blur(12px)",
+        backgroundColor: '#690027',
+        backgroundImage: fabricTexture,
+        backgroundRepeat: 'repeat',
+        backgroundSize: '300px 300px',
+        opacity: 1,
         border: "1px solid rgba(212, 175, 55, 0.5)",
         boxShadow: "inset 0 0 15px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.15)",
       }
     }
 
     return {
-      background: "rgba(0, 0, 0, 0.65)",
-      backdropFilter: "blur(12px)",
+      backgroundColor: '#690027',
+      backgroundImage: fabricTexture,
+      backgroundRepeat: 'repeat',
+      backgroundSize: '300px 300px',
+      opacity: 1,
       border: "1px solid rgba(212, 175, 55, 0.3)",
       boxShadow: "inset 0 0 15px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.15)",
     }
@@ -394,16 +409,12 @@ export default function LuxuryCard({
   const getAdditionalClasses = () => {
     let classes = "group"
 
-    if (variant === "core-value") {
-      classes += " float-animation-subtle"
-    }
-
     if (variant === "gallery-item" || isClickable) {
       classes += " cursor-pointer"
     }
-
+    // Add very slight grow-on-hover for all cards except nested
     if (!isNested) {
-      classes += " hover-lift"
+      classes += " transition-transform duration-300 hover:scale-102"
     }
 
     return classes
@@ -434,6 +445,21 @@ export default function LuxuryCard({
     motionComponentProps.onClick = onClick;
   }
 
+  // Special case: gallery-item variant should render a clean image card with no sparkles or orbs
+  if (variant === "gallery-item") {
+    return (
+      <div
+        className={`relative rounded-2xl transition-all duration-500 overflow-hidden ${getPadding()} ${getAdditionalClasses()} ${className}`}
+        style={{
+          ...getBackgroundStyle(),
+          minHeight: "fit-content",
+        }}
+      >
+        {renderCardContent()}
+      </div>
+    );
+  }
+
   // For static/default variant, render a regular div (no motion)
   if (variant === "default" && !onClick && !actionLink) {
     return (
@@ -444,6 +470,18 @@ export default function LuxuryCard({
           minHeight: "fit-content",
         }}
       >
+        {/* Subtle sparkle overlay and shimmer orbs for elegance */}
+        {!["gallery-item", "nested"].includes(variant) && (
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: 'url("https://www.transparenttextures.com/patterns/45-degree-fabric-dark.png")',
+              backgroundSize: 'cover',
+              opacity: 0.5,
+              zIndex: 9,
+            }}
+          ></div>
+        )}
         {renderCardContent()}
       </div>
     )
@@ -480,26 +518,32 @@ export default function LuxuryCard({
           )}
 
           {/* Gold sparkle overlay with improved pattern */}
-          {sparkleOverlay && !isNested && (
+          {!["gallery-item", "nested"].includes(variant) && (
             <div
-              className="absolute inset-0 opacity-15 pointer-events-none z-0"
+              className="absolute inset-0 opacity-100 pointer-events-none"
               style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fillOpacity='0.4'%3E%3Ccircle cx='10' cy='10' r='1'/%3E%3Ccircle cx='30' cy='50' r='0.8'/%3E%3Ccircle cx='50' cy='30' r='1.2'/%3E%3Ccircle cx='70' cy='70' r='0.6'/%3E%3Ccircle cx='90' cy='20' r='1'/%3E%3Ccircle cx='20' cy='90' r='0.8'/%3E%3Ccircle cx='60' cy='10' r='0.5'/%3E%3Ccircle cx='80' cy='40' r='1.2'/%3E%3Ccircle cx='40' cy='80' r='0.9'/%3E%3C/g%3E%3C/svg%3E")`,
-                backgroundSize: "100px 100px",
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fillOpacity='1'%3E%3Ccircle cx='10' cy='10' r='3'/%3E%3Ccircle cx='30' cy='50' r='2.5'/%3E%3Ccircle cx='50' cy='30' r='3'/%3E%3Ccircle cx='70' cy='70' r='2'/%3E%3Ccircle cx='90' cy='20' r='3'/%3E%3Ccircle cx='20' cy='90' r='2.5'/%3E%3Ccircle cx='60' cy='10' r='2'/%3E%3Ccircle cx='80' cy='40' r='3'/%3E%3Ccircle cx='40' cy='80' r='2.5'/%3E%3C/g%3E%3C/svg%3E")`,
+                backgroundSize: "80px 80px",
+                zIndex: 99,
               }}
             ></div>
           )}
 
           {/* Animated shimmer points - reduced for performance */}
-          {sparkleOverlay && mounted && !isNested && !performanceMode && (
-            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-              {[...Array(performanceMode ? 3 : 12)].map((_, i) => (
+          {mounted && !isNested && !performanceMode && (
+            <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{zIndex: 100}}>
+              {[...Array(100)].map((_, i) => (
                 <div
                   key={i}
                   className="shimmer-point"
                   style={{
                     left: `${Math.random() * 100}%`,
                     top: `${Math.random() * 100}%`,
+                    width: '20px',
+                    height: '20px',
+                    backgroundColor: '#FFD700',
+                    boxShadow: '0 0 40px 20px #FFD700, 0 0 80px 40px #fffbe6',
+                    opacity: 1,
                     animationDelay: `${Math.random() * 10}s`,
                     animationDuration: `${15 + Math.random() * 20}s`,
                     willChange: "transform, opacity",
@@ -685,26 +729,32 @@ export default function LuxuryCard({
         )}
 
         {/* Gold sparkle overlay with improved pattern */}
-        {sparkleOverlay && !isNested && (
+        {!["gallery-item", "nested"].includes(variant) && (
           <div
-            className="absolute inset-0 opacity-15 pointer-events-none z-0"
+            className="absolute inset-0 opacity-100 pointer-events-none"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fillOpacity='0.4'%3E%3Ccircle cx='10' cy='10' r='1'/%3E%3Ccircle cx='30' cy='50' r='0.8'/%3E%3Ccircle cx='50' cy='30' r='1.2'/%3E%3Ccircle cx='70' cy='70' r='0.6'/%3E%3Ccircle cx='90' cy='20' r='1'/%3E%3Ccircle cx='20' cy='90' r='0.8'/%3E%3Ccircle cx='60' cy='10' r='0.5'/%3E%3Ccircle cx='80' cy='40' r='1.2'/%3E%3Ccircle cx='40' cy='80' r='0.9'/%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundSize: "100px 100px",
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23d4af37' fillOpacity='1'%3E%3Ccircle cx='10' cy='10' r='3'/%3E%3Ccircle cx='30' cy='50' r='2.5'/%3E%3Ccircle cx='50' cy='30' r='3'/%3E%3Ccircle cx='70' cy='70' r='2'/%3E%3Ccircle cx='90' cy='20' r='3'/%3E%3Ccircle cx='20' cy='90' r='2.5'/%3E%3Ccircle cx='60' cy='10' r='2'/%3E%3Ccircle cx='80' cy='40' r='3'/%3E%3Ccircle cx='40' cy='80' r='2.5'/%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundSize: "80px 80px",
+              zIndex: 99,
             }}
           ></div>
         )}
 
         {/* Animated shimmer points - reduced for performance */}
-        {sparkleOverlay && mounted && !isNested && !performanceMode && (
-          <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-            {[...Array(performanceMode ? 3 : 12)].map((_, i) => (
+        {mounted && !isNested && !performanceMode && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{zIndex: 100}}>
+            {[...Array(100)].map((_, i) => (
               <div
                 key={i}
                 className="shimmer-point"
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
+                  width: '20px',
+                  height: '20px',
+                  backgroundColor: '#FFD700',
+                  boxShadow: '0 0 40px 20px #FFD700, 0 0 80px 40px #fffbe6',
+                  opacity: 1,
                   animationDelay: `${Math.random() * 10}s`,
                   animationDuration: `${15 + Math.random() * 20}s`,
                   willChange: "transform, opacity",

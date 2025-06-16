@@ -390,13 +390,13 @@ body {
 /* Enhanced shimmer point animation for drifting sparkles */
 .shimmer-point {
   position: absolute;
-  width: 2px;
-  height: 2px;
+  width: 6px;
+  height: 6px;
   background-color: #d4af37;
   border-radius: 50%;
   opacity: 0;
-  filter: blur(1px);
-  box-shadow: 0 0 4px #d4af37;
+  filter: blur(2px);
+  box-shadow: 0 0 16px 6px #d4af37, 0 0 32px 12px #fffbe6;
   animation: shimmerFloat linear infinite, shimmerPulse ease-in-out infinite;
 }
 
@@ -424,7 +424,7 @@ body {
     opacity: 0;
   }
   50% {
-    opacity: 0.7;
+    opacity: 0.95;
   }
 }
 

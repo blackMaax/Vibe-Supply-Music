@@ -36,16 +36,16 @@ export const FALLBACK_IMAGES = {
 
 // Function to get a fallback image with console logging
 export function getFallbackImage(key: string): string {
-  console.log(`Getting fallback image for key: ${key}`)
+  // Development only: console.log(`Getting fallback image for key: ${key}`)
 
   // If the key exists in our fallback map, return it
   if (key in FALLBACK_IMAGES) {
     const imagePath = FALLBACK_IMAGES[key as keyof typeof FALLBACK_IMAGES]
-    console.log(`Found fallback image: ${imagePath}`)
+    // Development only: console.log(`Found fallback image: ${imagePath}`)
     return imagePath
   }
 
   // Otherwise return a placeholder
-  console.log(`No fallback found for ${key}, using default placeholder`)
+  // Development only: console.log(`No fallback found for ${key}, using default placeholder`)
   return `/placeholder.svg?height=600&width=800&text=${key}`
 }

@@ -105,7 +105,10 @@ module.exports = {
       },
       boxShadow: {
         "nav-active-underline-black": "0 1px 1px rgba(0,0,0,0.2)",
-      }
+      },
+      scale: {
+        102: '1.02',
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
