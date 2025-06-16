@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     // Verify reCAPTCHA token
     const secretKey = process.env.RECAPTCHA_SECRET_KEY;
     const expectedAction = process.env.RECAPTCHA_V3_EXPECTED_ACTION || "submitContactForm";
-    const scoreThreshold = parseFloat(process.env.RECAPTCHA_V3_SCORE_THRESHOLD || "0.5");
+    const scoreThreshold = parseFloat(process.env.RECAPTCHA_V3_SCORE_THRESHOLD || "0.3");
 
     if (!secretKey) {
       console.error('Missing RECAPTCHA_SECRET_KEY environment variable');
