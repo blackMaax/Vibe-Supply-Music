@@ -7,7 +7,6 @@ export default defineType({
   // Define fieldsets for grouping
   fieldsets: [
     { name: 'branding', title: 'Branding & Identity', options: { collapsible: true, collapsed: false } },
-    { name: 'seo', title: 'SEO & Metadata', options: { collapsible: true, collapsed: false } },
     { name: 'contact', title: 'Contact Information', options: { collapsible: true, collapsed: false } },
     { name: 'footerConfig', title: 'Footer Configuration', options: { collapsible: true, collapsed: false } },
     { name: 'social', title: 'Social Media Links', options: { collapsible: true, collapsed: false } },
@@ -30,7 +29,7 @@ export default defineType({
           name: 'alt',
           title: 'Alt text',
           type: 'string',
-          description: 'Important for SEO and accessibility.',
+          description: 'Important for accessibility.',
         },
       ],
       fieldset: 'branding', // Assign to branding fieldset
@@ -46,7 +45,7 @@ export default defineType({
           name: 'alt',
           title: 'Alt text',
           type: 'string',
-          description: 'Important for SEO and accessibility.',
+          description: 'Important for accessibility.',
         },
       ],
       fieldset: 'branding', // Assign to branding fieldset
@@ -69,33 +68,10 @@ export default defineType({
           name: 'alt',
           title: 'Alt text',
           type: 'string',
-          description: 'Describe the image for accessibility and SEO.',
+          description: 'Describe the image for accessibility.',
         },
       ],
       fieldset: 'branding', // Assign to branding fieldset
-    },
-    {
-      name: 'description',
-      title: 'Site Description',
-      type: 'text',
-      description: 'Describe your site for search engines and social media.',
-      fieldset: 'seo', // Assign to SEO fieldset
-    },
-    {
-      name: 'keywords',
-      title: 'Keywords',
-      type: 'array',
-      of: [{ type: 'string' }],
-      description: 'Add keywords that describe your site.',
-      fieldset: 'seo', // Assign to SEO fieldset
-    },
-    {
-      name: 'defaultOgImage',
-      title: 'Default OG Image',
-      type: 'image',
-      description: 'Used for social media cards when no image is added.',
-      options: { hotspot: true },
-      fieldset: 'seo', // Assign to SEO fieldset
     },
     {
       name: 'contactEmail',
@@ -189,7 +165,6 @@ export default defineType({
   preview: {
     select: {
       title: 'title',
-      subtitle: 'description',
     },
   },
 }) 

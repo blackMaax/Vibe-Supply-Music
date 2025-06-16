@@ -1,34 +1,50 @@
 import ContactFormSection from "@/components/home/contact-form-section";
-import { getContactSectionData, getSiteSettings } from "@/lib/queries";
+import { getSiteSettingsOptimized, getContactSectionData } from "@/lib/queries";
 import { urlForImage } from "@/lib/sanity-image";
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Navbar from '@/components/layout/navbar';
 
-// Add revalidation
-export const revalidate = 30; // Or set to a higher value like 60 for production
-
-// Basic metadata, can be enhanced with Sanity data later if needed
+// SEO metadata for Contact page
 export const metadata: Metadata = {
-  title: 'Contact Us',
-  description: 'Get in touch with Vibe Supply for your event needs.',
+  title: "Contact Vibe Supply | Book Live Music for Your Event",
+  description: "Get in touch with Vibe Supply to check availability, request a quote, or discuss your wedding or event entertainment needs.",
+  keywords: "contact live band, book a wedding band, music enquiry, event availability, hire a function band, get a quote, band enquiry form, booking request, contact musicians, spam protection, secure form, contact confirmation, live band email, response automation",
+  openGraph: {
+    title: "Contact Vibe Supply | Book Live Music for Your Event",
+    description: "Get in touch with Vibe Supply to check availability, request a quote, or discuss your wedding or event entertainment needs.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact Vibe Supply | Book Live Music for Your Event",
+    description: "Get in touch with Vibe Supply to check availability, request a quote, or discuss your wedding or event entertainment needs.",
+  },
 };
 
+// Add revalidation
+export const revalidate = 60; // Or set to a higher value like 60 for production
+
 export default async function ContactPage() {
+  const siteSettings = await getSiteSettingsOptimized();
   const contactSectionData = await getContactSectionData();
-  const siteSettings = await getSiteSettings(); // For global contact info like email/phone
+  
+  if (!siteSettings) {
+    return <div>Error loading site settings</div>;
+  }
 
   const logoToDisplay = siteSettings?.logo?.asset ? urlForImage(siteSettings.logo) : "/placeholder.svg";
 
+  // Get the contact image from Sanity or fallback
   const imageSrc = contactSectionData?.featuredImageCard?.image
     ? urlForImage(contactSectionData.featuredImageCard.image)
-    : "/placeholder-contact.jpg"; // Fallback image
+    : "/placeholder.jpg";
 
   const contactFormProps = {
-    title: contactSectionData?.sectionTitle,
-    subtitle: contactSectionData?.sectionSubtitle,
-    imageSrc: imageSrc || "/placeholder-contact.jpg",
-    imageAlt: contactSectionData?.featuredImageCard?.imageAlt,
+    title: contactSectionData?.sectionTitle || "Get in Touch",
+    subtitle: contactSectionData?.sectionSubtitle || "Ready to elevate your event? Contact us.",
+    imageSrc: imageSrc || "/placeholder.jpg",
+    imageAlt: contactSectionData?.featuredImageCard?.imageAlt || "Contact Vibe Supply",
     featuredImageTitle: contactSectionData?.featuredImageCard?.imageTitle,
     featuredImageSubtitle: contactSectionData?.featuredImageCard?.imageSubtitle,
     contactEmail: siteSettings?.contactEmail,
@@ -37,9 +53,9 @@ export default async function ContactPage() {
   };
 
   return (
-    <main className="pt-6">
+    <main className="pt-10 md:pt-12">
       {logoToDisplay && (
-        <div className="container mx-auto px-4 mb-6 sm:mb-7 md:mb-8 flex justify-center">
+        <div className="container mx-auto px-4 mb-8 flex justify-center">
           <Image 
             src={logoToDisplay}
             alt={siteSettings?.logo?.alt || "Vibe Supply Logo"}

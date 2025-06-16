@@ -1,22 +1,38 @@
-import type { Metadata } from "next"
-import PackagesClientPage from "./PackagesClientPage"
-import { getPackagePageDataOptimized, type SiteSettingsData, type PackagePageData } from "@/lib/queries"
+import { Metadata } from 'next'
+import { getPackagePageDataOptimized } from '@/lib/queries'
+import PackagesClientPage from './PackagesClientPage'
 
+// SEO metadata for Packages page
 export const metadata: Metadata = {
-  title: "Packages | Vibe Supply",
-  description: "Explore our premium entertainment packages for your special event.",
+  title: "Band Packages & Pricing | Vibe Supply Live Entertainment",
+  description: "Choose from our premium live band packages for weddings, parties, and events. Compare features and pricing to find your perfect match.",
+  keywords: "wedding band packages, live music pricing, function band hire, 5-piece band, DJ and band combo, party band options, event band tiers, compare band packages, music options, event band features, Diamond package, VIP band, Elite band package, music pricing, event cost, DJ + live band, vocals, brass section, lighting and sound, energy-filled performance",
+  openGraph: {
+    title: "Band Packages & Pricing | Vibe Supply Live Entertainment",
+    description: "Choose from our premium live band packages for weddings, parties, and events. Compare features and pricing to find your perfect match.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Band Packages & Pricing | Vibe Supply Live Entertainment",
+    description: "Choose from our premium live band packages for weddings, parties, and events. Compare features and pricing to find your perfect match.",
+  },
 }
 
-// Increase revalidation time to 5 minutes to reduce API calls
-export const revalidate = 30;
+// Add revalidation
+export const revalidate = 60
 
 export default async function PackagesPage() {
-  const { siteSettings, packagePageData } = await getPackagePageDataOptimized();
+  const data = await getPackagePageDataOptimized()
+  
+  if (!data.siteSettings || !data.packagePageData) {
+    return <div>Error loading packages data</div>
+  }
 
   return (
     <PackagesClientPage 
-      siteSettings={siteSettings} 
-      packagePageData={packagePageData}
+      siteSettings={data.siteSettings}
+      packagePageData={data.packagePageData}
     />
-  );
+  )
 }

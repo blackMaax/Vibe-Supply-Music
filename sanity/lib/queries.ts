@@ -3,8 +3,7 @@ import { client } from './client';
 // GROQ query to fetch the siteSettings singleton document
 const siteSettingsQuery = `*[_type == "siteSettings" && _id == "siteSettings"][0]{
   // Specify the fields you want to fetch from siteSettings
-  // Example: logo, logoWhite, favicon, contactEmail, contactPhone, socialLinks, 
-  // defaultSeoTitle, defaultSeoDescription, defaultSeoImage, footerText
+  // Example: logo, logoWhite, favicon, contactEmail, contactPhone, socialLinks, footerText
   ...
 }`;
 
@@ -31,9 +30,6 @@ export interface SiteSettingsData {
   contactEmail?: string;
   contactPhone?: string;
   socialLinks?: Array<{ platform?: string; url?: string }>;
-  defaultSeoTitle?: string;
-  defaultSeoDescription?: string;
-  defaultSeoImage?: { asset?: { _ref?: string, url?: string } };
   footerText?: string;
   // Add any other fields you have in your siteSettings schema
 }
@@ -68,9 +64,6 @@ export async function getSiteSettings(): Promise<SiteSettingsData | null> {
       platform,
       url
     },
-    defaultSeoTitle,
-    defaultSeoDescription,
-    defaultSeoImage,
     footerText
   }`;
   

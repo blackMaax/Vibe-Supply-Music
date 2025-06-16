@@ -21,9 +21,6 @@ export interface SanityImageObject {
 }
 
 export interface SiteSettingsData {
-  defaultSeoTitle?: string
-  defaultSeoDescription?: string
-  defaultSeoImage?: SanityImageObject 
   logo?: SanityImageObject 
   title?: string;
   siteBackgroundImage?: SanityImageObject;
@@ -292,7 +289,10 @@ export async function getSiteSettingsOptimized(): Promise<SiteSettingsData | nul
         }
       },
       alt
-    }
+    },
+    contactEmail,
+    contactPhone,
+    socialLinks
   }`
   try {
     const data = await client.fetch(query)

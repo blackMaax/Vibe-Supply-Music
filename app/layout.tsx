@@ -36,54 +36,42 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-// metadata can now be safely exported
-// We will update this later to use fetched SEO defaults
-// export const metadata = {
-//   title: "Vibe Supply - Default Title", // Placeholder
-//   description: "Default description from layout", // Placeholder
-//   // generator: 'v0.dev' // This was here before, keeping it for now
-// }
-
-// Function to generate metadata dynamically
+// Hardcoded SEO metadata - optimized with user keywords
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
 
   let faviconUrl = "/favicon.ico"; // Default fallback
   if (settings && settings.favicon && typeof settings.favicon === 'object' && 'asset' in settings.favicon) {
-    const builtUrl = urlFor(settings.favicon as any); // Use urlFor, cast for now
+    const builtUrl = urlFor(settings.favicon as any);
     if (builtUrl) {
       faviconUrl = builtUrl;
     }
   }
 
   return {
-    title: settings?.defaultSeoTitle || "Vibe Supply",
-    description: settings?.defaultSeoDescription || "High-energy live band for unforgettable events.",
+    title: "Live Wedding & Event Band | Vibe Supply UK",
+    description: "High-energy live music for weddings, parties, and events. Vibe Supply brings unforgettable performances across the UK with top-tier musicians.",
+    keywords: "live band for hire, wedding band UK, event entertainment, party band, function band, cover band, live music UK, soul band, club band hire",
     icons: {
       icon: faviconUrl,
     },
     robots: 'index, follow',
+    openGraph: {
+      title: "Live Wedding & Event Band | Vibe Supply UK",
+      description: "High-energy live music for weddings, parties, and events. Vibe Supply brings unforgettable performances across the UK with top-tier musicians.",
+      type: "website",
+      siteName: "Vibe Supply",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Live Wedding & Event Band | Vibe Supply UK",
+      description: "High-energy live music for weddings, parties, and events. Vibe Supply brings unforgettable performances across the UK with top-tier musicians.",
+    },
   };
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const siteSettings = await getSiteSettings();
-  
-  // Log to server console to verify fetching
-  // console.log("Fetched Site Settings in RootLayout:", siteSettings);
-
-  // We will pass siteSettings to MainLayoutClient or use it directly here later
-  // For now, just fetching and logging (on server side)
-
-  // TODO: Use siteSettings.defaultSeoTitle, etc. to dynamically set metadata
-  // For example:
-  // export async function generateMetadata(): Promise<Metadata> {
-  //   const settings = await getSiteSettings();
-  //   return {
-  //     title: settings?.defaultSeoTitle || 'Vibe Supply',
-  //     description: settings?.defaultSeoDescription || 'Default description',
-  //   };
-  // }
 
   let bodyStyle = {};
   // Check if siteSettings and siteBackgroundImage and its asset exist

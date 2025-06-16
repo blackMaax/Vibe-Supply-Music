@@ -15,6 +15,8 @@ const nextConfig = {
   ],
   poweredByHeader: false,
   reactStrictMode: true,
+  // Move serverComponentsExternalPackages to top level
+  serverExternalPackages: ['@sanity/image-url', 'nodemailer'],
   experimental: {
     optimizePackageImports: [
       '@radix-ui/react-dialog',
@@ -33,8 +35,6 @@ const nextConfig = {
     ],
     // Optimize CSS loading
     optimizeCss: true,
-    // Enable server components optimization
-    serverComponentsExternalPackages: ['@sanity/image-url', 'nodemailer'],
     // Turbo mode for faster builds
     turbo: {
       rules: {
@@ -122,8 +122,7 @@ const nextConfig = {
   compress: true,
   // Reduce bundle size by excluding source maps in production
   productionBrowserSourceMaps: false,
-  // Optimize fonts
-  optimizeFonts: true,
+  // Font optimization is now handled by Next.js automatically
 }
 
 export default nextConfig

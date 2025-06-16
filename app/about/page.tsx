@@ -7,7 +7,6 @@ import ContactFormSection from "@/components/home/contact-form-section"
 import AboutUsSection from "@/components/about/about-us-section"
 // import SoundStyleSection from "@/components/about/sound-style-section" // REMOVED
 import FoundersSection from "@/components/about/founders-section"
-import { getImageUrl } from "@/lib/static-data"
 import LuxuryCard from "@/components/ui/luxury-card"
 
 import Image from 'next/image'
@@ -15,13 +14,26 @@ import Navbar from '@/components/layout/navbar'
 import { getAboutPageDataOptimized } from "@/lib/queries"
 import { urlForImage } from "@/lib/sanity-image"
 import type { Metadata } from 'next'
-import { Sparkles, DollarSign, Handshake } from "lucide-react"; // Import icons
 
-// Basic metadata, can be enhanced later
+// SEO metadata for About page
 export const metadata: Metadata = {
-  title: 'About Us',
-  description: 'Learn more about Vibe Supply and our mission.',
-};
+  title: "About Vibe Supply | Meet the Band Behind the Music",
+  description: "Learn about Vibe Supply's story, meet our band members, and discover what makes our performances unforgettable.",
+  keywords: "about Vibe Supply, professional musicians, live band team, UK event band, wedding music group, meet the band, band background, music experience, event performers, live entertainment team, vocalist, guitarist, bassist, drummer, saxophonist, professional band members, live music values, band mission, event entertainment principles, quality performance",
+  openGraph: {
+    title: "About Vibe Supply | Meet the Band Behind the Music",
+    description: "Learn about Vibe Supply's story, meet our band members, and discover what makes our performances unforgettable.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Vibe Supply | Meet the Band Behind the Music",
+    description: "Learn about Vibe Supply's story, meet our band members, and discover what makes our performances unforgettable.",
+  },
+}
+
+// Add revalidation
+export const revalidate = 60
 
 export default async function AboutPage() {
   const data = await getAboutPageDataOptimized();
