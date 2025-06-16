@@ -81,7 +81,8 @@ const ContactFormSection = ({
     mode: "onChange"
   });
   const [isRecaptchaLoaded, setIsRecaptchaLoaded] = useState(false);
-  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [isRecaptchaReady, setIsRecaptchaReady] = useState(false);
+  const recaptchaRef = useRef<any>(null);
   const [formSuccessMessage, setFormSuccessMessage] = useState<string | null>(null);
 
   const watchedFields = watch();
@@ -112,30 +113,45 @@ const ContactFormSection = ({
   }, []);
 
   const handleRecaptcha = async () => {
-    if (!recaptchaRef.current) {
-      toast.error("reCAPTCHA not loaded yet. Please try again shortly.");
+    if (!isRecaptchaReady || !recaptchaRef.current) {
+      toast.error("Security verification is loading. Please wait a moment and try again.");
       return null;
     }
+    
     try {
+      // Reset the reCAPTCHA before getting a new token
+      recaptchaRef.current.reset();
       const token = await recaptchaRef.current.executeAsync();
+      
       if (token) {
         return token;
       } else {
-        toast.error("Could not obtain reCAPTCHA token. Please try again.");
+        toast.error("Security verification failed. Please try again.");
         return null;
       }
     } catch (error) {
-      toast.error("An error occurred during reCAPTCHA verification. Please try again.");
+      console.error("reCAPTCHA error:", error);
+      toast.error("Security verification error. Please refresh the page and try again.");
       return null;
     }
   };
 
   const onSubmit: SubmitHandler<ContactFormInputs> = async (data) => {
     setFormSuccessMessage(null);
+    
+    // Show loading state immediately
+    toast.loading("Sending your message...", { id: "contact-form" });
+    
+    // Wait a moment for reCAPTCHA to be ready if needed
+    if (!isRecaptchaReady) {
+      toast.loading("Preparing security verification...", { id: "contact-form" });
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    
     const token = await handleRecaptcha();
 
     if (!token) {
-      toast.error("reCAPTCHA verification failed. Please try submitting again.");
+      toast.error("Security verification failed. Please try again.", { id: "contact-form" });
       return;
     }
 
@@ -156,13 +172,17 @@ const ContactFormSection = ({
       const result = await response.json();
 
       if (!response.ok) {
+        console.error('Contact form error:', result);
         throw new Error(result.error || 'Failed to send message.');
       }
       
+      toast.success("Message sent successfully! We'll be in touch soon.", { id: "contact-form" });
       setFormSuccessMessage("Message sent successfully! We'll be in touch soon.");
       reset();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'An unexpected error occurred.');
+      console.error('Contact form submission error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
+      toast.error(errorMessage, { id: "contact-form" });
       setFormSuccessMessage(null);
     }
   };
@@ -267,12 +287,12 @@ const ContactFormSection = ({
 
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !isRecaptchaReady}
                     className="w-full bg-gradient-to-r from-gold-dark via-gold to-gold-dark text-navy font-bold py-3 px-6 rounded-full relative overflow-hidden group transition-all duration-300 hover:shadow-[0_0_15px_rgba(212,175,55,0.5)] disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-gold to-gold-light opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
                     <span className="relative flex items-center justify-center">
-                      {isSubmitting ? "Sending..." : "Send Message"} <Send className="ml-2 h-5 w-5" />
+                      {isSubmitting ? "Sending..." : !isRecaptchaReady ? "Loading..." : "Send Message"} <Send className="ml-2 h-5 w-5" />
                     </span>
                   </button>
 
@@ -286,10 +306,15 @@ const ContactFormSection = ({
                     {isRecaptchaLoaded && (
                       <div className="recaptcha-badge-wrapper" style={{ transform: 'scale(0.77)', transformOrigin: 'center', display: 'inline-block', height: '60px' }}>
                         <ReCAPTCHA
-                          ref={recaptchaRef}
+                          ref={(ref) => { recaptchaRef.current = ref; }}
                           sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
                           size="invisible"
                           badge="inline"
+                          onLoad={() => setIsRecaptchaReady(true)}
+                          onError={() => {
+                            console.error('reCAPTCHA failed to load');
+                            setIsRecaptchaReady(false);
+                          }}
                         />
                       </div>
                     )}
