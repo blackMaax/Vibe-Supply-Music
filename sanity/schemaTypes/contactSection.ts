@@ -34,13 +34,7 @@ export default defineType({
           },
           validation: (Rule) => Rule.required(),
         }),
-        defineField({
-          name: 'imageAlt',
-          title: 'Image Alt Text',
-          description: 'Descriptive text for the image (for accessibility).',
-          type: 'string',
-          validation: (Rule) => Rule.required(),
-        }),
+
         defineField({
           name: 'imageTitle',
           title: 'Title on Image',

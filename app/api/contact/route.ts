@@ -16,25 +16,7 @@ export async function POST(request: Request) {
     const body = await request.json() as ContactRequestBody;
     const { name, email, subject, message, recaptchaToken, recaptchaAction } = body;
 
-    // Debug logging
-    console.log('Contact form submission received:', {
-      name: name ? '[PROVIDED]' : '[MISSING]',
-      email: email ? '[PROVIDED]' : '[MISSING]',
-      subject: subject ? '[PROVIDED]' : '[MISSING]',
-      message: message ? '[PROVIDED]' : '[MISSING]',
-      recaptchaToken: recaptchaToken ? '[PROVIDED]' : '[MISSING]',
-      recaptchaAction: recaptchaAction || '[MISSING]',
-      envVarsPresent: {
-        RECAPTCHA_SECRET_KEY: !!process.env.RECAPTCHA_SECRET_KEY,
-        EMAIL_HOST: !!process.env.EMAIL_HOST,
-        EMAIL_USER: !!process.env.EMAIL_USER,
-        EMAIL_PASS: !!process.env.EMAIL_PASS,
-        CONTACT_FORM_RECEIVER_EMAIL: !!process.env.CONTACT_FORM_RECEIVER_EMAIL
-      }
-    });
-
     if (!recaptchaToken || !recaptchaAction) {
-      console.error('Missing reCAPTCHA data:', { recaptchaToken: !!recaptchaToken, recaptchaAction: !!recaptchaAction });
       return NextResponse.json({ error: 'Missing reCAPTCHA token or action' }, { status: 400 });
     }
 
@@ -55,10 +37,7 @@ export async function POST(request: Request) {
       const recaptchaData = await recaptchaResponse.json();
 
       if (!recaptchaData.success) {
-        console.error('reCAPTCHA verification failed (success: false):', {
-          errorCodes: recaptchaData['error-codes'],
-          recaptchaResponse: recaptchaData
-        });
+        console.warn('reCAPTCHA verification failed (success: false):', recaptchaData['error-codes']);
         return NextResponse.json({ error: 'reCAPTCHA verification failed. Please try again.' }, { status: 400 });
       }
       
@@ -67,14 +46,14 @@ export async function POST(request: Request) {
       // we proceed, relying on the score and success status. This handles cases where the frontend
       // reCAPTCHA library might not explicitly send an action with executeAsync for v3.
       if (recaptchaData.action !== undefined && recaptchaData.action !== expectedAction) {
-        console.error(`reCAPTCHA action mismatch. Expected: ${expectedAction}, Google reported: ${recaptchaData.action}. Action sent by client: ${recaptchaAction}`);
+        console.warn(`reCAPTCHA action mismatch. Expected: ${expectedAction}, Google reported: ${recaptchaData.action}. Action sent by client: ${recaptchaAction}`);
         return NextResponse.json({ error: 'reCAPTCHA action mismatch.' }, { status: 400 });
       } else if (recaptchaData.action === undefined) {
         console.warn(`Google did not report a reCAPTCHA action. Proceeding based on score. Expected: ${expectedAction}, Action sent by client: ${recaptchaAction}`);
       }
 
       if (recaptchaData.score < scoreThreshold) {
-        console.error(`reCAPTCHA score too low. Score: ${recaptchaData.score}, Threshold: ${scoreThreshold}`);
+        console.warn(`reCAPTCHA score too low. Score: ${recaptchaData.score}, Threshold: ${scoreThreshold}`);
         // You might choose to still process the message but flag it, or outright reject it.
         // For now, we reject it.
         return NextResponse.json({ error: 'reCAPTCHA score too low. Please try again.' }, { status: 400 });
@@ -90,17 +69,11 @@ export async function POST(request: Request) {
 
     // Basic validation
     if (!name || !email || !message) {
-      console.error('Missing required fields:', { 
-        name: !!name, 
-        email: !!email, 
-        message: !!message 
-      });
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     // Validate email format (simple regex)
     if (!/\S+@\S+\.\S+/.test(email)) {
-      console.error('Invalid email format:', email);
       return NextResponse.json({ error: 'Invalid email format' }, { status: 400 });
     }
     

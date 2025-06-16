@@ -16,12 +16,7 @@ export default defineType({
       },
       validation: (Rule) => Rule.required(),
     }),
-    defineField({
-      name: 'alt',
-      title: 'Alternative Text',
-      type: 'string',
-      description: 'Important for SEO and accessibility. Describe the image briefly.',
-    }),
+
     defineField({
       name: 'caption',
       title: 'Caption',
@@ -39,13 +34,11 @@ export default defineType({
   preview: {
     select: {
       title: 'caption',
-      subtitle: 'alt',
       media: 'image',
     },
-    prepare({ title, subtitle, media }) {
+    prepare({ title, media }) {
       return {
         title: title || 'No caption',
-        subtitle: subtitle || 'No alt text',
         media: media || Images,
       }
     },

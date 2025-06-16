@@ -33,12 +33,6 @@ export default defineType({
               options: { hotspot: true },
               fields: [
                 defineField({
-                  name: 'alt',
-                  title: 'Image Alt Text / Name',
-                  type: 'string',
-                  description: 'Describe this image for accessibility and SEO.',
-                }),
-                defineField({
                   name: 'title',
                   title: 'Image Title Overlay',
                   type: 'string',

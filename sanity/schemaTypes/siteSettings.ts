@@ -24,14 +24,6 @@ export default defineType({
       title: 'Site Logo',
       type: 'image',
       options: { hotspot: true },
-      fields: [
-        {
-          name: 'alt',
-          title: 'Alt text',
-          type: 'string',
-          description: 'Important for accessibility.',
-        },
-      ],
       fieldset: 'branding', // Assign to branding fieldset
     },
     {
@@ -40,14 +32,6 @@ export default defineType({
       type: 'image',
       description: 'A version of the logo for use on dark backgrounds.',
       options: { hotspot: true },
-      fields: [
-        {
-          name: 'alt',
-          title: 'Alt text',
-          type: 'string',
-          description: 'Important for accessibility.',
-        },
-      ],
       fieldset: 'branding', // Assign to branding fieldset
     },
     {
@@ -63,14 +47,6 @@ export default defineType({
       type: 'image',
       description: 'A large image to be used as the default background for the entire site.',
       options: { hotspot: true }, // Hotspot is useful for images where focal point matters
-      fields: [
-        {
-          name: 'alt',
-          title: 'Alt text',
-          type: 'string',
-          description: 'Describe the image for accessibility.',
-        },
-      ],
       fieldset: 'branding', // Assign to branding fieldset
     },
     {

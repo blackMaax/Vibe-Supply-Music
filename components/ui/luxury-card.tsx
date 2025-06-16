@@ -142,7 +142,7 @@ export default function LuxuryCard({
 
     if (variant === "package" && isHighlighted) {
       return {
-        backgroundColor: '#690027',
+        backgroundColor: '#850400',
         backgroundImage: fabricTexture,
         backgroundRepeat: 'repeat',
         backgroundSize: '300px 300px',
@@ -153,7 +153,7 @@ export default function LuxuryCard({
     }
 
     return {
-      backgroundColor: '#690027',
+      backgroundColor: '#850400',
       backgroundImage: fabricTexture,
       backgroundRepeat: 'repeat',
       backgroundSize: '300px 300px',

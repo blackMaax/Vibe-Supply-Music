@@ -57,12 +57,6 @@ export default defineType({
           },
           fields: [
             {
-              name: 'alt',
-              title: 'Alt Text',
-              type: 'string',
-              description: 'Alternative text for the image.',
-            },
-            {
               name: 'position',
               title: 'Image Position',
               type: 'string',
@@ -120,12 +114,6 @@ export default defineType({
           type: 'image',
           options: { hotspot: true },
           fields: [
-            {
-              name: 'alt',
-              title: 'Alt Text',
-              type: 'string',
-              description: 'Describe this image for accessibility.',
-            },
             {
               name: 'caption',
               title: 'Image Caption',
@@ -211,14 +199,6 @@ export default defineType({
                   title: 'Profile Image',
                   type: 'image',
                   options: { hotspot: true },
-                  fields: [
-                    {
-                      name: 'alt',
-                      title: 'Alt Text',
-                      type: 'string',
-                      description: 'Describe this image for accessibility.',
-                    },
-                  ],
                 },
                 {
                   name: 'socialLinks',

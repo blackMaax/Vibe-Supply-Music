@@ -134,7 +134,6 @@ const ContactFormSection = ({
         return null;
       }
     } catch (error) {
-      console.error("reCAPTCHA error:", error);
       toast.error("Security verification error. Please refresh the page and try again.");
       return null;
     }
@@ -176,7 +175,6 @@ const ContactFormSection = ({
       const result = await response.json();
 
       if (!response.ok) {
-        console.error('Contact form error:', result);
         throw new Error(result.error || 'Failed to send message.');
       }
       
@@ -184,7 +182,6 @@ const ContactFormSection = ({
       setFormSuccessMessage("Message sent successfully! We'll be in touch soon.");
       reset();
     } catch (error) {
-      console.error('Contact form submission error:', error);
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
       toast.error(errorMessage, { id: "contact-form" });
       setFormSuccessMessage(null);

@@ -44,15 +44,7 @@ export default defineType({
               options: {
                 hotspot: true,
               },
-              fields: [
-                defineField({
-                  name: 'alt',
-                  title: 'Alt Text',
-                  type: 'string',
-                  description: 'Describe this image for accessibility.',
-                  validation: Rule => Rule.required(),
-                }),
-              ],
+
             }),
             defineField({
               name: 'isPopular',
