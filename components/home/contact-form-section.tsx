@@ -98,6 +98,10 @@ const ContactFormSection = ({
       (entries) => {
         if (entries[0].isIntersecting) {
           setIsRecaptchaLoaded(true);
+          // Set ready state after a short delay to ensure reCAPTCHA is fully loaded
+          setTimeout(() => {
+            setIsRecaptchaReady(true);
+          }, 2000);
           observer.disconnect();
         }
       },
@@ -113,7 +117,7 @@ const ContactFormSection = ({
   }, []);
 
   const handleRecaptcha = async () => {
-    if (!isRecaptchaReady || !recaptchaRef.current) {
+    if (!recaptchaRef.current) {
       toast.error("Security verification is loading. Please wait a moment and try again.");
       return null;
     }
@@ -143,7 +147,7 @@ const ContactFormSection = ({
     toast.loading("Sending your message...", { id: "contact-form" });
     
     // Wait a moment for reCAPTCHA to be ready if needed
-    if (!isRecaptchaReady) {
+    if (!recaptchaRef.current) {
       toast.loading("Preparing security verification...", { id: "contact-form" });
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
@@ -287,12 +291,12 @@ const ContactFormSection = ({
 
                   <button
                     type="submit"
-                    disabled={isSubmitting || !isRecaptchaReady}
+                    disabled={isSubmitting || !isRecaptchaLoaded}
                     className="w-full bg-gradient-to-r from-gold-dark via-gold to-gold-dark text-navy font-bold py-3 px-6 rounded-full relative overflow-hidden group transition-all duration-300 hover:shadow-[0_0_15px_rgba(212,175,55,0.5)] disabled:opacity-70 disabled:cursor-not-allowed"
                   >
                     <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-gold to-gold-light opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
                     <span className="relative flex items-center justify-center">
-                      {isSubmitting ? "Sending..." : !isRecaptchaReady ? "Loading..." : "Send Message"} <Send className="ml-2 h-5 w-5" />
+                      {isSubmitting ? "Sending..." : !isRecaptchaLoaded ? "Loading..." : "Send Message"} <Send className="ml-2 h-5 w-5" />
                     </span>
                   </button>
 
@@ -310,11 +314,6 @@ const ContactFormSection = ({
                           sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
                           size="invisible"
                           badge="inline"
-                          onLoad={() => setIsRecaptchaReady(true)}
-                          onError={() => {
-                            console.error('reCAPTCHA failed to load');
-                            setIsRecaptchaReady(false);
-                          }}
                         />
                       </div>
                     )}
