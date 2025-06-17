@@ -10,6 +10,7 @@ const siteSettingsQuery = `*[_type == "siteSettings" && _id == "siteSettings"][0
 // Interface for the expected shape of siteSettings data
 // You should update this to match the fields you defined in your siteSettings.ts schema
 export interface SiteSettingsData {
+  title?: string; // Site title field
   logo?: { asset?: { _ref?: string, url?: string } }; // Adjust based on actual image field structure
   favicon?: { asset?: { _ref?: string, url?: string } };
   siteBackgroundImage?: { 
@@ -43,6 +44,7 @@ export async function getSiteSettings(): Promise<SiteSettingsData | null> {
   // For example: `*[_type == "siteSettings"][0]{ logo, contactEmail, socialLinks }`
   // For now, using "..." to fetch all fields for simplicity, but it's less efficient.
   const query = `*[_type == "siteSettings" && _id == "siteSettings"][0]{
+    title,
     logo,
     favicon,
     siteBackgroundImage {

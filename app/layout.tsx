@@ -36,7 +36,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-// Hardcoded SEO metadata - optimized with user keywords
+// SEO metadata - optimized with user keywords, pulling site title from Sanity
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
 
@@ -48,8 +48,11 @@ export async function generateMetadata(): Promise<Metadata> {
     }
   }
 
+  // Use site title from Sanity, with fallback
+  const siteTitle = settings?.title || "Live Wedding & Event Band | Vibe Supply UK";
+
   return {
-    title: "Live Wedding & Event Band | Vibe Supply UK",
+    title: siteTitle,
     description: "High-energy live music for weddings, parties, and events. Vibe Supply brings unforgettable performances across the UK with top-tier musicians.",
     keywords: "live band for hire, wedding band UK, event entertainment, party band, function band, cover band, live music UK, soul band, club band hire",
     icons: {
@@ -57,14 +60,14 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     robots: 'index, follow',
     openGraph: {
-      title: "Live Wedding & Event Band | Vibe Supply UK",
+      title: siteTitle,
       description: "High-energy live music for weddings, parties, and events. Vibe Supply brings unforgettable performances across the UK with top-tier musicians.",
       type: "website",
       siteName: "Vibe Supply",
     },
     twitter: {
       card: "summary_large_image",
-      title: "Live Wedding & Event Band | Vibe Supply UK",
+      title: siteTitle,
       description: "High-energy live music for weddings, parties, and events. Vibe Supply brings unforgettable performances across the UK with top-tier musicians.",
     },
   };
