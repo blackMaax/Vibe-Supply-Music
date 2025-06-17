@@ -3,7 +3,7 @@ import { client } from './client';
 // GROQ query to fetch the siteSettings singleton document
 const siteSettingsQuery = `*[_type == "siteSettings" && _id == "siteSettings"][0]{
   // Specify the fields you want to fetch from siteSettings
-  // Example: logo, logoWhite, favicon, contactEmail, contactPhone, socialLinks, footerText
+  // Example: logo, favicon, contactEmail, contactPhone, socialLinks, footerText
   ...
 }`;
 
@@ -11,7 +11,6 @@ const siteSettingsQuery = `*[_type == "siteSettings" && _id == "siteSettings"][0
 // You should update this to match the fields you defined in your siteSettings.ts schema
 export interface SiteSettingsData {
   logo?: { asset?: { _ref?: string, url?: string } }; // Adjust based on actual image field structure
-  logoWhite?: { asset?: { _ref?: string, url?: string } };
   favicon?: { asset?: { _ref?: string, url?: string } };
   siteBackgroundImage?: { 
     asset?: { 
@@ -45,7 +44,6 @@ export async function getSiteSettings(): Promise<SiteSettingsData | null> {
   // For now, using "..." to fetch all fields for simplicity, but it's less efficient.
   const query = `*[_type == "siteSettings" && _id == "siteSettings"][0]{
     logo,
-    logoWhite,
     favicon,
     siteBackgroundImage {
       asset-> {

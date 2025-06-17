@@ -26,14 +26,7 @@ export default defineType({
       options: { hotspot: true },
       fieldset: 'branding', // Assign to branding fieldset
     },
-    {
-      name: 'logoWhite',
-      title: 'White/Inverted Logo',
-      type: 'image',
-      description: 'A version of the logo for use on dark backgrounds.',
-      options: { hotspot: true },
-      fieldset: 'branding', // Assign to branding fieldset
-    },
+
     {
       name: 'favicon',
       title: 'Favicon',
