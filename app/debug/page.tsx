@@ -6,8 +6,36 @@ import {
   getPackagePageData 
 } from '@/lib/queries'
 
+// Direct Sanity API test
+async function testSanityDirectly() {
+  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
+  const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
+  const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-12-17'
+  
+  // Test URL - direct to Sanity API
+  const testUrl = `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}?query=*[_type == "packageSection"][0]{packages[]{name,price}}`
+  
+  try {
+    const response = await fetch(testUrl)
+    const data = await response.json()
+    return {
+      url: testUrl,
+      status: response.status,
+      data: data
+    }
+  } catch (error) {
+    return {
+      url: testUrl,
+      error: error instanceof Error ? error.message : String(error)
+    }
+  }
+}
+
 export default async function DebugPage() {
   const fetchTime = new Date().toISOString()
+  
+  // Test direct Sanity API
+  const directTest = await testSanityDirectly()
   
   // Fetch all the main data sources
   const [
@@ -32,6 +60,28 @@ export default async function DebugPage() {
         <br />
         Refresh this page to see if data updates in real-time
       </p>
+
+      {/* Direct Sanity API Test */}
+      <div className="bg-red-100 p-6 rounded-lg shadow mb-8">
+        <h2 className="text-xl font-bold mb-4 text-red-600">🔥 DIRECT SANITY API TEST</h2>
+        <p className="mb-4"><strong>This bypasses ALL our code and queries Sanity directly:</strong></p>
+        <pre className="text-sm overflow-auto bg-white p-4 rounded border">
+          {JSON.stringify(directTest, null, 2)}
+        </pre>
+      </div>
+
+      {/* Environment Check */}
+      <div className="bg-yellow-100 p-6 rounded-lg shadow mb-8">
+        <h2 className="text-xl font-bold mb-4 text-yellow-600">🔧 ENVIRONMENT CHECK</h2>
+        <pre className="text-sm overflow-auto bg-white p-4 rounded border">
+          {JSON.stringify({
+            NEXT_PUBLIC_SANITY_PROJECT_ID: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+            NEXT_PUBLIC_SANITY_DATASET: process.env.NEXT_PUBLIC_SANITY_DATASET,
+            NEXT_PUBLIC_SANITY_API_VERSION: process.env.NEXT_PUBLIC_SANITY_API_VERSION,
+            NODE_ENV: process.env.NODE_ENV
+          }, null, 2)}
+        </pre>
+      </div>
       
       <div className="space-y-8">
         {/* Site Settings */}
