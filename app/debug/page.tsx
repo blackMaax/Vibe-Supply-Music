@@ -12,21 +12,32 @@ async function testSanityDirectly() {
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
   const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-12-17'
   
-  // Test URL - direct to Sanity API
-  const testUrl = `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}?query=*[_type == "packageSection"][0]{packages[]{name,price}}`
+  // Test URL - direct to Sanity API with aggressive cache busting
+  const cacheBust = Date.now()
+  const testUrl = `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}?query=*[_type == "packageSection"][0]{packages[]{name,price}}&cacheBust=${cacheBust}`
   
   try {
-    const response = await fetch(testUrl)
+    const response = await fetch(testUrl, {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    })
     const data = await response.json()
     return {
       url: testUrl,
       status: response.status,
+      timestamp: new Date().toISOString(),
+      cacheBust: cacheBust,
       data: data
     }
   } catch (error) {
     return {
       url: testUrl,
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : String(error),
+      timestamp: new Date().toISOString()
     }
   }
 }
