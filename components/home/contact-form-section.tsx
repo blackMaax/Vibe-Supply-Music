@@ -4,7 +4,7 @@ import type { ReactNode, HTMLAttributes } from "react"
 import { motion, type MotionProps } from "framer-motion"
 import { Send, Mail, Instagram, Facebook, Twitter, Link as LinkIcon, Youtube } from "lucide-react"
 import LuxuryCard from "@/components/ui/luxury-card"
-import FeaturedImage from "@/components/contact/featured-image"
+
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -31,10 +31,6 @@ type ContactFormInputs = z.infer<typeof contactFormSchema>;
 interface ContactFormSectionProps {
   title?: string
   subtitle?: string
-  imageSrc: string
-  imageAlt?: string
-  featuredImageTitle?: string;
-  featuredImageSubtitle?: string;
   className?: string
   children?: ReactNode
   contactEmail?: string;
@@ -57,10 +53,6 @@ const getSocialIcon = (platform?: string) => {
 const ContactFormSection = ({
   title = "Get in Touch",
   subtitle = "Ready to elevate your event with unforgettable music? We\'d love to hear from you.",
-  imageSrc,
-  imageAlt = "Vibe Supply Performance",
-  featuredImageTitle,
-  featuredImageSubtitle,
   className = "",
   children,
   contactEmail,
@@ -337,15 +329,8 @@ const ContactFormSection = ({
             </LuxuryCard>
           </motion.div>
 
-          {/* Right Column - Featured Image and Contact Details */}
+          {/* Right Column - Contact Details */}
           <motion.div {...rightColumnMotionProps}>
-            <FeaturedImage 
-              imageSrc={imageSrc} 
-              imageAlt={imageAlt || "Vibe Supply Live Performance"} 
-              title={featuredImageTitle}
-              subtitle={featuredImageSubtitle}
-            />
-
             {/* Contact Details Card */}
             {(contactEmail || contactPhone || (socialLinks && socialLinks.length > 0)) && (
               <LuxuryCard className="flex-grow h-full" cornerAccents="none">

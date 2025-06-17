@@ -180,9 +180,7 @@ export default function LuxuryCard({
         return (
           <div className="flex flex-col items-center text-center relative z-10">
             {icon && (
-              <div className="bg-black/50 w-20 h-20 rounded-full flex items-center justify-center mb-6 group-hover:bg-pink/20 transition-colors duration-300 border border-gold/40 relative overflow-hidden">
-                {/* Animated glow behind icon */}
-                <div className="absolute inset-0 bg-gradient-to-br from-gold/20 to-pink/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md"></div>
+              <div className="bg-black/50 w-20 h-20 rounded-full flex items-center justify-center mb-6 border border-gold/40 relative overflow-hidden">
                 <div className="relative z-10">{icon}</div>
               </div>
             )}
@@ -287,11 +285,11 @@ export default function LuxuryCard({
             {actionLink && (
               <Link
                 href={actionLink}
-                className={`flex items-center justify-center py-3 px-6 rounded-full relative z-10 transition-all duration-300 ${
-                  isHighlighted
-                    ? "bg-gold text-navy hover:bg-gold-dark font-medium"
-                    : "bg-white/80 text-navy hover:bg-white border border-gold/30 hover:bg-gold/10 font-medium"
-                }`}
+                                  className={`flex items-center justify-center py-3 px-6 rounded-full relative z-10 ${
+                    isHighlighted
+                      ? "bg-gold text-navy font-medium"
+                      : "bg-white/80 text-navy border border-gold/30 font-medium"
+                  }`}
               >
                 {actionText || "Book Now"}
               </Link>
@@ -309,12 +307,9 @@ export default function LuxuryCard({
               </div>
             )}
 
-            {/* Overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-            {/* Text content */}
+            {/* Text content - always visible */}
             {title && (
-              <div className="absolute bottom-0 left-0 right-0 p-6 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute bottom-0 left-0 right-0 p-6 z-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                 <h3 className="text-xl font-bold font-display gold-text">{title}</h3>
               </div>
             )}
@@ -340,7 +335,7 @@ export default function LuxuryCard({
                     src={imageSrc || "/placeholder.svg"}
                     alt={imageAlt}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover"
                   />
                 </div>
               </div>
@@ -407,22 +402,19 @@ export default function LuxuryCard({
 
   // Determine additional classes based on variant
   const getAdditionalClasses = () => {
-    let classes = "group"
+    let classes = ""
 
     if (variant === "gallery-item" || isClickable) {
       classes += " cursor-pointer"
     }
-    // Add very slight grow-on-hover for all cards except nested
-    if (!isNested) {
-      classes += " transition-transform duration-300 hover:scale-102"
-    }
+    // Remove all hover animations per client request
 
     return classes
   }
 
   const animationSettings = getAnimationSettings();
 
-  // Consolidate props for the motion component
+      // Consolidate props for the motion component
   const motionComponentProps: any = {
     ...animationSettings,
     className: `relative rounded-2xl ${
@@ -431,7 +423,7 @@ export default function LuxuryCard({
             : variant === "hero"
               ? "overflow-hidden flex justify-center items-center"
               : "overflow-visible"
-    } transition-all duration-500 ${getPadding()} ${getAdditionalClasses()} ${className}`,
+    } ${getPadding()} ${getAdditionalClasses()} ${className}`,
     style: {
           ...getBackgroundStyle(),
           animationDelay: variant === "core-value" || variant === "band-member" ? `${index * 0.2}s` : undefined,
@@ -449,7 +441,7 @@ export default function LuxuryCard({
   if (variant === "gallery-item") {
     return (
       <div
-        className={`relative rounded-2xl transition-all duration-500 overflow-hidden ${getPadding()} ${getAdditionalClasses()} ${className}`}
+        className={`relative rounded-2xl overflow-hidden ${getPadding()} ${getAdditionalClasses()} ${className}`}
         style={{
           ...getBackgroundStyle(),
           minHeight: "fit-content",
@@ -464,7 +456,7 @@ export default function LuxuryCard({
   if (variant === "default" && !onClick && !actionLink) {
     return (
       <div
-        className={`relative rounded-2xl transition-all duration-500 ${getPadding()} ${getAdditionalClasses()} ${className}`}
+        className={`relative rounded-2xl ${getPadding()} ${getAdditionalClasses()} ${className}`}
         style={{
           ...getBackgroundStyle(),
           minHeight: "fit-content",
@@ -494,17 +486,7 @@ export default function LuxuryCard({
     return (
       <Link href={actionLink} passHref legacyBehavior>
         <motion.a {...motionComponentProps}>
-          {/* Enhanced hover glow effect */}
-          {!isNested && (
-            <div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 pointer-events-none"
-              style={{
-                boxShadow: "0 0 20px rgba(212, 175, 55, 0.4), inset 0 0 20px rgba(212, 175, 55, 0.2)",
-                borderRadius: "1rem",
-                zIndex: 1,
-              }}
-            ></div>
-          )}
+          {/* Hover effects removed per client request */}
 
           {/* Gradient overlay for depth */}
           {gradientOverlay && !isNested && (
@@ -705,17 +687,7 @@ export default function LuxuryCard({
   return (
     <>
       <motion.div {...motionComponentProps}>
-        {/* Enhanced hover glow effect */}
-        {!isNested && (
-          <div
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 pointer-events-none"
-            style={{
-              boxShadow: "0 0 20px rgba(212, 175, 55, 0.4), inset 0 0 20px rgba(212, 175, 55, 0.2)",
-              borderRadius: "1rem",
-              zIndex: 1,
-            }}
-          ></div>
-        )}
+        {/* Hover effects removed per client request */}
 
         {/* Gradient overlay for depth */}
         {gradientOverlay && !isNested && (
@@ -967,7 +939,7 @@ export default function LuxuryCard({
         <div className="mt-6">
           <Link
             href={actionLink}
-            className="bg-black text-gold font-medium py-2 md:py-4 px-6 md:px-10 rounded-full shadow-md hover:bg-black/80 transition-all duration-300 transform hover:scale-105 border border-gold/50 text-sm md:text-base"
+            className="bg-black text-gold font-medium py-2 md:py-4 px-6 md:px-10 rounded-full shadow-md border border-gold/50 text-sm md:text-base"
             style={{
               boxShadow: "0 0 15px rgba(212, 175, 55, 0.3)",
             }}

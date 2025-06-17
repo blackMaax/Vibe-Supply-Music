@@ -66,14 +66,46 @@ export default function FoundersSection({ data }: FoundersSectionProps) {
             return (
               <motion.div key={founder.name} {...founderCardMotionProps}>
                 <LuxuryCard
-                  variant="band-member"
-                  name={founder.name}
-                  role={founder.role}
-                  bio={founder.bio}
-                  imageSrc={founder.image?.asset ? urlForImage(founder.image) || "/placeholder.svg" : "/placeholder.svg"}
+                  variant="default"
                   cornerAccents="none"
-                  className="h-full flex flex-col"
-                />
+                  sparkleOverlay={false}
+                  className="h-full flex flex-col text-center p-6"
+                >
+                  {/* Clean image without overlay */}
+                  {founder.image?.asset && (
+                    <div className="mx-auto mb-6 w-32 h-32 rounded-full overflow-hidden border-4 border-gold/30 shadow-lg">
+                      <img
+                        src={urlForImage(founder.image) || "/placeholder.svg"}
+                        alt={founder.name || "Team Member"}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+
+                  {/* Name */}
+                  {founder.name && (
+                    <h3 className="text-2xl font-bold gold-text font-display mb-2">
+                      {founder.name}
+                    </h3>
+                  )}
+
+                  {/* Role */}
+                  {founder.role && (
+                    <p className="text-pink text-sm font-medium mb-4 tracking-wider uppercase">
+                      {founder.role}
+                    </p>
+                  )}
+
+                  {/* Decorative divider */}
+                  <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-gold/50 to-transparent mb-4 mx-auto"></div>
+
+                  {/* Bio */}
+                  {founder.bio && (
+                    <p className="text-gray-300 text-sm leading-relaxed flex-grow">
+                      {founder.bio}
+                    </p>
+                  )}
+                </LuxuryCard>
               </motion.div>
             );
           })}

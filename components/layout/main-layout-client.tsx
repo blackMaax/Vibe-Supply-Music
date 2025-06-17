@@ -9,10 +9,7 @@ import { urlForImage as urlFor } from "@/lib/sanity-image"
 import { Suspense } from 'react'
 
 // Lazy load non-critical components with better error handling
-const DebugInfo = dynamic(() => import("@/components/layout/debug-info"), {
-  ssr: false,
-  loading: () => null
-})
+// Debug info component removed per client request
 
 const CookieBanner = dynamic(() => import("@/components/layout/cookie-banner"), {
   ssr: false,
@@ -61,7 +58,7 @@ export default function MainLayoutClient({ children, siteSettings }: MainLayoutC
   // Safely get footer logo URL
   let footerLogoUrl: string | null = null;
   try {
-    footerLogoUrl = siteSettings?.logoWhite ? urlFor(siteSettings.logoWhite) : null;
+    footerLogoUrl = siteSettings?.logo ? urlFor(siteSettings.logo) : null;
   } catch (error) {
     // Silently handle image URL errors
     footerLogoUrl = null;
@@ -91,9 +88,7 @@ export default function MainLayoutClient({ children, siteSettings }: MainLayoutC
           footerText={siteSettings?.footerText}
         />
       </Suspense>
-      <Suspense fallback={null}>
-        <DebugInfo />
-      </Suspense>
+
       <Suspense fallback={null}>
         <CookieBanner />
       </Suspense>
