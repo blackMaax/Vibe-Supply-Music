@@ -5,6 +5,11 @@ export const client = createClient({
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
   apiVersion: '2024-01-01',
   useCdn: false, // Disabled CDN for testing - re-enable for production
+  perspective: 'published', // Only fetch published documents
+  stega: {
+    enabled: false,
+    studioUrl: undefined,
+  },
 }) 
  
  
