@@ -3,7 +3,7 @@ import { createClient } from 'next-sanity'
 export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '',
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-  apiVersion: '2024-12-17',
+  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-12-17',
   useCdn: false, // Disabled CDN for testing - re-enable for production
   perspective: 'published', // Only fetch published documents
   stega: {
