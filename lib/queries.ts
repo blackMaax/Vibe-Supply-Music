@@ -295,8 +295,6 @@ export async function getSiteSettingsOptimized(): Promise<SiteSettingsData | nul
 
 export async function getHomepageData(): Promise<HomepageData | null> {
   try {
-    // Add cache busting timestamp
-    const cacheBust = Date.now();
     const query = `*[_type == "homepage"][0] {
       _id,
       _type,
@@ -357,8 +355,7 @@ export async function getHomepageData(): Promise<HomepageData | null> {
             }
           }
         }
-      },
-      "cacheBust": ${cacheBust}
+      }
     }`
     return await client.fetch(query)
   } catch (error) {
@@ -403,8 +400,6 @@ export async function getHomepageDataOptimized(): Promise<{
   contactSectionData: ContactSectionData | null;
 }> {
   try {
-    // Add cache busting timestamp to force fresh data
-    const cacheBust = Date.now();
     const query = `{
       "homepageData": *[_type == "homepage"][0] {
         _id,
@@ -486,8 +481,7 @@ export async function getHomepageDataOptimized(): Promise<{
           imageTitle,
           imageSubtitle
         }
-      },
-      "cacheBust": ${cacheBust}
+      }
     }`;
     const result = await client.fetch(query);
     return {
@@ -699,11 +693,6 @@ export async function getPackagePageDataOptimized(): Promise<{
   packagePageData: PackagePageData | null;
 }> {
   try {
-    // NUCLEAR cache busting - multiple timestamps and random values
-    const cacheBust = Date.now();
-    const randomId = Math.random().toString(36).substring(7);
-    const uniqueId = `${cacheBust}_${randomId}`;
-    
     const query = `{
       "siteSettings": *[_type == "siteSettings"][0] {
         logo {
@@ -779,16 +768,10 @@ export async function getPackagePageDataOptimized(): Promise<{
             imagePosition
           }
         }
-      },
-      "cacheBust": ${cacheBust},
-      "randomId": "${randomId}",
-      "uniqueId": "${uniqueId}",
-      "timestamp": "${new Date().toISOString()}"
+      }
     }`
 
-    console.log(`🔥 NUCLEAR CACHE BUST: ${uniqueId}`)
     const result = await client.fetch(query);
-    console.log(`📦 Package data fetched:`, result.packagePageData?.packageSectionRef?.packages?.map((p: any) => `${p.name}: ${p.price}`))
     
     return {
       siteSettings: result.siteSettings || null,

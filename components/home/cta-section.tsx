@@ -170,9 +170,7 @@ const CTASection = ({
   className = "",
   packages = []
 }: CTASectionProps) => {
-  // DEBUG: Log what packages we're receiving on homepage
-  console.log('🏠 CTASection received packages:', packages)
-  console.log('🏠 Package prices on homepage:', packages.map(pkg => `${pkg.name}: ${pkg.price}`))
+
 
   const titleParts = title.split(" ")
   const lastWord = titleParts.pop()

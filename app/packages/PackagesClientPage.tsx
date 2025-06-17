@@ -27,10 +27,7 @@ export default function PackagesClientPage({
   const packagesData = packagePageData?.packageSectionRef?.packages || [];
   const faqData = packagePageData?.faqSection?.faqs || [];
 
-  // DEBUG: Log what data we're actually receiving
-  console.log('🔍 PackagesClientPage received packagePageData:', packagePageData)
-  console.log('🔍 Packages data extracted:', packagesData)
-  console.log('🔍 Package prices:', packagesData.map(pkg => `${pkg.name}: ${pkg.price}`))
+
 
   const pageTitle = packagePageData?.title || "Our Packages";
   const pageSubtitle = packagePageData?.subtitle || "Premium entertainment packages for your special event";

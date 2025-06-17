@@ -1,7 +1,6 @@
 import { createClient } from 'next-sanity'
 
 const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-12-17'
-console.log('🔧 Sanity Client API Version:', apiVersion)
 
 export const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '',

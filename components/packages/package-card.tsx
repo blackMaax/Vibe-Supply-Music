@@ -35,8 +35,7 @@ export default function PackageCard({
   ctaLink = "/contact",
   price,
 }: PackageProps) {
-  // DEBUG: Log what props we're receiving
-  console.log(`🎯 PackageCard "${name}" received price:`, price)
+
   
   const cardAssemblyMotionProps: MotionProps & HTMLAttributes<HTMLDivElement> = {
     initial: { opacity: 0, y: 20 },
