@@ -699,8 +699,11 @@ export async function getPackagePageDataOptimized(): Promise<{
   packagePageData: PackagePageData | null;
 }> {
   try {
-    // Add cache busting timestamp
+    // NUCLEAR cache busting - multiple timestamps and random values
     const cacheBust = Date.now();
+    const randomId = Math.random().toString(36).substring(7);
+    const uniqueId = `${cacheBust}_${randomId}`;
+    
     const query = `{
       "siteSettings": *[_type == "siteSettings"][0] {
         logo {
@@ -777,10 +780,16 @@ export async function getPackagePageDataOptimized(): Promise<{
           }
         }
       },
-      "cacheBust": ${cacheBust}
+      "cacheBust": ${cacheBust},
+      "randomId": "${randomId}",
+      "uniqueId": "${uniqueId}",
+      "timestamp": "${new Date().toISOString()}"
     }`
 
+    console.log(`🔥 NUCLEAR CACHE BUST: ${uniqueId}`)
     const result = await client.fetch(query);
+    console.log(`📦 Package data fetched:`, result.packagePageData?.packageSectionRef?.packages?.map((p: any) => `${p.name}: ${p.price}`))
+    
     return {
       siteSettings: result.siteSettings || null,
       packagePageData: result.packagePageData || null,
