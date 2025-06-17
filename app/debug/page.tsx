@@ -7,6 +7,8 @@ import {
 } from '@/lib/queries'
 
 export default async function DebugPage() {
+  const fetchTime = new Date().toISOString()
+  
   // Fetch all the main data sources
   const [
     homepageData,
@@ -24,7 +26,12 @@ export default async function DebugPage() {
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold mb-8">Sanity Data Debug</h1>
+      <h1 className="text-3xl font-bold mb-4">Sanity Data Debug</h1>
+      <p className="text-lg mb-8 bg-blue-100 p-4 rounded">
+        Data fetched at: <strong>{fetchTime}</strong>
+        <br />
+        Refresh this page to see if data updates in real-time
+      </p>
       
       <div className="space-y-8">
         {/* Site Settings */}

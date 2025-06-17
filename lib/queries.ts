@@ -295,6 +295,8 @@ export async function getSiteSettingsOptimized(): Promise<SiteSettingsData | nul
 
 export async function getHomepageData(): Promise<HomepageData | null> {
   try {
+    // Add cache busting timestamp
+    const cacheBust = Date.now();
     const query = `*[_type == "homepage"][0] {
       _id,
       _type,
@@ -355,7 +357,8 @@ export async function getHomepageData(): Promise<HomepageData | null> {
             }
           }
         }
-      }
+      },
+      "cacheBust": ${cacheBust}
     }`
     return await client.fetch(query)
   } catch (error) {
@@ -400,6 +403,8 @@ export async function getHomepageDataOptimized(): Promise<{
   contactSectionData: ContactSectionData | null;
 }> {
   try {
+    // Add cache busting timestamp to force fresh data
+    const cacheBust = Date.now();
     const query = `{
       "homepageData": *[_type == "homepage"][0] {
         _id,
@@ -481,7 +486,8 @@ export async function getHomepageDataOptimized(): Promise<{
           imageTitle,
           imageSubtitle
         }
-      }
+      },
+      "cacheBust": ${cacheBust}
     }`;
     const result = await client.fetch(query);
     return {
@@ -693,6 +699,8 @@ export async function getPackagePageDataOptimized(): Promise<{
   packagePageData: PackagePageData | null;
 }> {
   try {
+    // Add cache busting timestamp
+    const cacheBust = Date.now();
     const query = `{
       "siteSettings": *[_type == "siteSettings"][0] {
         logo {
@@ -768,7 +776,8 @@ export async function getPackagePageDataOptimized(): Promise<{
             imagePosition
           }
         }
-      }
+      },
+      "cacheBust": ${cacheBust}
     }`
 
     const result = await client.fetch(query);
