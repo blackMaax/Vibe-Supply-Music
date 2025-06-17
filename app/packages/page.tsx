@@ -2,6 +2,9 @@ import { Metadata } from 'next'
 import { getPackagePageDataOptimized } from '@/lib/queries'
 import PackagesClientPage from './PackagesClientPage'
 
+// Force dynamic rendering - fetch fresh data on every request
+export const dynamic = 'force-dynamic'
+
 // SEO metadata for Packages page
 export const metadata: Metadata = {
   title: "Band Packages & Pricing | Vibe Supply Live Entertainment",

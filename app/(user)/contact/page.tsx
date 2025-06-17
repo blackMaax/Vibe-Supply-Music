@@ -5,6 +5,9 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Navbar from '@/components/layout/navbar';
 
+// Force dynamic rendering - fetch fresh data on every request
+export const dynamic = 'force-dynamic'
+
 // SEO metadata for Contact page
 export const metadata: Metadata = {
   title: "Contact Vibe Supply | Book Live Music for Your Event",

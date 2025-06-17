@@ -2,8 +2,8 @@
 import HomePageClient from "@/components/home/home-page-client" // Import the new client component
 import { getSiteSettings, type SiteSettingsData, getHomepageDataOptimized, type HomepageData, type ContactSectionData } from "@/lib/queries" // Added getContactSectionData and ContactSectionData
 
-// Disable revalidation for testing - re-enable for production
-// export const revalidate = 30
+// Force dynamic rendering - fetch fresh data on every request
+export const dynamic = 'force-dynamic'
 
 export default async function Home() {
   const siteSettings: SiteSettingsData | null = await getSiteSettings(); 

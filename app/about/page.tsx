@@ -15,6 +15,9 @@ import { getAboutPageDataOptimized } from "@/lib/queries"
 import { urlForImage } from "@/lib/sanity-image"
 import type { Metadata } from 'next'
 
+// Force dynamic rendering - fetch fresh data on every request
+export const dynamic = 'force-dynamic'
+
 // SEO metadata for About page
 export const metadata: Metadata = {
   title: "About Vibe Supply | Meet the Band Behind the Music",

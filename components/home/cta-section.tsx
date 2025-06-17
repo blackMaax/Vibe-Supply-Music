@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, type MotionProps } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { Check, ChevronRight } from "lucide-react"
@@ -8,6 +8,8 @@ import LuxuryCard from "@/components/ui/luxury-card"
 import type { PackageItem } from "../../sanity/lib/queries"
 import { urlForImage } from "@/lib/sanity-image"
 import { Button } from "@/components/ui/button"
+import type { HTMLAttributes } from "react"
+import type { PackageItemData } from "@/lib/queries"
 
 interface PackageCardProps {
   _key?: string
@@ -154,22 +156,37 @@ const PackageCard = ({ name, tagline, features = [], isPopular = false, image }:
 interface CTASectionProps {
   title?: string
   subtitle?: string
-  ctaText?: string
-  ctaLink?: string
-  image?: any // Sanity image asset
-  packages?: PackageCardProps[] // Add packages prop
+  buttonText?: string
+  buttonLink?: string
+  className?: string
+  packages?: PackageItemData[]
 }
 
-export default function CTASection({
-  title = "Ready to Make Your Event Unforgettable?",
-  subtitle = "Book a consultation with us today and let's create something special together.",
-  ctaText = "Book a Consultation",
-  ctaLink = "/contact",
-  image,
-  packages = [], // Default to empty array
-}: CTASectionProps) {
-  // Get image URL from Sanity, ensuring it's always a string
-  const imageUrl = image?.asset ? urlForImage(image) || "/placeholder.svg?height=600&width=800&text=CTA+Image" : "/placeholder.svg?height=600&width=800&text=CTA+Image"
+const CTASection = ({
+  title = "Ready to Elevate Your Event?",
+  subtitle = "Whether it's an intimate wedding or a large corporate function, Vibe Supply brings the energy and creates unforgettable moments through music.",
+  buttonText = "View Packages",
+  buttonLink = "/packages",
+  className = "",
+  packages = []
+}: CTASectionProps) => {
+  // DEBUG: Log what packages we're receiving on homepage
+  console.log('🏠 CTASection received packages:', packages)
+  console.log('🏠 Package prices on homepage:', packages.map(pkg => `${pkg.name}: ${pkg.price}`))
+
+  const titleParts = title.split(" ")
+  const lastWord = titleParts.pop()
+  const firstPart = titleParts.join(" ")
+
+  const sectionHeaderMotionProps: MotionProps & HTMLAttributes<HTMLDivElement> = {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { opacity: 1, y: 0 },
+    transition: { duration: 0.7, delay: 0.1 },
+    viewport: { once: true },
+    className: "text-center mb-16"
+  }
+
+
 
   return (
     <section className="py-16 md:py-24">
@@ -200,3 +217,5 @@ export default function CTASection({
     </section>
   )
 }
+
+export default CTASection
