@@ -94,11 +94,6 @@ export interface ContactSectionData {
   _id: string;
   sectionTitle?: string;
   sectionSubtitle?: string;
-  featuredImageCard?: {
-    image?: SanityImageObject;
-    imageTitle?: string;
-    imageSubtitle?: string;
-  };
 }
 
 // --- About Page Interfaces ---
@@ -109,25 +104,8 @@ export interface KeyPointItem {
 }
 
 export interface AboutUsSectionData {
-  title?: string;
-  subtitle?: string;
   ethosTitle?: string;
   ethosContent?: string;
-  ethosImage?: {
-    asset: {
-      _id: string;
-      _ref: string;
-      url?: string;
-      metadata?: {
-        dimensions?: {
-          width?: number;
-          height?: number;
-          aspectRatio?: number;
-        };
-      };
-    };
-    position?: 'left' | 'right';
-  };
   mainContentTitle?: string;
   ourStoryParagraph?: string;
   keyPoints?: KeyPointItem[];
@@ -196,25 +174,8 @@ export interface PackagePageData {
 
 export interface AboutPageData {
   aboutUsSection: {
-    title?: string;
-    subtitle?: string;
     ethosTitle?: string;
     ethosContent?: string;
-    ethosImage?: {
-      asset: {
-        _id: string;
-        _ref: string;
-        url?: string;
-        metadata?: {
-          dimensions?: {
-            width?: number;
-            height?: number;
-            aspectRatio?: number;
-          };
-        };
-      };
-      position?: 'left' | 'right';
-    };
     mainContentTitle?: string;
     ourStoryParagraph?: string;
     keyPoints?: KeyPointItem[];
@@ -371,21 +332,7 @@ export async function getContactSectionData(): Promise<ContactSectionData | null
       _id,
       _type,
       sectionTitle,
-      sectionSubtitle,
-      featuredImageCard {
-        image {
-          asset -> {
-            _id,
-            _ref,
-            url,
-            metadata {
-              dimensions
-            }
-          }
-        },
-        imageTitle,
-        imageSubtitle
-      }
+      sectionSubtitle
     }`
     return await client.fetch(query)
   } catch (error) {
@@ -466,21 +413,7 @@ export async function getHomepageDataOptimized(): Promise<{
         _id,
         _type,
         sectionTitle,
-        sectionSubtitle,
-        featuredImageCard {
-          image {
-            asset -> {
-              _id,
-              _ref,
-              url,
-              metadata {
-                dimensions
-              }
-            }
-          },
-          imageTitle,
-          imageSubtitle
-        }
+        sectionSubtitle
       }
     }`;
     const result = await client.fetch(query);
@@ -519,21 +452,8 @@ export async function getAboutPageDataOptimized(): Promise<{
       },
       "aboutPageData": *[_type == "aboutPage"][0] {
         aboutUsSection {
-          title,
-          subtitle,
           ethosTitle,
           ethosContent,
-          ethosImage {
-            asset-> {
-              _id,
-              _ref,
-              url,
-              metadata {
-                dimensions
-              }
-            },
-            position
-          },
           mainContentTitle,
           ourStoryParagraph,
           keyPoints[] {
@@ -575,28 +495,14 @@ export async function getAboutPageDataOptimized(): Promise<{
             }
           }
         }
-      },
-      "contactSectionData": *[_type == "contactSection"][0] {
-        _id,
-        _type,
-        sectionTitle,
-        sectionSubtitle,
-        featuredImageCard {
-          image {
-            asset -> {
-              _id,
-              _ref,
-              url,
-              metadata {
-                dimensions
-              }
-            }
-          },
-          imageTitle,
-          imageSubtitle
+              },
+        "contactSectionData": *[_type == "contactSection"][0] {
+          _id,
+          _type,
+          sectionTitle,
+          sectionSubtitle
         }
-      }
-    }`
+      }`
 
     const data = await client.fetch(query)
     

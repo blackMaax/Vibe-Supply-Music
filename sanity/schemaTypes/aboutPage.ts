@@ -23,18 +23,6 @@ export default defineType({
       },
       fields: [
         {
-          name: 'title',
-          title: 'Section Title',
-          type: 'string',
-          description: 'The main title for the about us section (e.g., About Us).',
-        },
-        {
-          name: 'subtitle',
-          title: 'Section Subtitle',
-          type: 'text',
-          description: 'A brief introduction or subtitle for the about us section.',
-        },
-        {
           name: 'ethosTitle',
           title: 'Ethos Title',
           type: 'string',
@@ -47,30 +35,7 @@ export default defineType({
           type: 'text',
           description: 'The main content of the ethos section.',
         },
-        {
-          name: 'ethosImage',
-          title: 'Ethos Image',
-          type: 'image',
-          description: 'The image to display alongside the ethos content.',
-          options: {
-            hotspot: true,
-          },
-          fields: [
-            {
-              name: 'position',
-              title: 'Image Position',
-              type: 'string',
-              description: 'Choose whether the image appears on the left or right.',
-              options: {
-                list: [
-                  { title: 'Left', value: 'left' },
-                  { title: 'Right', value: 'right' },
-                ],
-              },
-              initialValue: 'right',
-            },
-          ],
-        },
+
         {
           name: 'mainContentTitle',
           title: 'Main Content Title',

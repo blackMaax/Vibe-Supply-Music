@@ -138,27 +138,18 @@ export default function LuxuryCard({
       if (index % 3 === 2) gradient = "linear-gradient(135deg, #16363a 0%, #27473a 100%)";
     }
 
-    const fabricTexture = 'url("https://www.transparenttextures.com/patterns/large-leather.png")';
+    const fabricTexture = 'url("https://www.transparenttextures.com/patterns/classy-fabric.png")';
 
-    if (variant === "package" && isHighlighted) {
-      return {
-        backgroundColor: '#210100',
-        backgroundImage: fabricTexture,
-        backgroundRepeat: 'repeat',
-        backgroundSize: '300px 300px',
-        opacity: 1,
-        border: "1px solid rgba(212, 175, 55, 0.5)",
-        boxShadow: "inset 0 0 15px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.15)",
-      }
-    }
-
+    // Default fabric texture background with conditional border opacity for highlighted packages
+    const borderOpacity = (variant === "package" && isHighlighted) ? "0.5" : "0.3";
+    
     return {
-      backgroundColor: '#210100',
+      backgroundColor: '#000080',
       backgroundImage: fabricTexture,
       backgroundRepeat: 'repeat',
-      backgroundSize: '300px 300px',
+      backgroundSize: '150px 150px',
       opacity: 1,
-      border: "1px solid rgba(212, 175, 55, 0.3)",
+      border: `1px solid rgba(212, 175, 55, ${borderOpacity})`,
       boxShadow: "inset 0 0 15px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.15)",
     }
   }

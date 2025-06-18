@@ -2,7 +2,7 @@
 
 import { motion, type MotionProps } from "framer-motion"
 import Image from "next/image"
-import { getImageUrl } from "@/lib/static-data"
+
 import type { HTMLAttributes } from "react"
 import LuxuryCard from "@/components/ui/luxury-card"
 import { urlForImage } from "@/lib/sanity-image"
@@ -49,45 +49,30 @@ export default function AboutUsSection({ data }: AboutUsSectionProps) {
       <div className="container mx-auto px-4">
         {/* Main content and Ethos within a flex/grid container */}
         <div className="flex flex-col gap-12">
-          {/* Ethos Section (formerly inline in page.tsx) */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-1 lg:gap-12 lg:items-stretch mx-auto">
-            {/* Ethics Card */}
-            <div
-              className={`${leftColumnBaseClass} ${data.ethosImage?.position === 'left' ? 'lg:order-2' : 'lg:order-1'}`}
+          {/* Ethos Section - Full Width */}
+          <div className="max-w-4xl mx-auto">
+            <LuxuryCard 
+              variant="default" 
+              cornerAccents="none" 
+              sparkleOverlay={true} 
+              floatingParticles={true}
+              className="relative p-8"
             >
-              <LuxuryCard 
-                variant="default" 
-                cornerAccents="none" 
-                sparkleOverlay={true} 
-                floatingParticles={true}
-                className="h-full relative p-8"
-              >
-                <div className="relative z-10 flex flex-col gap-6">
-                  {/* Title with gold underline */}
-                  <div className="text-center">
-                    <h2 className="text-3xl font-display font-bold gold-text mb-1 flex items-center justify-center">
-                      <Handshake size={32} className="mr-3" /> {data.ethosTitle || "The Vibe Supply Ethos"}
-                    </h2>
-                    <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-gold/70 to-transparent mt-2 mx-auto relative">
-                      <div className="absolute inset-0 blur-sm bg-gold/30"></div>
-                    </div>
+              <div className="relative z-10 flex flex-col gap-6">
+                {/* Title with gold underline */}
+                <div className="text-center">
+                  <h2 className="text-3xl font-display font-bold gold-text mb-1 flex items-center justify-center">
+                    <Handshake size={32} className="mr-3" /> {data.ethosTitle || "The Vibe Supply Ethos"}
+                  </h2>
+                  <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-gold/70 to-transparent mt-2 mx-auto relative">
+                    <div className="absolute inset-0 blur-sm bg-gold/30"></div>
                   </div>
-                  <p className="text-white text-center">
-                    {data.ethosContent || "Whenever possible, we are committed to representation and diversity. We believe that having as many different kinds of people on stage not only makes for a more interesting show but enriches the music itself."}
-                  </p>
                 </div>
-              </LuxuryCard>
-            </div>
-
-            {/* Ethos Image Card */}
-            <LuxuryCard
-              variant="gallery-item"
-              cornerAccents="none"
-              sparkleOverlay={true}
-              className={`min-h-[200px] lg:min-h-0 h-auto lg:h-full ${data.ethosImage?.position === 'left' ? 'lg:order-1' : 'lg:order-2'}`}
-              imageSrc={data.ethosImage?.asset ? urlForImage(data.ethosImage) || "/placeholder.jpg" : "/placeholder.jpg"}
-              imageAlt={data.ethosImage?.alt || "Vibe Supply Ethos"}
-            />
+                <p className="text-white text-center max-w-3xl mx-auto text-lg leading-relaxed">
+                  {data.ethosContent || "Whenever possible, we are committed to representation and diversity. We believe that having as many different kinds of people on stage not only makes for a more interesting show but enriches the music itself."}
+                </p>
+              </div>
+            </LuxuryCard>
           </div>
 
           {/* Main About Us Content Section (formerly handled by the second AboutUsSection call) */}
@@ -139,7 +124,7 @@ export default function AboutUsSection({ data }: AboutUsSectionProps) {
               sparkleOverlay={true}
               className={`min-h-[200px] lg:min-h-0 h-auto lg:h-full ${data.featuredImage?.position === 'left' ? 'lg:order-1' : 'lg:order-2'}`}
               imageSrc={data.featuredImage?.asset ? urlForImage(data.featuredImage) || "/placeholder.svg" : "/placeholder.svg"}
-              imageAlt={data.featuredImage?.alt || "About Us Featured Image"}
+              imageAlt="About Us Featured Image"
             />
           </div>
         </div>

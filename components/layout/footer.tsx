@@ -3,9 +3,8 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Instagram, Facebook, Twitter, Mail, Phone, Clock, Link as LinkIcon, Youtube, Linkedin, MessageCircle, Pin, Film } from "lucide-react"
-import { useState, useEffect } from "react"
-import React from "react"
 import { urlForImage } from "@/lib/sanity-image"
+import LuxuryCard from "@/components/ui/luxury-card"
 
 // Define the props for the Footer component
 interface FooterProps {
@@ -43,11 +42,6 @@ const Footer = ({
   socialLinks = [],
   footerText 
 }: FooterProps) => {
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   // Get logo URL from Sanity or use provided logoUrl
   const displayLogo = logoAsset ? urlForImage(logoAsset) : logoUrl || "/placeholder.svg?height=100&width=200&text=Logo";
   const displayEmail = contactEmail || "info@example.com";
@@ -64,29 +58,15 @@ const Footer = ({
       */}
 
       <div className="container mx-auto px-4 py-16 relative z-10">
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 bg-black/75 backdrop-blur-md border border-gold/30 rounded-2xl p-8 shadow-[inset_0_0_15px_rgba(0,0,0,0.3),0_10px_30px_rgba(0,0,0,0.15)] relative overflow-hidden">
-          {/* Animated floating particles inside the card - Render only on client after mount */}
-          {isMounted && (
-            <div className="absolute inset-0 pointer-events-none z-0">
-              {[...Array(50).keys()].map((i) => (
-                <div
-                  key={`footer-card-particle-${i}`}
-                  className="absolute w-1 h-1 rounded-full bg-gold/30"
-                  style={{
-                    left: `${5 + Math.random() * 90}%`,
-                    top: `${5 + Math.random() * 90}%`,
-                    filter: "blur(0.5px)",
-                    animation: `float-${(i % 3) + 1} ${18 + Math.random() * 25}s linear infinite`,
-                    opacity: 0.2 + Math.random() * 0.4,
-                    willChange: "transform, opacity",
-                  }}
-                ></div>
-              ))}
-            </div>
-          )}
-          
-          {/* Content columns (relative z-10 to be above particles) */}
-          {/* Removed Logo and Description Section */}
+        <LuxuryCard 
+          variant="default" 
+          cornerAccents="none" 
+          sparkleOverlay={true} 
+          floatingParticles={true}
+          className="p-8"
+        >
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
+            {/* Content columns */}
 
           <div className="relative z-10">
             <h3 className="text-lg font-bold mb-6 relative inline-block font-display gold-text">
@@ -162,7 +142,8 @@ const Footer = ({
               )}
             </ul>
           </div>
-        </div>
+          </div>
+        </LuxuryCard>
 
         <div className="text-center mt-12 text-gray-400">
           <p className="text-sm">{displayFooterText}</p>
