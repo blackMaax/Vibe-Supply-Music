@@ -26,9 +26,9 @@ export default function Navbar() {
 
   return (
     <header className="w-full py-6">
-      <div className="container mx-auto">
+      <div className="container mx-auto px-4">
         <nav className="flex flex-col items-center justify-center">
-          <div className="relative flex items-center justify-center gap-2 sm:gap-4 md:gap-8 py-4">
+          <div className="relative flex items-center justify-center gap-1 sm:gap-4 md:gap-8 py-4 w-full max-w-full overflow-hidden">
             {navItems.map((item, index) => (
               <React.Fragment key={`nav-fragment-${item}`}>
                 <NavItem
@@ -56,7 +56,7 @@ function NavItem({ item, isActive }: NavItemProps) {
       <Link
         href={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
         className={cn(
-          "relative z-10 px-2 sm:px-3 md:px-4 py-2 text-base font-medium transition-colors",
+          "relative z-10 px-1 sm:px-3 md:px-4 py-2 text-sm sm:text-base font-medium transition-colors",
           isActive ? "text-black" : "text-black hover:text-black",
         )}
       >
@@ -64,10 +64,16 @@ function NavItem({ item, isActive }: NavItemProps) {
 
         {/* Geometric line accents that appear on hover and when active */}
         {isActive && (
-          // @ts-ignore 
           <motion.div
             layoutId="activeNavIndicator"
-            className="absolute -bottom-1 left-0 right-0 h-[2px] bg-black"
+            style={{
+              position: 'absolute',
+              bottom: '-4px',
+              left: 0,
+              right: 0,
+              height: '2px',
+              backgroundColor: 'black'
+            }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.2 }}
