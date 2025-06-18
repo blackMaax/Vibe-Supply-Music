@@ -7,7 +7,6 @@ import type { HTMLAttributes } from "react"
 import LuxuryCard from "@/components/ui/luxury-card"
 import { urlForImage } from "@/lib/sanity-image"
 import type { AboutUsSectionData, KeyPointItem } from '@/lib/queries';
-import { Handshake } from "lucide-react"
 
 // Define motion props types including className
 type MotionDivProps = MotionProps & HTMLAttributes<HTMLDivElement>; // Keep this type for clarity
@@ -61,8 +60,8 @@ export default function AboutUsSection({ data }: AboutUsSectionProps) {
               <div className="relative z-10 flex flex-col gap-6">
                 {/* Title with gold underline */}
                 <div className="text-center">
-                  <h2 className="text-3xl font-display font-bold gold-text mb-1 flex items-center justify-center">
-                    <Handshake size={32} className="mr-3" /> {data.ethosTitle || "The Vibe Supply Ethos"}
+                  <h2 className="text-3xl font-display font-bold gold-text mb-1">
+                    {data.ethosTitle || "The Vibe Supply Ethos"}
                   </h2>
                   <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-gold/70 to-transparent mt-2 mx-auto relative">
                     <div className="absolute inset-0 blur-sm bg-gold/30"></div>
@@ -122,7 +121,7 @@ export default function AboutUsSection({ data }: AboutUsSectionProps) {
               variant="gallery-item"
               cornerAccents="none"
               sparkleOverlay={true}
-              className={`min-h-[200px] lg:min-h-0 h-auto lg:h-full ${data.featuredImage?.position === 'left' ? 'lg:order-1' : 'lg:order-2'}`}
+              className={`min-h-[200px] sm:min-h-[225px] lg:min-h-0 h-auto lg:h-full ${data.featuredImage?.position === 'left' ? 'lg:order-1' : 'lg:order-2'}`}
               imageSrc={data.featuredImage?.asset ? urlForImage(data.featuredImage) || "/placeholder.svg" : "/placeholder.svg"}
               imageAlt="About Us Featured Image"
             />

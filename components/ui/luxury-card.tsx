@@ -435,7 +435,7 @@ export default function LuxuryCard({
         className={`relative rounded-2xl overflow-hidden ${getPadding()} ${getAdditionalClasses()} ${className}`}
         style={{
           ...getBackgroundStyle(),
-          minHeight: "fit-content",
+          // Allow className to control minHeight for gallery-item
         }}
       >
         {renderCardContent()}
