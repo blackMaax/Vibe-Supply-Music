@@ -6,7 +6,7 @@ import Image from "next/image"
 import type { HTMLAttributes } from "react"
 import LuxuryCard from "@/components/ui/luxury-card"
 import { urlForImage } from "@/lib/sanity-image"
-import type { AboutUsSectionData, KeyPointItem } from '@/lib/queries';
+import type { AboutUsSectionData, KeyPointItem, ParagraphItem } from '@/lib/queries';
 
 // Define motion props types including className
 type MotionDivProps = MotionProps & HTMLAttributes<HTMLDivElement>; // Keep this type for clarity
@@ -97,13 +97,21 @@ export default function AboutUsSection({ data }: AboutUsSectionProps) {
                       <div className="absolute inset-0 blur-sm bg-gold/30"></div>
                     </div>
                   </div>
-                  {/* Paragraph with some italics */}
-                  {data.ourStoryParagraph && (
+                  {/* Paragraphs - support both new array format and legacy single paragraph */}
+                  {data.ourStoryParagraphs && data.ourStoryParagraphs.length > 0 ? (
+                    <div className="space-y-4">
+                      {data.ourStoryParagraphs.map((paragraph: ParagraphItem) => (
+                        <p key={paragraph._key} className="text-white text-left">
+                          {paragraph.text}
+                        </p>
+                      ))}
+                    </div>
+                  ) : data.ourStoryParagraph ? (
                     <p className="text-white text-left">
-                      {/* Render text directly from Sanity */}
+                      {/* Backward compatibility with old single paragraph field */}
                       {data.ourStoryParagraph}
                     </p>
-                  )}
+                  ) : null}
                   {/* Gold bullet points */}
                   {data.keyPoints && data.keyPoints.length > 0 && (
                     <ul className="space-y-2 text-gold font-medium text-left list-disc list-inside">

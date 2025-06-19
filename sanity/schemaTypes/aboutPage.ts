@@ -43,10 +43,37 @@ export default defineType({
           description: 'The title for the main content block (e.g., Our Story).',
         },
         {
-          name: 'ourStoryParagraph',
-          title: 'Our Story Paragraph',
-          type: 'text',
-          description: 'The main paragraph of the Our Story section.',
+          name: 'ourStoryParagraphs',
+          title: 'Our Story Paragraphs',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              name: 'paragraph',
+              title: 'Paragraph',
+              fields: [
+                {
+                  name: 'text',
+                  title: 'Paragraph Text',
+                  type: 'text',
+                  validation: (Rule: any) => Rule.required(),
+                },
+              ],
+              preview: {
+                select: {
+                  title: 'text',
+                },
+                prepare(selection: Record<string, any>) {
+                  const { title } = selection;
+                  return {
+                    title: title ? `${(title as string).substring(0, 50)}...` : 'Paragraph',
+                  };
+                }
+              },
+            },
+          ],
+          description: 'Add one or more paragraphs for the Our Story section. First paragraph is required, additional paragraphs are optional.',
+          validation: (Rule: any) => Rule.min(1).max(3).error('You must have at least 1 paragraph and at most 3 paragraphs.'),
         },
         {
           name: 'keyPoints',

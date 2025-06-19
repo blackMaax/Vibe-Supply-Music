@@ -103,10 +103,17 @@ export interface KeyPointItem {
   text: string;
 }
 
+export interface ParagraphItem {
+  _key: string;
+  text: string;
+}
+
 export interface AboutUsSectionData {
   ethosTitle?: string;
   ethosContent?: string;
   mainContentTitle?: string;
+  ourStoryParagraphs?: ParagraphItem[];
+  // Keep old field for backward compatibility
   ourStoryParagraph?: string;
   keyPoints?: KeyPointItem[];
   featuredImage?: {
@@ -177,6 +184,8 @@ export interface AboutPageData {
     ethosTitle?: string;
     ethosContent?: string;
     mainContentTitle?: string;
+    ourStoryParagraphs?: ParagraphItem[];
+    // Keep old field for backward compatibility
     ourStoryParagraph?: string;
     keyPoints?: KeyPointItem[];
     featuredImage?: {
@@ -455,6 +464,10 @@ export async function getAboutPageDataOptimized(): Promise<{
           ethosTitle,
           ethosContent,
           mainContentTitle,
+          ourStoryParagraphs[] {
+            _key,
+            text
+          },
           ourStoryParagraph,
           keyPoints[] {
             _key,
