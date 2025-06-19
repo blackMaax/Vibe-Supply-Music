@@ -43,6 +43,14 @@ export default defineType({
       fieldset: 'branding', // Assign to branding fieldset
     },
     {
+      name: 'socialSharingImage',
+      title: 'Social Sharing Image',
+      type: 'image',
+      description: 'Image shown when your website is shared on WhatsApp, Facebook, Twitter, etc. Recommended: 1200x630px for best results.',
+      options: { hotspot: true },
+      fieldset: 'branding', // Assign to branding fieldset
+    },
+    {
       name: 'contactEmail',
       title: 'Contact Email',
       type: 'string',

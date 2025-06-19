@@ -48,6 +48,15 @@ export async function generateMetadata(): Promise<Metadata> {
     }
   }
 
+  // Get social sharing image URL
+  let socialImageUrl = null;
+  if (settings && settings.socialSharingImage && typeof settings.socialSharingImage === 'object' && 'asset' in settings.socialSharingImage) {
+    const builtUrl = urlFor(settings.socialSharingImage as any);
+    if (builtUrl) {
+      socialImageUrl = builtUrl;
+    }
+  }
+
   // Use site title from Sanity, with fallback
   const siteTitle = settings?.title || "Live Wedding & Event Band | Vibe Supply UK";
 
@@ -64,11 +73,13 @@ export async function generateMetadata(): Promise<Metadata> {
       description: "High-energy live music for weddings, parties, and events. Vibe Supply brings unforgettable performances across the UK with top-tier musicians.",
       type: "website",
       siteName: "Vibe Supply",
+      ...(socialImageUrl && { images: [{ url: socialImageUrl, width: 1200, height: 630, alt: siteTitle }] }),
     },
     twitter: {
       card: "summary_large_image",
       title: siteTitle,
       description: "High-energy live music for weddings, parties, and events. Vibe Supply brings unforgettable performances across the UK with top-tier musicians.",
+      ...(socialImageUrl && { images: [socialImageUrl] }),
     },
   };
 }

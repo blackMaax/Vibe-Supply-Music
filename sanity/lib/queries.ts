@@ -27,6 +27,20 @@ export interface SiteSettingsData {
     },
     alt?: string
   };
+  socialSharingImage?: { 
+    asset?: { 
+      _id?: string,
+      _ref?: string, 
+      url?: string,
+      metadata?: {
+        dimensions?: {
+          width?: number,
+          height?: number
+        }
+      }
+    },
+    alt?: string
+  };
   contactEmail?: string;
   contactPhone?: string;
   socialLinks?: Array<{ platform?: string; url?: string }>;
@@ -48,6 +62,17 @@ export async function getSiteSettings(): Promise<SiteSettingsData | null> {
     logo,
     favicon,
     siteBackgroundImage {
+      asset-> {
+        _id,
+        _ref,
+        url,
+        metadata {
+          dimensions
+        }
+      },
+      alt
+    },
+    socialSharingImage {
       asset-> {
         _id,
         _ref,
